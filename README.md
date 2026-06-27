@@ -92,7 +92,7 @@ $ python marketing/bench/gen_dataset.py --rows 100000 && python marketing/bench/
 
 **정합성 검산 엔진** (`marketing/reconcile.py`) 실전 예:
 ```text
-$ python marketing/reconcile.py marketing/sample_campaign.csv
+$ python marketing/reconcile.py marketing/samples/sample_campaign.csv
 -- checks: 16 PASS, 2 WARN --
   ! [C_carousel] ctr: reported=9.9% recomputed=5.0000%      # 보고값과 실제 불일치 적발
   ! [SUM] spend: rows_sum=4,100,000 vs total_row=4,200,000   # 합계 ≠ 총계 적발
