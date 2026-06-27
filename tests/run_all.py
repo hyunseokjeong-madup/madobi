@@ -66,6 +66,8 @@ CHECKS = [
     ("sc: new_vs_returning",          ["python", "marketing/pm/new_vs_returning.py", "marketing/sample_tx.csv"], "NEW vs RETURNING"),
     ("sc: data_quality",              ["python", "marketing/pm/data_quality.py", "marketing/sample_dirty.csv"], "DATA QUALITY"),
     ("sc: shapley_attribution",       ["python", "marketing/pm/shapley_attribution.py", "marketing/sample_paths.csv"], "SHAPLEY ATTRIBUTION"),
+    ("sc: conversion_lag",            ["python", "marketing/pm/conversion_lag.py", "marketing/sample_lag.csv"], "CONVERSION LAG"),
+    ("sc: incrementality_ab",         ["python", "marketing/pm/incrementality_ab.py", "--test-n", "100000", "--test-conv", "3000", "--control-n", "100000", "--control-conv", "2500"], "INCREMENTALITY"),
 ]
 
 def run():
