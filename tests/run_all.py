@@ -23,6 +23,10 @@ CHECKS = [
     ("pm: funnel",                    ["python", "marketing/pm/funnel.py", "--csv", "marketing/sample_campaign.csv"], "FUNNEL"),
     ("pm: abtest",                    ["python", "marketing/pm/abtest.py", "--a-n", "1000", "--a-x", "50", "--b-n", "1000", "--b-x", "70"], "A/B TEST"),
     ("pm: reallocate",                ["python", "marketing/pm/reallocate.py", "marketing/sample_campaign.csv", "--by", "creative"], "REALLOCATION"),
+    ("pm: guardrails",                ["python", "marketing/pm/guardrails.py", "marketing/sample_campaign.csv", "--by", "creative", "--target-roas", "2.5"], "GUARDRAILS"),
+    ("pm: waste",                     ["python", "marketing/pm/waste.py", "marketing/sample_campaign.csv", "--by", "creative", "--min-roas", "2.5"], "WASTE FINDER"),
+    ("pm: dow heatmap",               ["python", "marketing/pm/dow_heatmap.py", "marketing/sample_timeseries.csv", "--metric", "revenue"], "HEATMAP"),
+    ("pm: forecast",                  ["python", "marketing/pm/forecast.py", "marketing/sample_timeseries.csv", "--total-days", "30"], "FORECAST"),
 ]
 
 def run():
