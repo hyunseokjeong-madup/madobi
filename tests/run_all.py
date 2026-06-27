@@ -95,6 +95,8 @@ CHECKS = [
     ("sc: roas_gap",                  ["python", "marketing/pm/roas_gap.py", "marketing/samples/sample_campaign.csv", "--target", "3.0", "--by", "creative"], "ROAS GAP"),
     ("sc: exec_report",               ["python", "marketing/pm/exec_report.py", "marketing/samples/sample_campaign.csv", "--target-roas", "3.0"], "EXEC REPORT"),
     ("sc: ctr_benchmark",             ["python", "marketing/pm/ctr_benchmark.py", "marketing/samples/sample_campaign.csv"], "CTR BENCHMARK"),
+    ("sc: cpm_trend",                 ["python", "marketing/pm/cpm_trend.py", "marketing/samples/sample_cpm.csv"], "CPM TREND"),
+    ("sc: efficiency_quadrant",       ["python", "marketing/pm/efficiency_quadrant.py", "marketing/samples/sample_campaign.csv"], "EFFICIENCY QUADRANT"),
 ]
 
 def run():

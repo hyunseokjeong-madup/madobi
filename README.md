@@ -11,7 +11,8 @@
 `진화적 스웜 최적화` · `Doer–Verifier 검증` · `마케팅 애널리틱스`
 
 ![license](https://img.shields.io/badge/license-MIT-green)
-![checks](https://img.shields.io/badge/checks-8%2F8%20green-brightgreen)
+![checks](https://img.shields.io/badge/integration%20checks-passing-brightgreen)
+![tools](https://img.shields.io/badge/pm%20tools-68%2B-7c83ff)
 ![numbers](https://img.shields.io/badge/aggregation-100k%20rows%20exact-6ee7ff)
 ![made by](https://img.shields.io/badge/made%20by-Madup-7c83ff)
 ![built with](https://img.shields.io/badge/built%20with-Claude%20Code-b072ff)
