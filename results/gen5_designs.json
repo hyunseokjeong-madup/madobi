@@ -1,0 +1,10 @@
+[
+ {
+  "name": "F03_adversarial_c",
+  "manual": "Roleplay two adversaries on your draft answer.\n1. Solve once to get a DRAFT.\n2. PROSECUTOR: argue the draft is wrong. Cite the most damaging concrete flaw — a specific miscount, an arithmetic line, a misread constraint, a boundary case. Be ruthless; find the strongest objection, not a weak one.\n3. DEFENDER: respond to the prosecutor's exact charge by re-deriving that piece independently (different method if possible).\n4. JUDGE: if defender's independent re-derivation disagrees with the draft, the draft loses — adopt the corrected value. If they agree, draft survives.\n5. Repeat the debate once on the surviving answer only if the first round changed anything.\n6. Re-read the output contract; emit exactly that token."
+ },
+ {
+  "name": "C0_baseline",
+  "manual": "No operating manual. Solve the problem directly and give the final answer in the required format."
+ }
+]

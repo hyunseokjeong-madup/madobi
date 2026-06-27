@@ -104,3 +104,15 @@
 ## 챔피언 확정 & 마케팅 특화 전환
 - 일반 챔피언 = SWARM-SOLVER(검증 스웜 + 다수결). 마케팅 도메인에 특화 → **MADOBI**:
   검증 스웜을 "숫자 정합성(reconciliation)"에 적용, 소재 기획/생성/점검 + 성장형 놀리지에셋 + 스킬화.
+
+---
+## Generation 5 — 마케팅 추론 벤치 (2026-06-27)
+- 코드검증 마케팅 word-problem 10종(CPC/CPM/ROAS/CPA/가중CTR/페이싱/최대CPC/정합성차이/ROI/frequency).
+- 챔피언(F03_adversarial_c) vs baseline × 3시행 = 60노드, **단일 워크플로 0실패**.
+- **둘 다 10/10** — Simpson 함정(M5 가중CTR=1.25%, 단순평균 1.5% 아님)까지 정확.
+- 해석: 깔끔히 정의된 마케팅 산술은 모델이 이미 강함. **실익은 (a) 대용량/다필드 집계(코드 강제),
+  (b) 보고값 vs 실제 불일치 적발(reconcile)** 에 있다 — Gen5는 "정의가 명확하면 안 틀린다"를 확인.
+
+## 자동화 백로그 완료 (천천히, 항목별 커밋·푸시)
+- 소재 생성기(creative_gen) · 이벤트 분석기(event_analysis, 구간별 이상치) · 통합테스트(run_all, 8/8)
+- 데모 리포트(docs/DEMO) · 자기개선 Stop 훅(autosync) · README 배지 · Gen5 마케팅 벤치.
