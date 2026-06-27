@@ -27,6 +27,12 @@ CHECKS = [
     ("pm: waste",                     ["python", "marketing/pm/waste.py", "marketing/sample_campaign.csv", "--by", "creative", "--min-roas", "2.5"], "WASTE FINDER"),
     ("pm: dow heatmap",               ["python", "marketing/pm/dow_heatmap.py", "marketing/sample_timeseries.csv", "--metric", "revenue"], "HEATMAP"),
     ("pm: forecast",                  ["python", "marketing/pm/forecast.py", "marketing/sample_timeseries.csv", "--total-days", "30"], "FORECAST"),
+    ("pm: poas",                      ["python", "marketing/pm/poas.py", "--revenue", "100", "--spend", "50", "--margin", "0.3"], "POAS"),
+    ("pm: frequency",                 ["python", "marketing/pm/frequency.py", "--impressions", "600", "--reach", "150"], "FREQUENCY"),
+    ("pm: ltv_payback",               ["python", "marketing/pm/ltv_payback.py", "--cac", "30000", "--arpu", "15000"], "PAYBACK"),
+    ("pm: naming_check",              ["python", "marketing/pm/naming_check.py", "--names", "CMP_benefit_video_number_v01"], "NAMING CHECK"),
+    ("pm: search_terms",              ["python", "marketing/pm/search_terms.py", "marketing/sample_searchterms.csv"], "SEARCH TERMS"),
+    ("pm: channel_mix",               ["python", "marketing/pm/channel_mix.py", "marketing/sample_campaign.csv", "--by", "creative"], "CHANNEL MIX"),
 ]
 
 def run():
