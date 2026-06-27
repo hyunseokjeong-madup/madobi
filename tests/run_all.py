@@ -34,6 +34,15 @@ CHECKS = [
     ("pm: search_terms",              ["python", "marketing/pm/search_terms.py", "marketing/sample_searchterms.csv"], "SEARCH TERMS"),
     ("pm: channel_mix",               ["python", "marketing/pm/channel_mix.py", "marketing/sample_campaign.csv", "--by", "creative"], "CHANNEL MIX"),
     ("pm: alert_digest",              ["python", "marketing/pm/alert_digest.py", "marketing/sample_campaign.csv", "--by", "creative", "--target-roas", "2.5"], "DAILY DIGEST"),
+    ("pm: mer",                       ["python", "marketing/pm/mer.py", "--revenue", "300", "--spend", "100"], "MER"),
+    ("pm: seasonality",               ["python", "marketing/pm/seasonality.py", "marketing/sample_timeseries.csv", "--metric", "revenue"], "SEASONALITY INDEX"),
+    ("pm: attribution_compare",       ["python", "marketing/pm/attribution_compare.py", "marketing/sample_attribution.csv", "--a-col", "platform_conv", "--b-col", "ga_conv"], "ATTRIBUTION COMPARE"),
+    ("pm: rotation",                  ["python", "marketing/pm/rotation.py", "marketing/sample_campaign.csv", "--min-impr", "30000"], "CREATIVE ROTATION"),
+    ("kb: build_kb",                  ["python", "marketing/knowledge/build_kb.py"], "generated"),
+    ("kb: build_kb2",                 ["python", "marketing/knowledge/build_kb2.py"], "generated"),
+    ("kb: build_kb3",                 ["python", "marketing/knowledge/build_kb3.py"], "generated"),
+    ("kb: build_kb4",                 ["python", "marketing/knowledge/build_kb4.py"], "generated"),
+    ("bench: reasoning2",             ["python", "marketing/bench/reasoning2.py"], "built 40"),
 ]
 
 def run():
