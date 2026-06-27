@@ -63,6 +63,8 @@ CHECKS = [
     ("sc: promo_roi",                 ["python", "marketing/pm/promo_roi.py", "--baseline-units", "1000", "--price", "50000", "--margin", "0.4", "--discount", "0.2", "--uplift", "0.5"], "PROMO ROI"),
     ("sc: market_basket",             ["python", "marketing/pm/market_basket.py", "marketing/sample_baskets.csv", "--min-support", "0.2"], "MARKET BASKET"),
     ("sc: churn_score",               ["python", "marketing/pm/churn_score.py", "marketing/sample_tx.csv", "--asof", "2026-02-15"], "CHURN RISK"),
+    ("sc: new_vs_returning",          ["python", "marketing/pm/new_vs_returning.py", "marketing/sample_tx.csv"], "NEW vs RETURNING"),
+    ("sc: data_quality",              ["python", "marketing/pm/data_quality.py", "marketing/sample_dirty.csv"], "DATA QUALITY"),
 ]
 
 def run():

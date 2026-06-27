@@ -24,9 +24,11 @@
 | 16 | 프로모션 ROI(마진잠식) | `marketing/pm/promo_roi.py` | 증분 -5M/BE +100% 검산 |
 | 17 | 시장바구니 연관규칙(support/conf/lift) | `marketing/pm/market_basket.py` | lift 1.12x 검산 |
 | 18 | 이탈위험 스코어(최근성/기대주기) | `marketing/pm/churn_score.py` | 위험 4명 식별 |
+| 19 | 신규 vs 재구매 분해 | `marketing/pm/new_vs_returning.py` | 재구매율 60% 검산 |
+| 20 | 데이터 품질 검증기(다중 정합성 룰) | `marketing/pm/data_quality.py` | 5종 위반 전부 적발 |
 
 ## ⬜ 진행/큐 (각 30분급)
-19 신규 vs 재구매 분해 ·
+21 코호트 히트맵 · 22 LTV 세그·예산배분(LP) · 23 어트리뷰션 Shapley · … (→200)
 6 미디어믹스 회귀(MMM 간이) · 7 증분성(geo holdout) 추정 · 8 검색어 클러스터링 · 9 소재 피로 모델(추세) ·
 10 페이싱 최적화(잔여예산 재분배) · 11 HTML 대시보드 생성 · 12 데이터 품질 검증기(다중 룰) ·
 13 입찰 시뮬레이터 · 14 LTV 예측(코호트 외삽) · 15 RFM 세그먼테이션 · … (→200)
