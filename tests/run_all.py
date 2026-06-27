@@ -93,6 +93,8 @@ CHECKS = [
     ("sc: marginal_cpa",              ["python", "marketing/pm/marginal_cpa.py", "marketing/samples/sample_marginal.csv"], "MARGINAL CPA"),
     ("sc: reach_planner",             ["python", "marketing/pm/reach_planner.py", "--budget", "10000000", "--cpm", "5000", "--audience", "1000000"], "REACH PLANNER"),
     ("sc: roas_gap",                  ["python", "marketing/pm/roas_gap.py", "marketing/samples/sample_campaign.csv", "--target", "3.0", "--by", "creative"], "ROAS GAP"),
+    ("sc: exec_report",               ["python", "marketing/pm/exec_report.py", "marketing/samples/sample_campaign.csv", "--target-roas", "3.0"], "EXEC REPORT"),
+    ("sc: ctr_benchmark",             ["python", "marketing/pm/ctr_benchmark.py", "marketing/samples/sample_campaign.csv"], "CTR BENCHMARK"),
 ]
 
 def run():
