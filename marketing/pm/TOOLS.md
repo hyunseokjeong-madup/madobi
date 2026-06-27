@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 45개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 47개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -11,6 +11,7 @@
 | `attribution_mta.py` | 멀티터치 어트리뷰션(MTA) 엔진 — 경로(touchpoint) CSV에서 채널 기여를 5개 모델로 배분. |
 | `bid_sim.py` | 입찰 시뮬레이터 — 입찰 랜드스케이프(CPC→클릭량)에서 이익 최대 입찰 탐색. |
 | `budget_optimizer.py` | 예산 최적화 — 한계수익(marginal return) 기반 채널 배분. |
+| `budget_response_alloc.py` | 포화곡선 기반 예산배분 — 채널별 Hill 반응(y=Vmax·x/(K+x))에서 한계전환 균등화로 총전환 최대 배분. |
 | `channel_mix.py` | 채널 믹스 분석. 현재 지출 배분(%)과 ROAS를 비교해 과/저투자 채널을 식별. |
 | `churn_score.py` | 이탈위험 스코어 — 최근성 대비 기대 구매주기로 위험 산출. |
 | `cluster_terms.py` | 검색어 클러스터링 — 공통 토큰으로 검색어를 묶고 클러스터별 성과 집계. |
@@ -40,6 +41,7 @@
 | `price_optimizer.py` | 가격 최적화 — 일정탄력성 수요(q=k·p^e)에서 이익 최대 가격의 폐형식 해. |
 | `promo_roi.py` | 프로모션 ROI — 할인 판촉의 증분 이익을 마진 잠식까지 반영해 계산. |
 | `reallocate.py` | 예산 재배분 제안 (budget reallocation). 저효율 → 고효율 채널로 예산 이동, 매출 증분 추정. |
+| `revenue_waterfall.py` | 매출 워터폴 — 두 기간 사이 총매출 변화를 채널별 기여로 분해(워터폴). 합=총변화(정확). |
 | `rfm.py` | RFM 세그멘테이션 — 거래 데이터로 Recency/Frequency/Monetary 5분위 점수화 후 세그먼트 분류. |
 | `rotation.py` | 소재 로테이션/리프레시. 노출 충분한데 CTR 낮은 소재 → 교체 후보. 신선도 우선순위 제시. |
 | `sample_size.py` | A/B 표본수 · 검정력 계산기 (two-proportion). |

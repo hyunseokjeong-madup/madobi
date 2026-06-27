@@ -71,6 +71,8 @@ CHECKS = [
     ("sc: tools_index",               ["python", "marketing/pm/tools_index.py"], "TOOLS index"),
     ("sc: price_optimizer",           ["python", "marketing/pm/price_optimizer.py", "--cost", "10000", "--elasticity", "-2"], "PRICE OPTIMIZER"),
     ("sc: saturation_fit",            ["python", "marketing/pm/saturation_fit.py", "marketing/sample_curve.csv"], "SATURATION FIT"),
+    ("sc: revenue_waterfall",         ["python", "marketing/pm/revenue_waterfall.py", "marketing/sample_rev2.csv"], "REVENUE WATERFALL"),
+    ("sc: budget_response_alloc",     ["python", "marketing/pm/budget_response_alloc.py", "marketing/sample_params.csv", "--budget", "30000000"], "BUDGET RESPONSE"),
 ]
 
 def run():
