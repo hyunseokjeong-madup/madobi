@@ -89,6 +89,8 @@ CHECKS = [
     ("sc: outlier_iqr",               ["python", "marketing/pm/outlier_iqr.py", "marketing/samples/sample_metrics.csv", "--col", "cpa"], "IQR OUTLIERS"),
     ("sc: srm_check",                 ["python", "marketing/pm/srm_check.py", "--a-n", "10000", "--b-n", "9000"], "SRM CHECK"),
     ("sc: ramp_plan",                 ["python", "marketing/pm/ramp_plan.py", "--current-daily", "1000000", "--target-daily", "3000000"], "BUDGET RAMP"),
+    ("sc: brand_split",               ["python", "marketing/pm/brand_split.py", "marketing/samples/sample_searchterms.csv", "--brand", "브랜드명"], "BRAND vs NON-BRAND"),
+    ("sc: marginal_cpa",              ["python", "marketing/pm/marginal_cpa.py", "marketing/samples/sample_marginal.csv"], "MARGINAL CPA"),
 ]
 
 def run():

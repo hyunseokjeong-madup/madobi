@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 62개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 64개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -11,6 +11,7 @@
 | `attribution_compare.py` | 어트리뷰션 비교. 두 전환 소스(예: 플랫폼 vs GA/내부)의 합계와 격차(%)를 대사. |
 | `attribution_mta.py` | 멀티터치 어트리뷰션(MTA) 엔진 — 경로(touchpoint) CSV에서 채널 기여를 5개 모델로 배분. |
 | `bid_sim.py` | 입찰 시뮬레이터 — 입찰 랜드스케이프(CPC→클릭량)에서 이익 최대 입찰 탐색. |
+| `brand_split.py` | 브랜드 vs 논브랜드 분리 — 검색어를 브랜드 키워드 포함 여부로 분류해 성과 분해. |
 | `budget_optimizer.py` | 예산 최적화 — 한계수익(marginal return) 기반 채널 배분. |
 | `budget_response_alloc.py` | 포화곡선 기반 예산배분 — 채널별 Hill 반응(y=Vmax·x/(K+x))에서 한계전환 균등화로 총전환 최대 배분. |
 | `channel_mix.py` | 채널 믹스 분석. 현재 지출 배분(%)과 ROAS를 비교해 과/저투자 채널을 식별. |
@@ -35,6 +36,7 @@
 | `kpi_decomp.py` | KPI 변동 요인분해 — CPA = CPC / CVR 의 기간 변화(A→B)를 CPC효과·CVR효과로 로그분해. |
 | `ltv_forecast.py` | LTV 예측 — 관측 리텐션에서 기하감쇠(retention_n = r1 * d^(n-1)) 추정 후 horizon까지 외삽, |
 | `ltv_payback.py` | LTV·페이백. CAC 회수 기간(개월)과 LTV/CAC 비율. 마진 반영. |
+| `marginal_cpa.py` | 한계 CPA — 두 구간(증액 전/후)의 추가 지출당 추가 전환 비용. marginal CPA=Δspend/Δconv. |
 | `market_basket.py` | 시장바구니 분석 — 연관규칙(support/confidence/lift). 함께 구매되는 품목쌍 발굴(번들·교차판매). |
 | `mer.py` | MER (Marketing Efficiency Ratio) = 총매출/총광고비. 채널귀속 무관 전사 효율. |
 | `mmm.py` | 미디어믹스 간이 회귀(MMM) — OLS로 채널별 매출 기여 계수 추정. |

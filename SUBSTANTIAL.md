@@ -66,8 +66,11 @@
 | 44 | SRM 표본비율 불일치(카이제곱) | `marketing/pm/srm_check.py` | chi²=52.6 검산 |
 | 45 | 예산 램프 플랜(학습 리셋 방지) | `marketing/pm/ramp_plan.py` | 7일 점진 검산 |
 
+| 46 | 브랜드 vs 논브랜드 분리 | `marketing/pm/brand_split.py` | 세그 집계 검산 |
+| 47 | 한계 CPA(증액 효율 체감) | `marketing/pm/marginal_cpa.py` | meta20k/google8.3k/naver∞ |
+
 ## ⬜ 진행/큐 (각 30분급)
-46 멀티 KPI 대시 · 47 코호트 LTV 곡선 비교 · 48 첫구매 전환 경로 · … (→200)
+48 멀티 KPI 대시 · 49 코호트 LTV 비교 · 50 첫구매 경로 · … (→200)
 6 미디어믹스 회귀(MMM 간이) · 7 증분성(geo holdout) 추정 · 8 검색어 클러스터링 · 9 소재 피로 모델(추세) ·
 10 페이싱 최적화(잔여예산 재분배) · 11 HTML 대시보드 생성 · 12 데이터 품질 검증기(다중 룰) ·
 13 입찰 시뮬레이터 · 14 LTV 예측(코호트 외삽) · 15 RFM 세그먼테이션 · … (→200)
