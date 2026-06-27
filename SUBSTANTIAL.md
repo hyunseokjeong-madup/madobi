@@ -41,8 +41,11 @@
 | 28 | 매출 워터폴(기간변화 채널분해) | `marketing/pm/revenue_waterfall.py` | 분해합=+700k 검산 |
 | 29 | 포화곡선 예산배분(한계전환 그리디) | `marketing/pm/budget_response_alloc.py` | 한계균등·합=예산 |
 
+| 30 | madobi 통합 CLI 디스패처(하네스, 53도구) | `marketing/madobi.py` | list·dispatch 작동 |
+| 31 | 계절성 반영 예측(추세×요일지수) | `marketing/pm/seasonal_forecast.py` | 지수 반영 검증 |
+
 ## ⬜ 진행/큐 (각 30분급)
-30 코호트 히트맵(HTML) · 31 LTV 세그 · 32 시즌 인덱스 곱 예측 · … (→200)
+32 코호트 히트맵(HTML) · 33 LTV 세그 · 34 파레토(80/20) 분석 · … (→200)
 6 미디어믹스 회귀(MMM 간이) · 7 증분성(geo holdout) 추정 · 8 검색어 클러스터링 · 9 소재 피로 모델(추세) ·
 10 페이싱 최적화(잔여예산 재분배) · 11 HTML 대시보드 생성 · 12 데이터 품질 검증기(다중 룰) ·
 13 입찰 시뮬레이터 · 14 LTV 예측(코호트 외삽) · 15 RFM 세그먼테이션 · … (→200)

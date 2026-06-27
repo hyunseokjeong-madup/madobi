@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 47개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 48개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -47,6 +47,7 @@
 | `sample_size.py` | A/B 표본수 · 검정력 계산기 (two-proportion). |
 | `saturation_fit.py` | 반응곡선 적합(포화) — Hill/Michaelis 곡선 y = Vmax·x/(K+x) 을 (지출,전환) 점들에서 적합. |
 | `search_terms.py` | 검색어 분석. 지출은 큰데 전환 0인 검색어 → 네거티브 키워드 후보. 전환 좋은 검색어 → 확대 후보. |
+| `seasonal_forecast.py` | 계절성 반영 예측 — 선형 추세 × 요일 계절지수로 향후 N일 예측. |
 | `seasonality.py` | 시즌성(요일) 지수. 요일 평균/전체 평균 = 지수(>1 강세, <1 약세). 입찰·예산 가중 가이드. |
 | `shapley_attribution.py` | Shapley 값 데이터기반 어트리뷰션 — 채널 조합(coalition) 기여를 Shapley 값으로 공정 배분. |
 | `tools_index.py` | 도구 인덱스 생성기 — marketing/pm/*.py 의 모듈 도크스트링 첫 줄을 모아 TOOLS.md 자동 생성. |

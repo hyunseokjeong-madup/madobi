@@ -73,6 +73,8 @@ CHECKS = [
     ("sc: saturation_fit",            ["python", "marketing/pm/saturation_fit.py", "marketing/sample_curve.csv"], "SATURATION FIT"),
     ("sc: revenue_waterfall",         ["python", "marketing/pm/revenue_waterfall.py", "marketing/sample_rev2.csv"], "REVENUE WATERFALL"),
     ("sc: budget_response_alloc",     ["python", "marketing/pm/budget_response_alloc.py", "marketing/sample_params.csv", "--budget", "30000000"], "BUDGET RESPONSE"),
+    ("harness: madobi dispatcher",    ["python", "marketing/madobi.py", "list"], "MADOBI 도구"),
+    ("sc: seasonal_forecast",         ["python", "marketing/pm/seasonal_forecast.py", "marketing/sample_timeseries.csv", "--metric", "revenue", "--days", "5"], "SEASONAL FORECAST"),
 ]
 
 def run():
