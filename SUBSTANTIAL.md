@@ -35,8 +35,11 @@
 | 24 | 도구 인덱스 자동 생성기(발견성) | `marketing/pm/tools_index.py` → `TOOLS.md` | 43개 인덱싱 |
 | 25 | 스킬 라우팅에 도구 인덱스 연결(skill 강화) | `.claude/skills/marketing-analyst/SKILL.md` | — |
 
+| 26 | 가격 최적화(탄력성 폐형식) | `marketing/pm/price_optimizer.py` | p*=20,000 검산 |
+| 27 | 반응곡선 적합(Hill 포화) | `marketing/pm/saturation_fit.py` | Vmax=100,K=5000 복원 |
+
 ## ⬜ 진행/큐 (각 30분급)
-26 코호트 히트맵 · 27 LTV 세그 예산배분 · 28 가격최적화(이익최대) · … (→200)
+28 코호트 히트맵 · 29 LTV 세그 예산배분 · 30 채널 기여 워터폴 · … (→200)
 6 미디어믹스 회귀(MMM 간이) · 7 증분성(geo holdout) 추정 · 8 검색어 클러스터링 · 9 소재 피로 모델(추세) ·
 10 페이싱 최적화(잔여예산 재분배) · 11 HTML 대시보드 생성 · 12 데이터 품질 검증기(다중 룰) ·
 13 입찰 시뮬레이터 · 14 LTV 예측(코호트 외삽) · 15 RFM 세그먼테이션 · … (→200)

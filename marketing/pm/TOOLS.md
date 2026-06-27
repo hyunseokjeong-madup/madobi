@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 43개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 45개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -37,11 +37,13 @@
 | `pacing_optimizer.py` | 페이싱 최적화 — 잔여 예산을 남은 일자에 가중치(요일/시즌)대로 재분배해 일별 목표 산출. |
 | `poas.py` | POAS — 마진 반영 수익성 ROAS. POAS=매출×마진/광고비. 손익분기 마진도 계산. |
 | `price_elasticity.py` | 가격탄력성 추정 — log(수량) = a + e·log(가격)의 OLS 기울기 e가 탄력성. |
+| `price_optimizer.py` | 가격 최적화 — 일정탄력성 수요(q=k·p^e)에서 이익 최대 가격의 폐형식 해. |
 | `promo_roi.py` | 프로모션 ROI — 할인 판촉의 증분 이익을 마진 잠식까지 반영해 계산. |
 | `reallocate.py` | 예산 재배분 제안 (budget reallocation). 저효율 → 고효율 채널로 예산 이동, 매출 증분 추정. |
 | `rfm.py` | RFM 세그멘테이션 — 거래 데이터로 Recency/Frequency/Monetary 5분위 점수화 후 세그먼트 분류. |
 | `rotation.py` | 소재 로테이션/리프레시. 노출 충분한데 CTR 낮은 소재 → 교체 후보. 신선도 우선순위 제시. |
 | `sample_size.py` | A/B 표본수 · 검정력 계산기 (two-proportion). |
+| `saturation_fit.py` | 반응곡선 적합(포화) — Hill/Michaelis 곡선 y = Vmax·x/(K+x) 을 (지출,전환) 점들에서 적합. |
 | `search_terms.py` | 검색어 분석. 지출은 큰데 전환 0인 검색어 → 네거티브 키워드 후보. 전환 좋은 검색어 → 확대 후보. |
 | `seasonality.py` | 시즌성(요일) 지수. 요일 평균/전체 평균 = 지수(>1 강세, <1 약세). 입찰·예산 가중 가이드. |
 | `shapley_attribution.py` | Shapley 값 데이터기반 어트리뷰션 — 채널 조합(coalition) 기여를 Shapley 값으로 공정 배분. |

@@ -69,6 +69,8 @@ CHECKS = [
     ("sc: conversion_lag",            ["python", "marketing/pm/conversion_lag.py", "marketing/sample_lag.csv"], "CONVERSION LAG"),
     ("sc: incrementality_ab",         ["python", "marketing/pm/incrementality_ab.py", "--test-n", "100000", "--test-conv", "3000", "--control-n", "100000", "--control-conv", "2500"], "INCREMENTALITY"),
     ("sc: tools_index",               ["python", "marketing/pm/tools_index.py"], "TOOLS index"),
+    ("sc: price_optimizer",           ["python", "marketing/pm/price_optimizer.py", "--cost", "10000", "--elasticity", "-2"], "PRICE OPTIMIZER"),
+    ("sc: saturation_fit",            ["python", "marketing/pm/saturation_fit.py", "marketing/sample_curve.csv"], "SATURATION FIT"),
 ]
 
 def run():
