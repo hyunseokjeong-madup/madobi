@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Scratch / temp
+scratchpad/
+*.tmp
+*.log
+
+# Large regenerable benchmark artifacts (recreate via marketing/bench/gen_dataset.py)
+marketing/bench/dataset.csv
+marketing/bench/ground_truth.json
+
+# Keep results/ (reproducibility evidence) — do NOT ignore

@@ -1,0 +1,18 @@
+[
+ {
+  "name": "F02_verify_smallcase",
+  "manual": "1. Solve the general problem to get a formula or answer A.\n2. INDEPENDENTLY brute-force the smallest 2-3 instances (n=1,2,3) by hand-enumeration — list outcomes, do not use formula A.\n3. Plug those n into formula A; the outputs MUST match the enumerated values.\n4. If any mismatch: the formula is wrong (off-by-one, wrong base case, mis-set bound). Fix and re-test all small cases.\n5. Also sanity-check monotonicity/limits (does it grow the right way? boundary n=0?).\n6. Apply the validated formula to the actual input. Compute carefully: digit-by-digit, group long sums in 5s.\n7. Re-read the output contract and emit exactly that token (integer / reduced fraction / single word)."
+ },
+ {
+  "name": "F02_verify_dual_track",
+  "manual": "1. Set up TWO independent solution tracks before computing: e.g. enumeration vs formula, or forward vs backward, or units/dimensional reasoning vs direct.\n2. Break the problem into 2-3 checkpoints. At each checkpoint, compute the intermediate quantity on BOTH tracks and confirm they match before proceeding. Early divergence localizes the error fast.\n3. If tracks differ at a checkpoint, resolve it there (recompute the suspect step slowly) before moving on.\n4. Keep arithmetic clean: digit-by-digit, group long additions in 5s, recheck each group.\n5. For probability/fractions, carry numerator and denominator separately; reduce by GCD at the end; confirm the required format.\n6. Pre-flag the classic trap relevant here (exactly/at-least, inclusive bounds, distinct/identical) and ensure both tracks honor the same interpretation.\n7. When both tracks finish in agreement, emit EXACTLY the requested output format."
+ },
+ {
+  "name": "F03_adversarial_c",
+  "manual": "Roleplay two adversaries on your draft answer.\n1. Solve once to get a DRAFT.\n2. PROSECUTOR: argue the draft is wrong. Cite the most damaging concrete flaw — a specific miscount, an arithmetic line, a misread constraint, a boundary case. Be ruthless; find the strongest objection, not a weak one.\n3. DEFENDER: respond to the prosecutor's exact charge by re-deriving that piece independently (different method if possible).\n4. JUDGE: if defender's independent re-derivation disagrees with the draft, the draft loses — adopt the corrected value. If they agree, draft survives.\n5. Repeat the debate once on the surviving answer only if the first round changed anything.\n6. Re-read the output contract; emit exactly that token."
+ },
+ {
+  "name": "C2_selfverify",
+  "manual": "# Decompose + Independent Self-Verification\nPhase A: restate, list constraints, decompose, produce a candidate answer.\nPhase B (mandatory, DIFFERENT method): re-derive by an independent route (complementary count, plug back into constraints, different formula, small base case). If methods disagree, find the error and redo. Check sign/magnitude/units/format. Commit only when an independent check agrees."
+ }
+]

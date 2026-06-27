@@ -1,0 +1,674 @@
+[
+ {
+  "name": "F01_decomp_a",
+  "manual": "1. Restate the goal in one line; copy the exact output format (integer / a/b / one word).\n2. Split the problem into labeled subtasks S1..Sn. Solve each independently.\n3. COMPUTATION HYGIENE for any sum/iteration: list terms in order, add in chunks of 5, write each chunk subtotal, then sum the subtotals. Never add a long list in one sweep.\n4. For multiplications/large numbers, work digit-by-digit and keep place values aligned.\n5. Re-add each chunk a second time; if a subtotal disagrees, redo that chunk only.\n6. Pre-flag traps: 'exactly' vs 'at least', inclusive vs exclusive bounds, distinct vs identical, strictly-increasing, substring vs whole-word.\n7. Recombine subtask results; state the running total.\n8. Re-read the format and emit EXACTLY it, nothing else.",
+  "strategy": "Decompose into subtasks, then run every heavy sum through chunked partial totals re-added in groups of 5.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_b",
+  "manual": "1. Identify the asked quantity and required output format.\n2. METHOD A: break into parts, compute each with care (chunked sums of 5, digit-by-digit products).\n3. METHOD B: re-derive the SAME answer differently — reorder terms, use a formula vs direct count, or complementary counting.\n4. Compare A and B. If they disagree, locate the diverging part, recompute only it, repeat until they match.\n5. For probabilities/fractions: count numerator and denominator separately; reduce by GCD; confirm the format (reduced a/b).\n6. Flag classic traps before finalizing: base-rate (build a small Bayes table), 'exactly' vs 'at least', endpoints.\n7. Output only the value in the exact required format.",
+  "strategy": "Two-method cross-check: solve by decomposition, then re-derive the total by a different grouping and require agreement.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_c",
+  "manual": "1. Write the target and output contract at top.\n2. Build a LEDGER: one row per subtask with columns [step | computed value | running total].\n3. Solve subtasks top to bottom. After each row, recheck the partial value by a quick independent estimate or reverse operation; only then update running total.\n4. Heavy sums: add in groups of 5, record each group subtotal as its own ledger row.\n5. Carry digits explicitly in multi-digit arithmetic; never hold large numbers in your head.\n6. At the end, re-scan the ledger top-to-bottom confirming each running-total increment is consistent.\n7. Pre-flag: distinct vs identical, strictly-increasing, reduced-fraction-required, inclusive bounds.\n8. Emit exactly the contracted format.",
+  "strategy": "Ledger method: maintain a running tally table across decomposed steps, recheck each partial total before moving on.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_d",
+  "manual": "1. PLAN phase (no arithmetic yet): list the exact sequence of operations needed and the final format. Freeze this plan.\n2. EXECUTE phase: perform one planned block at a time. Within a block, show intermediate digits/terms.\n3. Sums: chunk into fives, subtotal, then total. Products: digit-by-digit with aligned place value.\n4. After finishing a block, VERIFY it alone — recompute by reverse operation (subtract back, divide back). Fix before proceeding.\n5. Watch traps flagged in the plan: 'exactly' vs 'at least', whole-word vs substring, distinct vs identical.\n6. For fractions: separate numerator/denominator counts, reduce by GCD, confirm reduced form.\n7. Re-read required format; output only that.",
+  "strategy": "Plan-then-execute with a frozen plan; execute arithmetic conservatively and verify each block in isolation.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_e",
+  "manual": "1. Note the question and the exact output format.\n2. Produce THREE independent attempts. Vary the decomposition order or method each time so errors are uncorrelated.\n3. In every attempt apply hygiene: add long lists in chunks of 5 with written subtotals; do products digit-by-digit.\n4. Collect the three final answers. Take the MAJORITY value.\n5. If all three differ, do a fourth careful attempt focusing on the step where they diverged, then pick the value with most support.\n6. Before locking in, check traps: inclusive/exclusive endpoints, 'exactly' vs 'at least', strictly-increasing.\n7. For probability, reduce the fraction by GCD and verify format.\n8. Emit exactly the required format.",
+  "strategy": "Self-consistency over decompositions: three independent careful attempts, majority vote on the final value.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_f",
+  "manual": "1. State target and output contract.\n2. Decompose into subtasks; solve each with careful arithmetic (chunked sums of 5; digit-by-digit products).\n3. After each subresult, play ADVERSARY: 'How is this wrong?' Check off-by-one, miscount, dropped term, sign, wrong base case. Repair any flaw found.\n4. Pre-attack classic traps: base-rate neglect (lay out a Bayes table), 'exactly' vs 'at least', substring vs whole-word, distinct vs identical, reduced-fraction-required.\n5. Recombine; then attack the FINAL answer once more — does it satisfy every constraint and the exact wording?\n6. For fractions, recount numerator and denominator independently, reduce by GCD.\n7. Output strictly in the required format.",
+  "strategy": "Adversarial self-refutation: decompose, then actively try to break each subresult and the final answer.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_g",
+  "manual": "1. Identify the quantity and output format.\n2. For iterative/recursive problems (sequences, Collatz-style, prime sums), process terms in ORDER, smallest unit first.\n3. CHECKPOINT rule: after every 5 terms, stop and re-add those 5 from scratch; confirm the checkpoint subtotal, then fold it into the grand total kept as a separate number.\n4. Keep two columns: current-term value and cumulative total; update deliberately.\n5. Do each arithmetic step digit-by-digit; never batch a long mental sum.\n6. At the end, re-add all checkpoint subtotals as the final cross-check.\n7. Trap scan: inclusive vs exclusive count of terms, 'exactly' vs 'at least', off-by-one on range length.\n8. Output the exact format only.",
+  "strategy": "Bottom-up accumulation with periodic re-add checkpoints every 5 terms to bound drift on long iterations.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F01_decomp_h",
+  "manual": "1. List ALL explicit and implicit constraints; restate the required output format verbatim.\n2. Decompose by constraint: handle one constraint per step, narrowing the candidate set.\n3. For counting/probability, count favorable and total SEPARATELY; build each via chunked sums of 5, digit-by-digit where large.\n4. Classify each constraint: distinct vs identical, ordered vs unordered, strictly-increasing, inclusive/exclusive — and apply the matching formula.\n5. Reduce any fraction by GCD; confirm it is in lowest terms.\n6. VERIFY by re-deriving the count a different way (complement or direct) and require agreement; recompute the diverging part if not.\n7. Final trap check: 'exactly' vs 'at least', whole-word vs substring.\n8. Emit exactly the contracted answer, nothing extra.",
+  "strategy": "Constraint-first decomposition: enumerate constraints and the output contract, satisfy each, verify count separately for combinatorics/probability.",
+  "family": "F01_decomp"
+ },
+ {
+  "name": "F02_verify_two_method",
+  "manual": "1. Read the question twice; note the exact output format and one trap (exactly vs at-least, distinct vs identical, inclusive bounds, reduced fraction).\n2. METHOD A: solve directly. Show key steps. State the answer.\n3. METHOD B: re-derive using a genuinely DIFFERENT route (e.g. complementary counting vs direct; algebra vs enumeration; closed form vs small-case sum). Do NOT reuse Method A's intermediate numbers.\n4. Compare the two answers.\n5. If they DISAGREE: find the specific error (recompute the suspicious step), pick a third method if needed, repeat until two methods agree.\n6. Computation hygiene: for long sums add in groups of 5, carry digit-by-digit, recheck each chunk.\n7. Emit EXACTLY the required format: integer only, or reduced a/b (divide by GCD), or one lowercase word. Nothing else.",
+  "strategy": "Solve once, re-derive by a structurally different method, reconcile until both agree.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_complement",
+  "manual": "1. Identify the universe size N (total outcomes/arrangements) exactly. Flag traps: exactly vs at-least, distinct vs identical, substring vs whole-word.\n2. DIRECT: count the favorable set, call it F.\n3. COMPLEMENT: independently count the UNfavorable set, call it U, by a different argument.\n4. CHECK: F + U must equal N. If not, one count is wrong — locate and fix before continuing.\n5. For probability: keep numerator and denominator as separate integers; reduce by GCD only at the end; confirm the format (reduced a/b).\n6. Sum hygiene: tally in chunks of 5, re-add each chunk twice.\n7. Once F, U, N are mutually consistent, state the answer in EXACTLY the requested format.",
+  "strategy": "Pair every direct count with its complement; the pair must sum to the known total.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_smallcase",
+  "manual": "1. Solve the general problem to get a formula or answer A.\n2. INDEPENDENTLY brute-force the smallest 2-3 instances (n=1,2,3) by hand-enumeration — list outcomes, do not use formula A.\n3. Plug those n into formula A; the outputs MUST match the enumerated values.\n4. If any mismatch: the formula is wrong (off-by-one, wrong base case, mis-set bound). Fix and re-test all small cases.\n5. Also sanity-check monotonicity/limits (does it grow the right way? boundary n=0?).\n6. Apply the validated formula to the actual input. Compute carefully: digit-by-digit, group long sums in 5s.\n7. Re-read the output contract and emit exactly that token (integer / reduced fraction / single word).",
+  "strategy": "Derive a general answer, then validate it against brute-forced small cases.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_bayes_table",
+  "manual": "1. Spot base-rate/conditional problems. Pre-flag: the prior is NOT the answer.\n2. METHOD A (formula): write Bayes explicitly, P(H|E)=P(E|H)P(H)/P(E); compute P(E) via total probability.\n3. METHOD B (counts): imagine a concrete population (e.g. 10,000). Fill a 2x2 table of true/false x positive/negative using the given rates. Read the answer directly off the table cells.\n4. The two answers must match. If not, recheck which rate is conditional on which.\n5. Keep numerator and denominator as integers; reduce by GCD; confirm requested format (decimal vs reduced fraction).\n6. Re-add column/row totals in groups of 5 to verify the table is internally consistent.\n7. Output exactly the required format, nothing more.",
+  "strategy": "For conditional probability, cross-check the formula result with a populated frequency table.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_three_vote",
+  "manual": "1. Note the output contract and one likely trap.\n2. Solve the problem THREE times, each as an independent fresh attempt using a different framing where possible (direct, complementary, algebraic/substitution). Do not look back at prior attempts while working a new one.\n3. Collect the three answers.\n4. If all three agree: done. If two agree and one differs: re-examine the outlier to confirm it's the error, then take the majority. If all three differ: identify the most error-prone step across them, recompute it slowly (digit-by-digit, sums in groups of 5), and run a tie-break fourth attempt.\n5. For fractions, reduce by GCD and verify format; for 'exactly/at-least' confirm interpretation matches all attempts.\n6. Emit the majority answer in EXACTLY the requested format.",
+  "strategy": "Produce three independent attempts and take the majority answer.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_refute",
+  "manual": "1. Solve the problem; record answer A with its key steps.\n2. ADVERSARIAL PASS: assume A is wrong. Attack it: test edge/boundary cases, re-check every trap (inclusive vs exclusive bounds, exactly vs at-least, strictly increasing, whole-word vs substring, reduced fraction required), and recompute the single riskiest arithmetic step independently.\n3. If the attack exposes a flaw, fix it and re-attack the new answer.\n4. CONFIRM by a second independent method (different route, not reusing A's numbers); it must agree.\n5. Arithmetic hygiene: long sums in groups of 5, verify each group; carry digits explicitly.\n6. Only when the answer survives refutation AND a second method, output it in EXACTLY the required format.",
+  "strategy": "After solving, adversarially try to prove your own answer wrong before accepting it.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_invert",
+  "manual": "1. Solve forward to obtain candidate answer A. Note the output format.\n2. INVERSE CHECK: substitute A back into the original conditions/equations and reconstruct the given quantities. Every stated constraint must be satisfied exactly.\n3. For counting: pick the answer's structure and verify it reproduces the required totals; for equations: plug roots back; for word/algorithm problems: trace the process with A and confirm it yields the stated outcome.\n4. If any condition fails, A is wrong — adjust and re-verify all conditions, not just the failing one.\n5. Watch traps: distinct vs identical, reduced fraction, off-by-one on bounds.\n6. Compute checks carefully, re-adding sums in chunks of 5.\n7. Output exactly the required token.",
+  "strategy": "Verify by plugging the answer back and reconstructing the inputs (inverse check).",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F02_verify_dual_track",
+  "manual": "1. Set up TWO independent solution tracks before computing: e.g. enumeration vs formula, or forward vs backward, or units/dimensional reasoning vs direct.\n2. Break the problem into 2-3 checkpoints. At each checkpoint, compute the intermediate quantity on BOTH tracks and confirm they match before proceeding. Early divergence localizes the error fast.\n3. If tracks differ at a checkpoint, resolve it there (recompute the suspect step slowly) before moving on.\n4. Keep arithmetic clean: digit-by-digit, group long additions in 5s, recheck each group.\n5. For probability/fractions, carry numerator and denominator separately; reduce by GCD at the end; confirm the required format.\n6. Pre-flag the classic trap relevant here (exactly/at-least, inclusive bounds, distinct/identical) and ensure both tracks honor the same interpretation.\n7. When both tracks finish in agreement, emit EXACTLY the requested output format.",
+  "strategy": "Run two methods in parallel from the start, agreeing at each milestone, not just the end.",
+  "family": "F02_verify"
+ },
+ {
+  "name": "F03_adversarial_a",
+  "manual": "1. Solve the problem once, normally, showing key steps.\n2. STOP. Declare: 'Assume this answer is WRONG.' Name the single most likely reason in one sentence (e.g., miscounted, off-by-one, used 'at least' as 'exactly', forgot to reduce fraction, arithmetic slip).\n3. Attack only that named weakness: redo the exact sub-step it touches. For sums/iterations, re-add in groups of 5 and recheck each term.\n4. If the attack reveals an error, fix it and re-attack the new answer once more. If no error found, the answer stands.\n5. Re-read the required output format and emit EXACTLY it (integer only / reduced a/b / one lowercase word). Nothing else.\nKeep the refutation short for easy problems; spend effort only where the named weakness lives.",
+  "strategy": "Solve, then assume wrong and name single most-likely failure before recomputing",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_b",
+  "manual": "1. Before solving, list the trap that fits this problem type: 'exactly' vs 'at least', inclusive vs exclusive bounds, whole-word vs substring, distinct vs identical, strictly vs non-strictly increasing, reduce-fraction-required, base-rate neglect.\n2. Solve the problem to a candidate answer.\n3. Write THREE specific wrong answers you could plausibly have produced (one per trap above when applicable). For each, state precisely what mistake would yield it.\n4. Check your candidate against all three: if it coincides with a trap answer, you likely fell in — redo with the correct interpretation.\n5. Recompute any heavy arithmetic digit-by-digit or in chunks to confirm.\n6. Output EXACTLY the demanded format, nothing more.",
+  "strategy": "Generate three concrete wrong-answer hypotheses (traps) and rule each out",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_c",
+  "manual": "Roleplay two adversaries on your draft answer.\n1. Solve once to get a DRAFT.\n2. PROSECUTOR: argue the draft is wrong. Cite the most damaging concrete flaw — a specific miscount, an arithmetic line, a misread constraint, a boundary case. Be ruthless; find the strongest objection, not a weak one.\n3. DEFENDER: respond to the prosecutor's exact charge by re-deriving that piece independently (different method if possible).\n4. JUDGE: if defender's independent re-derivation disagrees with the draft, the draft loses — adopt the corrected value. If they agree, draft survives.\n5. Repeat the debate once on the surviving answer only if the first round changed anything.\n6. Re-read the output contract; emit exactly that token.",
+  "strategy": "Prosecutor vs defender debate over the answer, judge decides",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_d",
+  "manual": "1. Produce an answer.\n2. PRE-MORTEM: 'It is graded — and it's WRONG. Why?' Brainstorm the 2-3 most probable causes ranked by likelihood for THIS problem (counting boundary, dropped case, sign error, wrong total in denominator, format violation).\n3. Take the #1 cause and prove or disprove it by re-examining that exact step with fresh computation. Then #2 if time allows.\n4. For any sum or long iteration, recompute partial sums in blocks and reconcile the running total — naive re-adding end-to-end is error-prone.\n5. Correct anything the pre-mortem exposes; otherwise confirm.\n6. Emit the answer in EXACTLY the required format (integer / reduced fraction / single lowercase word).",
+  "strategy": "Pre-mortem: imagine the answer was marked wrong, work backward to the cause",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_e",
+  "manual": "1. Solve to a candidate answer.\n2. ADVERSARIAL PERTURBATION: test your method on tiny/edge versions of the SAME problem where you can verify the true answer by hand (n=1, n=2, empty set, smallest bound). If your method gives the wrong small-case answer, your method is flawed — fix it, then re-apply.\n3. Flip every boundary word and recheck which the problem actually uses: inclusive/exclusive, <=/<, exactly/at least, distinct/repeatable.\n4. Re-verify the heavy arithmetic by a second grouping (chunks of 5) to catch addition/multiplication slips.\n5. If small-case and full computation are consistent, accept.\n6. Output strictly in the demanded format, nothing extra.",
+  "strategy": "Perturb inputs and boundaries to expose hidden interpretation errors",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_f",
+  "manual": "1. Solve via Method A.\n2. Commit to actively DISPROVING the answer using Method B — a genuinely different route (complement counting, direct enumeration, algebra vs casework, Bayes table for any base-rate problem). Try to make B disagree.\n3. If B disagrees with A: at least one is wrong. Find which by checking the divergent step with careful chunked arithmetic; resolve to the correct value.\n4. If B confirms A despite honest effort to break it, trust the result.\n5. For probabilities: count numerator and denominator separately in B, reduce by GCD, and confirm the reduced form matches.\n6. Re-read the output spec and emit exactly that.",
+  "strategy": "Mandatory disagreement: a second method must contradict before trusting agreement",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_g",
+  "manual": "1. Produce Attempt 1 and Attempt 2 INDEPENDENTLY (do not let the first bias the second; ideally use different framings).\n2. If they AGREE: run one quick adversarial pass — name the single most likely shared mistake and check it. If clean, done.\n3. If they DISAGREE: treat each as a suspect. Adversarially attack both — for each, name why it might be wrong and recompute the contested step. Keep the one that survives scrutiny.\n4. If still unsure, run a third independent attempt and take the majority value.\n5. Recompute any large sums in groups of 5 to break ties reliably.\n6. Emit the final answer in EXACTLY the required output format.",
+  "strategy": "Two independent attempts plus a refutation tiebreaker",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F03_adversarial_h",
+  "manual": "1. Solve, but write each assumption/step on its own numbered line.\n2. DEVIL'S ADVOCATE: go line by line and challenge each: 'What if this is wrong?' Mark the riskiest 1-2 lines (usually a count, a boundary, or an arithmetic result).\n3. Re-derive only the marked lines independently. For arithmetic, redo digit-by-digit; for counts, enumerate a small slice explicitly.\n4. Specifically interrogate classic traps present: base-rate (build a 2x2 Bayes table), exactly-vs-at-least, distinct-vs-identical, substring-vs-word, fraction-must-be-reduced.\n5. Propagate any correction through later lines and recompute the final value.\n6. Confirm the output format requirement and return precisely that token, no commentary.",
+  "strategy": "Devil's-advocate checklist attacking each assumption line by line",
+  "family": "F03_adversarial"
+ },
+ {
+  "name": "F04_trapcheck_a",
+  "manual": "Before computing, scan the problem against this trap list and write a one-line note for each that applies:\n1. Base-rate: probabilities with a test/condition? Build a Bayes table (counts of TP, FP, FN, TN) instead of intuiting.\n2. \"Exactly\" vs \"at least\" vs \"at most\": underline the quantifier; pick the matching count.\n3. Whole-word vs substring: does 'contains' mean the full token or any letters?\n4. Strictly vs non-strictly increasing/decreasing: are equal adjacent values allowed?\n5. Distinct vs repeats-allowed: ordered or unordered, with or without replacement.\n6. Fraction must be reduced: plan to divide by GCD.\n7. Inclusive vs exclusive bounds: count endpoints carefully.\nSolve only after this scan. When summing many terms, add in groups of 5, keep running partial totals. Re-derive the flagged-trap quantity by a second method; if the two disagree, redo. Re-read the output format and emit exactly it (integer / reduced a/b / one lowercase word).",
+  "strategy": "Run a fixed trap-scan checklist before solving, then verify the flagged trap.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_b",
+  "manual": "Step 1 - Classify: is this counting, probability, number theory, or string/logic? Step 2 - Load the matching traps:\n- Counting: distinct vs identical objects, ordered vs unordered, off-by-one on inclusive ranges, overcounting symmetric cases.\n- Probability: base-rate (use a Bayes count table), \"exactly k\" vs \"at least k\", with/without replacement, reduce the final fraction by GCD.\n- Number theory: strict vs non-strict inequalities, primes excluding 1, divisor counting includes 1 and n.\n- String/logic: whole-word vs substring, case sensitivity, inclusive bounds.\nStep 3 - Solve, doing heavy sums in chunks of 5 with running subtotals (never one long mental addition). Step 4 - Verify the single trap most likely to bite here by re-deriving that piece differently. Step 5 - Output contract: re-read the exact format demanded and emit precisely that, nothing else.",
+  "strategy": "Classify the problem type first, then load only the relevant traps and a targeted verification.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_c",
+  "manual": "Treat the problem as a designed trap. For each item below, actively try to catch yourself making the naive error, then state why your reading is correct:\n1. Did I read 'exactly' as 'at least' (or vice versa)? Quote the exact phrase.\n2. Did I treat a substring as a whole word, or ignore word boundaries?\n3. Did I allow equal values where 'strictly' forbids them?\n4. Did I assume items are distinct when they may repeat (or repeat when distinct)?\n5. Did I forget to reduce the fraction, or misformat it?\n6. Did I include/exclude an endpoint wrongly?\n7. For conditional probability, did I confuse P(A|B) with P(B|A)? Build a Bayes table.\nOnly after refuting each likely trap, compute. For long additions, sum in groups of 5 and recheck each group. Produce the answer, then a one-line independent re-derivation. Emit exactly the required format.",
+  "strategy": "Adversarial trap interrogation: assume a trap is present and prove it is not.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_d",
+  "manual": "Pass 1 (Parse, do not compute): copy every constraint word verbatim and tag its trap class - quantifier (exactly/at least/at most), strictness (strict/non-strict), distinctness (distinct/repeats), membership (whole-word/substring), bounds (inclusive/exclusive), output (reduced fraction / integer / single word). Resolve each tag explicitly in words.\nPass 2 (Solve): use the locked constraints. For sums or iterated processes, never add everything at once - chunk into groups of 5, write partial sums, then total the partials; for big numbers work digit-by-digit. For probability, count numerator and denominator separately, then reduce by GCD.\nVerify: re-derive the final number by a different route (e.g., complement counting, or summing in reverse). If they disagree, find the error before answering. Final line: the answer in exactly the demanded format.",
+  "strategy": "Two-pass: first pass extracts and locks constraints, second pass solves with computation hygiene.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_e",
+  "manual": "1. List the traps that could plausibly apply here (base-rate, exactly/at-least, whole-word, strict-increase, distinct, reduced-fraction, inclusive bounds) and rate each High/Low risk for THIS problem.\n2. For every High-risk trap, write the precise correct interpretation and the wrong one you are avoiding.\n3. Solve using the correct interpretations. Keep arithmetic clean: heavy sums in chunks of 5 with running totals; fractions as separate numerator/denominator then GCD-reduced.\n4. Self-refute: pick your most likely mistake and argue against your own answer for one sentence; fix if the attack lands.\n5. Quick second method on the High-risk quantity only (keep it short so easy problems aren't over-thought). If two methods agree, commit.\n6. Re-read the required output format and emit exactly it - integer only, reduced a/b, or one lowercase word.",
+  "strategy": "Trap-weighted: rank which traps matter, attack the highest-risk one hardest.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_f",
+  "manual": "Scan the six-letter trap mnemonic SEWDFB before answering:\nS - Strictness: strictly vs non-strictly increasing/decreasing; equality allowed?\nE - Exactly vs at-least/at-most: match the quantifier precisely.\nW - Whole-word vs substring (and case sensitivity).\nD - Distinct vs repeated; ordered vs unordered; with/without replacement.\nF - Fraction: reduce by GCD and check requested format.\nB - Base-rate / Bounds: for conditional probability use a Bayes count table; for ranges check inclusive vs exclusive endpoints.\nWrite one clarifying line per letter that applies. Then solve. For long arithmetic, add in groups of 5 keeping subtotals. Produce TWO independent attempts (different orderings or methods); if they match, take it; if not, run a third and take the majority. Emit the answer in exactly the required format and nothing else.",
+  "strategy": "Mnemonic checklist (SEWDFB) scanned in order, then majority-vote verify.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_g",
+  "manual": "First, rewrite the problem in your own words with every ambiguity nailed down. As you rewrite, force a decision on each trap:\n- Replace vague quantifiers with explicit 'exactly k' / 'at least k' / 'at most k'.\n- State whether sequences must be STRICTLY increasing or allow equality.\n- State whether elements are DISTINCT and whether order matters.\n- State whether matching is WHOLE-WORD or substring.\n- State inclusive/exclusive for every bound.\n- Note if the answer must be a REDUCED fraction or plain integer or single word.\nSolve the rewritten, unambiguous version. Manage arithmetic: chunk sums into groups of 5, track partial totals, work big multiplications digit-by-digit. For probability, build numerator and denominator separately and reduce by GCD. Verify by re-deriving via a complementary method. Emit only the answer, in the exact required format.",
+  "strategy": "Restate-with-traps-resolved: rewrite the question unambiguously, then solve the clean version.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F04_trapcheck_h",
+  "manual": "Solve the problem normally first, with arithmetic hygiene (sums in chunks of 5, running subtotals, digit-by-digit for large numbers). Then run a targeted verification pass - for each trap that applies, perform the specific check:\n- Base-rate: rebuild the conditional probability via a Bayes table of raw counts; compare.\n- Exactly/at-least: recount the boundary cases (k and k+/-1) to confirm the quantifier.\n- Whole-word/substring: re-test on the literal tokens.\n- Strict-increase: re-scan for any equal adjacent pair.\n- Distinct: confirm no element was double-counted or wrongly merged.\n- Reduced fraction: recompute GCD; divide; confirm coprime.\n- Inclusive bounds: recount endpoints.\nIf any check contradicts your answer, fix and re-verify that trap. Keep it tight on easy problems. Finally, re-read the output contract and emit exactly the demanded format (integer / reduced a/b / one lowercase word).",
+  "strategy": "Trap-targeted verification loop: solve, then run one verification per applicable trap until stable.",
+  "family": "F04_trapcheck"
+ },
+ {
+  "name": "F05_constraint_grid_forced",
+  "manual": "Constraint-propagation first; search last.\n1. Draw the explicit structure: list variables/cells, their domains (allowed values), and every constraint verbatim.\n2. Pre-flag traps: distinct vs identical, strictly-increasing, 'exactly' vs 'at least', inclusive/exclusive bounds. Note each as a constraint.\n3. PROPAGATION LOOP: scan for any cell whose value is now forced (only one domain value survives the constraints). Fill it, then rescan. Repeat until no cell is forced. Record each deduction with its reason.\n4. If fully determined, stop. Else pick the variable with the SMALLEST remaining domain and branch on its values one at a time; re-run propagation inside each branch; discard contradictions.\n5. Count solutions if asked (don't stop at one). Re-add counts in groups of 5.\n6. Verify: re-check every original constraint against your solution. Re-read the output format and emit exactly it.",
+  "strategy": "Build the grid, propagate all forced cells before any guessing.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_mrv_branch",
+  "manual": "Solve as a CSP with smart ordering.\n1. Enumerate variables and full domains. Write all constraints, including hidden ones implied by wording (flag 'whole word vs substring', reduced-fraction-required, etc.).\n2. Apply unary constraints to shrink each domain immediately.\n3. Repeat: assign the variable with the FEWEST legal values left (MRV). After each assignment, remove now-illegal values from neighbors (forward-checking). If any domain empties, backtrack that choice.\n4. Keep a running assignment table so state is always visible; never hold it only in your head.\n5. When all variables are assigned, you have one solution. For counting, continue exhausting the branch tree systematically; tally in chunks of 5 and re-add.\n6. Independent verify: re-derive the same answer by scanning constraints in a DIFFERENT variable order; the two must agree.\n7. Emit the answer in the exact required format.",
+  "strategy": "Minimum-remaining-values heuristic to order branching and prune.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_elimination_table",
+  "manual": "Use an elimination matrix (classic logic-grid method).\n1. Build a table: categories on axes, every pairing as a cell. Mark nothing yet.\n2. Translate each clue into X (impossible) or O (must) marks. A single O in a row/column forces X on all others in that line; propagate immediately.\n3. Cross-infer: if A=B and B≠C, then A≠C. Apply transitively after every new mark. Loop until stable.\n4. Track which clues you've fully exploited vs partially; revisit partial ones after new deductions.\n5. If marks don't fully resolve, hypothesize the most-constrained open cell as O, propagate, and reject on contradiction.\n6. Watch traps: 'exactly one', negations, ordering clues (left/right, before/after) — encode direction carefully.\n7. Verify by re-reading EACH clue against the finished grid; all must hold. Output exactly the requested fields in the requested format.",
+  "strategy": "Logic-grid elimination matrix with X/O marks and cross-inference.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_case_split_prune",
+  "manual": "Disciplined case-splitting with early pruning.\n1. State all constraints and the goal (find one solution / count all / find max).\n2. Identify the single unknown that appears in the MOST constraints — splitting it prunes hardest. List its possible values as exhaustive, mutually-exclusive cases.\n3. For each case: substitute, then propagate forced consequences. Kill the branch the instant any constraint is violated (adversarial check: actively try to break it).\n4. Recurse on surviving branches, always splitting the most-constrained unknown next.\n5. Maintain a tree sketch so no branch is dropped or double-counted.\n6. Aggregate: for counting, sum leaf counts in groups of 5 and re-add; for optimization, compare leaf values.\n7. Verify the winning leaf independently by plugging values back into ALL original constraints. Re-read and match the output contract exactly.",
+  "strategy": "Split on the highest-impact unknown, prune branches by contradiction.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_invariant_parity",
+  "manual": "Exploit invariants before brute search.\n1. Model the configuration (grid, tiling, moves, assignment) and write the constraints.\n2. BEFORE enumerating, look for an invariant: parity, sum mod n, coloring (checkerboard), conserved quantity, or counting argument. Such invariants often forbid whole classes of states instantly — proving impossibility or fixing values.\n3. Apply the invariant to prune the domain; record what it rules out.\n4. Propagate remaining forced cells from the constraints. Loop until stable.\n5. Enumerate only the residual small space, case by case, discarding constraint violations.\n6. For counts, tally carefully in chunks of 5; for existence, one valid construction suffices.\n7. Cross-verify: confirm your answer satisfies BOTH the invariant and every explicit constraint, derived a second way. Re-read the question (exactly/at least, distinct/identical) and emit the exact required format.",
+  "strategy": "Use invariants/parity/coloring to cut the search before enumerating.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_two_pass_count",
+  "manual": "Exhaustive ordered enumeration for counting/probability.\n1. Fix a canonical order (e.g. lexicographic, smallest-first) so every valid configuration is generated once and only once — prevents double-count and omission.\n2. Write constraints; flag 'distinct vs identical', 'strictly increasing', 'exactly k'.\n3. Walk the ordered space, pruning partial prefixes that already violate a constraint (don't expand dead prefixes).\n4. Count favorable outcomes (numerator) and, separately, the total sample space (denominator) — never conflate them. Tally each in groups of 5 and re-add.\n5. For probability, form numerator/denominator, then reduce by GCD; confirm reduced form if required.\n6. Self-consistency: recount once using a complementary method (total minus bad, or a symmetry/combinatorial formula); the two counts must match.\n7. Emit exactly the requested format (integer, or reduced a/b).",
+  "strategy": "Systematic ordered enumeration with separate numerator/denominator counting.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_pencilmark_domains",
+  "manual": "Pencil-mark candidate elimination (Sudoku-style).\n1. For every cell/variable, write the full set of candidate values it could take given unary constraints.\n2. Elimination pass: for each constraint, delete candidates it forbids from the relevant cells. A cell reduced to one candidate is solved — propagate that value, removing it from peers.\n3. Hidden singles: if within a constraint-group a value can go in only one cell, place it there.\n4. Loop passes 2-3 until no candidate changes (a fixpoint).\n5. If unsolved, take the cell with two candidates, assume one, continue elimination; on contradiction, the other is forced.\n6. Keep the candidate grid written down at every step; never track mentally.\n7. Verify: every constraint satisfied, every cell filled legally — recheck independently. Output precisely the format requested, nothing extra.",
+  "strategy": "Maintain explicit candidate sets per cell, eliminate iteratively.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F05_constraint_bound_tighten",
+  "manual": "Bound-tightening search for numeric/combinatorial constraints.\n1. List variables, integer/real domains, and all constraints (equalities and inequalities). Flag inclusive vs exclusive bounds explicitly.\n2. Derive the tightest lower and upper bound for each variable by combining constraints (substitute known sums, use min/max). Shrink each domain to its true feasible interval.\n3. Re-substitute tightened bounds into other constraints to tighten further. Loop until bounds stop moving.\n4. When intervals collapse to single integers, those variables are forced — propagate.\n5. Enumerate only the small residual ranges; reject assignments breaking any constraint.\n6. For sums/totals, compute in chunks and re-add in groups of 5 to avoid arithmetic slips.\n7. Adversarial check: try to find a counterexample assignment that satisfies your bounds but breaks a constraint — if found, you missed one. Verify the final answer satisfies all constraints; emit the exact output format.",
+  "strategy": "Tighten upper/lower bounds from constraints, squeeze the feasible set.",
+  "family": "F05_constraint"
+ },
+ {
+  "name": "F06_comphygiene_a",
+  "manual": "COMPUTATION HYGIENE — TABULATE & CHUNK.\n1. Restate what must be summed/counted. Note the output format NOW (integer / a-b / one word).\n2. List every term explicitly in a vertical table with an index. Do not sum while listing.\n3. Group terms into blocks of 5. Compute each block's subtotal separately, writing it down.\n4. Add the block subtotals one at a time, keeping a running total. Re-add the block subtotals in reverse order; both passes must match.\n5. Sanity-bound: estimate the answer's order of magnitude (count of terms × average term). Confirm your total lands inside that bound.\n6. Re-read the format and emit EXACTLY it — integer only, no commas, no words.\nIf any check disagrees, find the offending block and recompute only it. Never trust a single-pass sum on more than 4 terms.",
+  "strategy": "Tabulate every term, sum in groups of five with running subtotals",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_b",
+  "manual": "COMPUTATION HYGIENE — DIGIT-BY-DIGIT.\nFor every multi-digit add/subtract/multiply, work columns right-to-left, writing each carry explicitly.\n1. Identify the exact quantity required and its output format.\n2. Align numbers by place value, padding with leading zeros.\n3. Process the units column, then tens, then hundreds; record the digit kept and the carry carried.\n4. For multiplication, compute one partial product per digit, then add partials using the columnar method above.\n5. Verify by a different route: cast out nines (digit-sum mod 9 of inputs must equal digit-sum mod 9 of the result), OR recompute via rounding (round inputs, estimate, compare).\n6. Bound-check magnitude: number of digits in the answer should match input sizes.\n7. Re-read required format; output exactly that.\nNever do multi-digit math \"in your head\" in one leap — always show carries.",
+  "strategy": "Digit-by-digit columnar arithmetic with explicit carries",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_c",
+  "manual": "COMPUTATION HYGIENE — FRACTION/PROBABILITY DISCIPLINE.\n1. Read the question; flag traps NOW: 'exactly' vs 'at least', distinct vs identical, with/without replacement, inclusive/exclusive bounds.\n2. Count the DENOMINATOR (total outcomes) independently. Show the formula and the arithmetic.\n3. Count the NUMERATOR (favorable outcomes) independently, by a method NOT reused from the denominator.\n4. Sanity-bound: the fraction must be between 0 and 1; estimate roughly and compare.\n5. Reduce: compute GCD of numerator and denominator step by step (Euclid), divide both.\n6. Re-derive the numerator a second way (complement, or direct enumeration of a small case) and confirm the same value.\n7. Check the required output format: reduced a/b? decimal? percent? Emit EXACTLY that, lowest terms.\nNever leave a fraction unreduced when 'reduced' is required.",
+  "strategy": "Numerator and denominator counted separately, reduce by GCD, confirm format",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_d",
+  "manual": "COMPUTATION HYGIENE — ITERATION TABLE.\nFor sequences, recurrences, Collatz-style or simulation problems:\n1. Define the state variables and the stopping condition explicitly.\n2. Build a table: one ROW per iteration, columns for step index, current value, and the operation applied. Fill rows one at a time; never skip or batch steps.\n3. After every 5 rows, pause and re-read the last value to confirm continuity (output of row n = input of row n+1).\n4. If accumulating a sum, keep a separate running-total column and add the new term explicitly each row.\n5. Verify the step count matches the stopping condition exactly (off-by-one guard: is the final value included?).\n6. Sanity-bound the result against a rough expectation.\n7. Re-read the output contract and emit exactly the required value (final term? count of steps? sum?).\nUntabulated iteration is the #1 error source — always tabulate.",
+  "strategy": "Iterative sequences via a state table, one row per step, no skipping",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_e",
+  "manual": "COMPUTATION HYGIENE — DUAL-METHOD AGREEMENT.\n1. Note the exact target quantity and output format.\n2. METHOD A: compute directly, showing all intermediate arithmetic with chunked partial sums (groups of 5) and explicit carries.\n3. METHOD B: compute the SAME quantity by a structurally different route — e.g. complement counting, closed-form formula vs enumeration, factoring vs expanding, or summation in a different grouping order.\n4. Compare A and B. If they disagree, locate the discrepancy by checking the smallest sub-result of each; do not average — find the bug.\n5. Only when A == B, accept the value.\n6. Magnitude bound: confirm the answer's size is plausible (rough estimate).\n7. Re-read the required format and emit exactly it.\nKeep both methods terse for small problems; the cost is low and it catches most slips.",
+  "strategy": "Two independent computation methods that must agree before answering",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_f",
+  "manual": "COMPUTATION HYGIENE — BOUND-FIRST.\n1. Before any exact work, ESTIMATE: compute a quick lower bound and upper bound for the answer (round terms, count items × typical size, use powers of ten). Write both bounds down.\n2. Identify the output format.\n3. Now compute exactly, using chunked partial sums in groups of 5 and explicit digit-by-digit carries for multi-digit steps.\n4. Check the exact result falls strictly inside [lower, upper]. If it escapes the bound, your exact computation has an error OR your bound was wrong — recheck both, fix the real one.\n5. Re-add any long sum in a different grouping to confirm.\n6. Watch unit/scale traps (thousands vs millions, percent vs proportion).\n7. Re-read the format; output exactly that.\nThe bound is your tripwire: a magnitude mismatch almost always signals a dropped digit, a place-value slip, or a miscounted term.",
+  "strategy": "Magnitude bounding first, then exact computation checked against the bound",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_g",
+  "manual": "COMPUTATION HYGIENE — BASE-RATE TABLE.\n1. Spot conditional-probability or base-rate wording. Flag the trap: the answer is NOT the test accuracy.\n2. Pick a concrete population size (e.g. 10,000 or 100,000) that makes all cells whole numbers.\n3. Build a 2x2 table: rows = true condition (yes/no), columns = test/observed (positive/negative). Fill each cell by multiplying population × base rate × conditional rate, digit-by-digit.\n4. Sum the row and column margins; confirm all four cells add to the chosen population.\n5. The requested conditional = target cell / (sum of the relevant row or column). Count numerator and denominator separately.\n6. Reduce by GCD if a fraction is required; convert to the requested format (decimal/percent/fraction).\n7. Sanity-bound: compare against the naive intuition to confirm the table-corrected value differs sensibly.\n8. Re-read the output contract and emit exactly it.",
+  "strategy": "Bayes/base-rate table for conditional probability, cells summed and checked",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F06_comphygiene_h",
+  "manual": "COMPUTATION HYGIENE — MAJORITY VOTE.\nFor high-variance arithmetic/counting problems:\n1. Note the exact quantity and output format.\n2. Produce THREE independent attempts. For each, vary the approach: different grouping order for sums, different counting decomposition, or different formula. Show each attempt's key arithmetic with explicit carries.\n3. Within each attempt, re-add long sums in groups of 5 to suppress per-attempt slips.\n4. Collect the three results. Take the MAJORITY value. If all three differ, run a fourth attempt and recheck the most error-prone step in each.\n5. For the chosen value, do one magnitude sanity-bound (rough estimate must match).\n6. If a fraction, ensure it is reduced (GCD) and in the required form.\n7. Re-read the output contract and emit EXACTLY the required format — nothing else.\nKeep each attempt lean so the three-fold cost stays affordable.",
+  "strategy": "Self-consistency: three independent attempts, take the majority value",
+  "family": "F06_comphygiene"
+ },
+ {
+  "name": "F07_estimate_a",
+  "manual": "1) Before any computation, write a crude LOWER and UPPER bound for the answer using rounding or limiting cases (e.g. round terms, ignore small corrections). State the interval [L,U].\n2) Now compute the exact answer carefully. For heavy sums/iterations, chunk into groups of 5, keep running partial totals, and re-add each group twice.\n3) Check the exact value lies in [L,U]. If it escapes, you made an arithmetic or setup error: recompute the offending chunk, not the whole thing.\n4) Flag traps before finalizing: 'exactly' vs 'at least', inclusive/exclusive bounds, distinct vs identical, reduced fraction required.\n5) Re-read the required output format and emit EXACTLY it (integer only / reduced a/b / one lowercase word). Nothing else.",
+  "strategy": "Bracket with lower/upper bounds first, then compute exactly inside the bracket.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_b",
+  "manual": "1) Estimate the answer's ORDER OF MAGNITUDE first: how many digits, roughly what size? Write one sentence: 'Answer should be near ___.'\n2) Identify which trap applies (base-rate/Bayes, substring vs whole word, strictly-increasing, exactly vs at least) and note its effect on size.\n3) Compute exactly. On long arithmetic go digit-by-digit; carry explicitly; re-add groups of 5.\n4) Compare exact result to your magnitude estimate. A 10x mismatch means a misplaced factor, dropped term, or off-by-one — hunt it.\n5) Verify the final step by ONE different method (reverse the operation, or plug back in). Two methods must agree.\n6) Output exactly the requested format, fractions reduced by GCD.",
+  "strategy": "Order-of-magnitude sanity gate before and after exact work.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_c",
+  "manual": "1) Probe limiting cases to bound the answer: smallest possible value, largest possible value, and an 'average' guess. Record min, max.\n2) For counting/probability, separately bound numerator and denominator (max count, min count).\n3) Compute the exact answer. Keep partial sums in chunks of 5; never sum a long list in one pass.\n4) Confirm exact value sits between min and max and is plausible vs the average guess.\n5) Adversarially refute your own answer once: 'What single mistake would make this wrong?' Check that specific risk (off-by-one, double count, wrong base rate).\n6) Reduce fractions, re-read the contract, emit exactly the required token.",
+  "strategy": "Extreme/limiting cases bound the answer; exact computation must respect them.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_d",
+  "manual": "1) Build a quick APPROXIMATION using a simplifying assumption (uniformity, independence, rounding, a closed-form near-formula). Compute it fast → estimate E.\n2) Note WHY the exact answer should differ from E and in which direction (the correction term's sign).\n3) Compute the exact answer with computation hygiene: group terms, partial sums of 5, explicit carries.\n4) Reconcile: exact − E should match the predicted direction/size of the correction. If the sign is wrong, your exact work or your model is flawed — re-examine.\n5) Pre-flag the classic trap relevant here and confirm you handled it.\n6) Emit exactly the required format (integer / reduced a/b / one lowercase word).",
+  "strategy": "Estimate via approximation formula, then exact, then reconcile the gap.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_e",
+  "manual": "1) Make TWO independent rough estimates by different reasoning paths (e.g. one by averaging, one by a representative case). Call them E1, E2; treat them as a soft interval.\n2) Compute the exact answer carefully — chunk long sums into fives, re-add each chunk, track carries digit-by-digit.\n3) The exact answer should sit near or between E1 and E2. If it's far outside both, distrust it and recompute.\n4) If E1 and E2 disagree wildly, that signals a conceptual ambiguity (which trap? exactly/at-least, distinct/identical) — resolve it before trusting the exact value.\n5) Final check: reduce any fraction by GCD, re-read the output contract, output exactly that and nothing more.",
+  "strategy": "Two independent estimates, then exact value must land between them.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_f",
+  "manual": "1) Replace every messy number with the nearest round number and compute a PROXY answer instantly. Write it down as the target ballpark.\n2) Predict whether the true answer is slightly above or below the proxy (based on how you rounded).\n3) Compute the exact answer. For iterative processes (sequences, repeated steps) record state every 5 steps and verify the running total there.\n4) Compare exact vs proxy: the difference must be small and in the predicted direction. A large or wrong-direction gap = error; locate it.\n5) Quick adversarial pass: did I confuse substring/whole-word, inclusive/exclusive, exactly/at-least?\n6) Output exactly the demanded format.",
+  "strategy": "Round-number proxy for fast estimate; exact computed and diffed against proxy.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_g",
+  "manual": "1) Quickly estimate a plausible range [L,U] for the answer.\n2) Solve the problem exactly THREE independent times, varying method or order. Use chunked partial sums (groups of 5) each time to limit arithmetic drift.\n3) Discard any attempt whose result falls outside [L,U] — it failed the sanity gate.\n4) Among surviving attempts, take the MAJORITY value. If all three disagree, redo the cleanest method slowly, digit-by-digit, and trust that.\n5) Confirm the winner against the traps list (base-rate, reduced fraction, strictly-increasing, distinct vs identical).\n6) Reduce fractions, re-read the format requirement, emit exactly the required output.",
+  "strategy": "Self-consistency: several estimates+exacts, bound-filter, take majority.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F07_estimate_h",
+  "manual": "1) Spend two lines deriving the TIGHTEST easy bounds you can: a lower bound that's clearly too small and an upper bound clearly too big, each justified in one phrase.\n2) Name the trap most likely here and pre-commit how you'll handle it (e.g. Bayes table for base-rate; count numerator and denominator separately for probability).\n3) Compute exactly; for big additions, sum in blocks of 5 and write each block subtotal so errors are localizable.\n4) Audit: does the exact value fall strictly inside your bounds? If borderline or outside, re-derive by a second method until two agree.\n5) Reduce any fraction by GCD; confirm 'exactly' vs 'at least' was respected.\n6) Re-read the output contract and print only the required token.",
+  "strategy": "Tight numeric interval first; exact answer audited digit-by-digit against it.",
+  "family": "F07_estimate"
+ },
+ {
+  "name": "F08_reduce_a",
+  "manual": "1. Before computing, write one sentence: \"This is a ___ problem\" (Bayes update, inclusion-exclusion, stars-and-bars, binomial, pigeonhole, Euler totient, linearity of expectation, DP shortest path, modular arithmetic).\n2. Write the canonical formula for that template with named symbols.\n3. Map each problem quantity to a symbol; list the substitutions explicitly so none is dropped.\n4. Flag the matching trap NOW: \"exactly\" vs \"at least\", distinct vs identical, inclusive vs exclusive bounds, reduced fraction required.\n5. Substitute and compute. Do heavy sums in chunks of 5 terms, writing each partial total.\n6. Re-derive the answer by a second method (e.g. complement counting, or direct enumeration of a small case) until two methods agree.\n7. Re-read the required output format and emit EXACTLY it (integer only / reduced a⁄b / one lowercase word).",
+  "strategy": "Name the canonical problem first, then plug into its standard formula",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_b",
+  "manual": "For any conditional-probability or 'given that' problem, reduce to a Bayes table:\n1. Identify hypotheses H and evidence E. Pre-flag the base-rate trap: the prior matters even when the test is accurate.\n2. Build a 2x2 (or NxM) table of counts over a concrete population (e.g. 100000 people). Fill: prior*likelihood for each cell.\n3. P(H|E) = (cell for H and E) / (sum of all cells with E). Count numerator and denominator separately.\n4. Sanity-check: does the posterior move in the intuitive direction and stay in [0,1]?\n5. Reduce the fraction by GCD; if a decimal is asked, divide carefully digit-by-digit.\n6. Verify independently: recompute via the odds form (prior odds x likelihood ratio) and confirm it matches.\n7. Emit exactly the requested format.",
+  "strategy": "Bayes-table specialist for conditional/probability-update problems",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_c",
+  "manual": "Reduce counting problems to inclusion-exclusion or complementary counting:\n1. Decide: is it easier to count the wanted set directly or its complement (total minus bad)? Pick the smaller.\n2. State the universe size precisely. Flag distinct-vs-identical objects and ordered-vs-unordered selection BEFORE counting.\n3. For overlapping conditions use |A∪B∪C| = Σ|A| - Σ|A∩B| + |A∩B∩C|. Write every term with its sign.\n4. Compute each term; for products/factorials, expand step by step, not in one leap.\n5. Add the signed terms in groups, re-adding to confirm.\n6. Cross-check with a tiny instance (n=2 or 3) computed by brute enumeration; ensure the formula reproduces it.\n7. Re-read 'exactly' vs 'at least' and adjust. Output exactly the requested format.",
+  "strategy": "Inclusion-exclusion / complement counting for counting problems",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_d",
+  "manual": "Reduce paths/optimization/sequence-count problems to a recurrence (DP):\n1. Define the state in words and the value f(state) precisely (e.g. number of ways to reach cell, min cost to position i).\n2. Write the transition: f(s) in terms of smaller states. State base cases explicitly.\n3. Identify evaluation order (smallest to largest). Build a small table of f-values, filling row by row, writing each cell.\n4. Keep a running ledger; recompute any cell that feeds many others.\n5. Read off the answer state. Verify by recomputing the final 2-3 cells via a different decomposition (e.g. count by last step).\n6. Watch traps: off-by-one in bounds, inclusive endpoints, whether the start cell counts.\n7. Emit exactly the required format (integer only unless stated).",
+  "strategy": "Set up a DP / recurrence for sequential or optimization tasks",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_e",
+  "manual": "For divisibility/coprime/remainder/cyclic problems, reduce to a number-theory tool:\n1. Pick the tool: Euler totient φ(n) for coprime counts, CRT for simultaneous remainders, Fermat/Euler for large powers mod m, gcd/lcm for periods.\n2. Factor the modulus/number into primes first; write the factorization explicitly.\n3. Apply the formula on prime powers, then combine multiplicatively. e.g. φ(n)=n∏(1-1/p).\n4. Do exponent reduction mod φ(m) before powering; reduce the base mod m early.\n5. Compute step by step, keeping numbers small via repeated mod.\n6. Verify on a tiny modulus by direct listing (e.g. count coprimes to 12 by hand) to confirm the method.\n7. Confirm inclusive/exclusive range bounds. Output exactly as requested.",
+  "strategy": "Number-theory toolkit: totient, CRT, modular, gcd",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_f",
+  "manual": "Solve by mapping to a known problem TWICE, via different templates:\n1. Identify the problem type and a primary standard model (formula A).\n2. Identify an alternative model that should give the same answer (e.g. direct count vs complement; expectation by linearity vs by cases; combinations vs path-counting).\n3. Solve A fully with computation hygiene: expand factorials/sums in chunks of 5, log partial results.\n4. Solve B independently, not reusing A's intermediate numbers.\n5. If A=B, accept. If they differ, find the discrepancy: re-check which trap applies (exactly/at-least, distinct/identical, ordered/unordered) and redo the wrong one.\n6. For fractions, count numerator and denominator separately, reduce by GCD, confirm lowest terms.\n7. Re-read the output contract and emit precisely that.",
+  "strategy": "Two independent reductions cross-checked (self-consistency)",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_g",
+  "manual": "Lead with trap detection, then reduce to the standard formula:\n1. Scan the prompt for trap keywords and circle them: 'exactly', 'at least', 'at most', 'distinct', 'strictly increasing', 'whole word' vs substring, 'reduced fraction', inclusive/exclusive, 'non-empty'.\n2. For each trap, write the one adjustment it forces (e.g. 'at least one' -> use complement 1 - P(none)).\n3. Now name the canonical problem and its formula consistent with those adjustments.\n4. Substitute values; compute heavy arithmetic digit-by-digit and re-add sums in groups.\n5. Adversarially self-refute: try to argue the answer is wrong by one (off-by-one, double-count, missed case). Fix if the attack lands.\n6. Reduce fractions via GCD if needed.\n7. Output exactly the required form, nothing else.",
+  "strategy": "Trap-first classification then formula application",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F08_reduce_h",
+  "manual": "For 'expected value', 'average', or aggregate-count problems, reduce via linearity or generating functions:\n1. Express the target as a SUM of simple indicators or per-item contributions: Total = Σ X_i.\n2. Compute E[X_i] or the count for ONE generic item using a standard sub-formula (probability, binomial coefficient).\n3. Multiply by the number of items / sum over i. Linearity holds even when items are dependent—state this to avoid an independence trap.\n4. For combinatorial coefficient extraction, set up the generating function and identify the needed coefficient term.\n5. Carry out arithmetic in small chunks, recording partial sums in groups of 5.\n6. Verify by computing a small case exhaustively and matching.\n7. If a fraction, reduce by GCD and confirm format; emit exactly the requested output.",
+  "strategy": "Generating-function / expectation linearity reduction for aggregate quantities",
+  "family": "F08_reduce"
+ },
+ {
+  "name": "F09_firstprin_a",
+  "manual": "1) DEFINE: List every technical term in the problem. Write its exact mathematical definition (set, condition, formula). Note edge cases the definition includes/excludes. 2) RESTATE: Rewrite the question using only your definitions, no informal words. 3) TRAP-CHECK each definition: 'exactly' vs 'at least', distinct vs identical, strictly vs weakly increasing, inclusive vs exclusive bounds, whole-word vs substring, reduced-fraction-required. 4) DERIVE step by step, citing which definition justifies each move. Never invoke a remembered result without re-deriving it from the definitions. 5) COMPUTE with hygiene: chunk sums in groups of 5, add digit-by-digit, keep running totals. 6) VERIFY by re-deriving the answer a DIFFERENT way; if the two disagree, find which definition you misapplied. 7) OUTPUT: re-read the required format and emit EXACTLY it (integer only / reduced a/b / one lowercase word).",
+  "strategy": "Write formal definitions of every term first, then derive only from them",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_b",
+  "manual": "Treat the problem as if no formulas exist. 1) AXIOMS: state the most primitive facts (counting principle, definition of probability = favorable/total, definition of divisibility, etc.) relevant here. 2) FORBID SHORTCUTS: explicitly write 'I will NOT apply a memorized formula without deriving it.' If you recall one, derive it from the axioms in two lines and check it on a tiny case (n=1,2). 3) CONSTRUCT the answer by composing atomic operations only. 4) ARITHMETIC HYGIENE: any sum/product over many terms, break into chunks of 5, re-add groups, carry digits explicitly. 5) For probability: count numerator and denominator independently from the axiom, then reduce by GCD. 6) REFUTE: try to break your own answer with one adversarial example or boundary case. 7) Re-read the output contract and emit exactly the requested form, nothing else.",
+  "strategy": "Build everything from atomic axioms upward, refusing any pattern-match",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_c",
+  "manual": "1) UNIVERSE: From definitions, write precisely what the full set of objects/outcomes is. State its size and how an element is uniquely specified. 2) CONSTRAINT: Translate every condition into a membership test on that universe. Flag 'exactly' vs 'at least', distinct vs identical, ordered vs unordered. 3) For small universes, ENUMERATE elements in a fixed canonical order; mark which pass. For large ones, derive the count via the multiplication/addition principle, justified per step. 4) COMPUTE carefully: chunked partial sums in groups of 5, digit-by-digit addition, running totals written down. 5) PROBABILITY: numerator = passing count, denominator = universe size, computed separately; reduce by GCD; confirm reduced form. 6) VERIFY by an independent recount (different ordering or complementary count); reconcile if they differ. 7) Emit EXACTLY the required output format.",
+  "strategy": "Enumerate the exact universe/sample space from its definition before counting",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_d",
+  "manual": "1) SYMBOLIZE: Assign symbols to all objects, sets, quantifiers. Rewrite the claim as a precise logical/set-theoretic statement (use ∀, ∃, ∈, |·|). 2) DEFINE each predicate by its exact membership condition; pin down trap-prone words: 'exactly'=equality, 'at least'=≥, strictly-increasing=<, distinct=pairwise unequal, inclusive bounds. 3) DERIVE by valid symbolic manipulation only; cite the rule (definition, distributivity, inclusion-exclusion) at each step, re-deriving any identity you use. 4) Convert to numbers only at the end. ARITHMETIC HYGIENE: sums in chunks of 5, digit-by-digit, re-add. 5) Fractions: separate numerator/denominator, reduce by GCD, confirm format. 6) VERIFY: re-evaluate the symbolic statement by a second method (e.g., complement, bijection) until two agree. 7) Re-read and output exactly the demanded format.",
+  "strategy": "Translate the whole problem into formal logic/set notation then manipulate symbolically",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_e",
+  "manual": "Pattern-matching fails when a formula's hypotheses don't hold. 1) For each formula/theorem you're tempted to use, WRITE its exact statement AND its preconditions. 2) VERIFY each precondition holds in this problem by checking the definitions (independence? mutually exclusive? distinct items? with/without replacement?). If any fails, derive the correct expression from first principles instead. 3) Re-derive Bayes for base-rate problems via a concrete frequency table (imagine 10,000 cases) rather than recalling the formula. 4) DERIVE the answer; justify each transition by a checked definition. 5) ARITHMETIC: chunk long sums into 5s, add digit-by-digit, keep written running totals. 6) VERIFY by a structurally different derivation; reconcile any mismatch. 7) Probability/fraction: numerator and denominator separately, reduce by GCD. 8) Output exactly the required format (integer / a/b / one lowercase word).",
+  "strategy": "Check a memorized formula's preconditions against definitions before any use",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_f",
+  "manual": "1) DEFINE every term exactly; note inclusion/exclusion edges. 2) GROUND: Apply each definition to the smallest cases (n=0,1,2) by hand to confirm you understand it correctly; fix misreadings now (especially 'exactly' vs 'at least', strictly-increasing, distinct vs identical). 3) GENERALIZE: derive the general rule/recurrence from what the small cases reveal, justified by the definitions — not by guessing a pattern alone; confirm the rule reproduces every small case. 4) COMPUTE to the target size with hygiene: partial sums chunked in 5s, digit-by-digit arithmetic, written running totals, re-add groups. 5) For probabilities, count numerator and denominator separately, reduce by GCD, confirm format. 6) VERIFY the final number by an independent method (direct vs complement); if they disagree, recheck the small-case grounding. 7) Emit exactly the required output form, nothing more.",
+  "strategy": "Verify definitions on tiny base cases, then scale the derivation",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_g",
+  "manual": "1) GIVENS: List exactly what the problem states, verbatim, as separate facts. 2) DEFINITIONS: For each term, write its precise meaning; list assumptions you'd normally make and mark each as STATED or ASSUMED — drop unstated assumptions unless the definition forces them. 3) TRAP AUDIT: examine bound inclusivity, 'exactly/at least', distinct vs identical, ordered vs unordered, reduced-fraction requirement, whole-word vs substring. 4) DERIVE the answer using only givens + definitions, naming the justification per step; do not import remembered answers. 5) ARITHMETIC HYGIENE: long sums in chunks of 5, digit-by-digit, re-add in groups, written totals. 6) ADVERSARIAL REFUTE: argue the answer is wrong; if the refutation exposes an unstated assumption, fix it. 7) Probability: numerator/denominator separately, reduce by GCD. 8) Re-read the format line and output exactly it.",
+  "strategy": "Make every hidden assumption explicit and derive only from stated givens",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F09_firstprin_h",
+  "manual": "1) DEFINE all terms exactly; flag traps (exactly vs at least, distinct vs identical, strict inequality, inclusive bounds, reduced fraction, substring vs word). 2) DERIVE the answer purely from those definitions, justifying each step — no formula recall without re-derivation. 3) REDO from scratch via a genuinely different route (e.g., complementary counting, bijection, direct enumeration), again definitions-only. 4) Do a THIRD independent pass if cheap. 5) ARITHMETIC HYGIENE on every pass: chunk sums in 5s, digit-by-digit addition, written running totals. 6) MAJORITY: compare the independent answers; take the value that agrees across passes. If all differ, locate the misapplied definition and rerun. 7) Fractions: numerator and denominator counted separately each pass, reduced by GCD. 8) Re-read the output contract and emit EXACTLY the required format (integer only / reduced a/b / one lowercase word).",
+  "strategy": "Definitions-first plus majority vote across independent from-scratch derivations",
+  "family": "F09_firstprin"
+ },
+ {
+  "name": "F10_dualprocess_a",
+  "manual": "1. SNAP: Write one fast intuitive answer in a line marked GUESS. Do not refine it yet.\n2. AUDIT: Solve the problem again from scratch using a DIFFERENT method (different order, different formula, complementary counting). Do not look at GUESS while doing this.\n3. COMPARE: If audit == GUESS, accept. If they differ, find which is wrong; the disagreement is a red flag — re-derive a third time to break the tie.\n4. HYGIENE: For any sum/iteration, write terms in chunks of 5, add each chunk, then add chunk totals. Never sum a long list in one pass.\n5. TRAP CHECK before finalizing: 'exactly' vs 'at least', inclusive/exclusive bounds, distinct vs identical, substring vs whole word, reduced fraction required.\n6. OUTPUT: Re-read the requested format and emit EXACTLY it (integer only / reduced a/b / one lowercase word). Nothing else.",
+  "strategy": "Snap guess, then independent re-derivation must confirm before trusting",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_b",
+  "manual": "1. Record your gut answer as HYPOTHESIS in one line.\n2. Become the prosecutor: actively try to PROVE the hypothesis wrong. List the top 2 ways a problem like this fools people (base-rate neglect, off-by-one, 'exactly' vs 'at least', counting identical-as-distinct).\n3. Test the hypothesis against a small concrete case or boundary you can verify by hand.\n4. If refutation succeeds, discard and recompute carefully; if it survives all attacks, accept.\n5. Computation hygiene: do arithmetic digit-by-digit; re-add long sums in groups of 5; for probability count numerator and denominator separately, then divide by GCD.\n6. State the final reduced/exact value, re-read the output contract, and emit exactly that format.",
+  "strategy": "Treat intuition as a suspect; adversarially try to refute it",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_c",
+  "manual": "1. FAST LANE: In under 15 seconds, give a rough estimate or ballpark (order of magnitude, parity, sign). Write it down.\n2. SLOW LANE: Solve rigorously step by step. Keep a running partial result.\n3. SANITY GATE: Check the rigorous answer falls inside the fast-lane band (right magnitude, right parity, plausible). A violation means a bug — locate it before proceeding.\n4. For heavy sums/iterations: never decompose without hygiene — list values in rows of 5, total each row, sum the row-totals; recompute once.\n5. Pre-flag traps relevant here: inclusive bounds, strictly-increasing, reduced fraction, distinct vs identical.\n6. Confirm exact form; reduce fractions by GCD; emit only the contracted output.",
+  "strategy": "Two-lane solve: System-1 estimate sets a sanity band for System-2",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_d",
+  "manual": "1. Quickly jot an intuitive answer A0.\n2. Run AUDIT-1: deliberate full derivation, method M1.\n3. Run AUDIT-2: re-derive with a genuinely different method M2 (complement, recursion vs direct enumeration, algebra vs casework).\n4. Take the MAJORITY of {A0, A1, A2}. If all three differ, trust the two audits over intuition and reconcile by finding the specific arithmetic or framing error.\n5. Arithmetic hygiene throughout: chunk sums into groups of 5 and re-add; verify multiplications by a second route.\n6. Trap sweep: 'at least' vs 'exactly', off-by-one bounds, substring vs whole-word, must-reduce fraction.\n7. Output exactly the required format, nothing more.",
+  "strategy": "Majority vote of intuition plus two deliberate audits",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_e",
+  "manual": "1. PRIOR: State your instinctive answer and your confidence (low/med/high) in one line.\n2. EVIDENCE: Deliberately work the problem, generating at least two checkable facts (a boundary case, a known sub-result, a parity/divisibility constraint).\n3. UPDATE: If evidence contradicts the prior, abandon the prior immediately — do not anchor. If confidence was low, weight the audit more.\n4. For Bayes/conditional problems, build an explicit table of counts (true-pos, false-pos, totals) rather than reasoning verbally; watch for base-rate neglect.\n5. Sum hygiene: groups of 5, re-add; fractions: numerator and denominator separately, reduce by GCD.\n6. Re-read the output contract and emit exactly the demanded format.",
+  "strategy": "Intuition is a prior; deliberate audit updates it via evidence",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_f",
+  "manual": "1. Write your fast answer, then mentally SEAL it — commit to ignoring it.\n2. Solve the problem deliberately as if you had no guess: define variables, set up the exact relation, compute with care.\n3. Keep computation honest: for iterations/sums, track state in a small table row-by-row; re-add long totals in chunks of 5; recompute any product twice.\n4. UNSEAL: compare deliberate result to the sealed guess. Agreement → high trust. Disagreement → the deliberate path wins unless you find a concrete bug in it.\n5. Final trap pass: exactly-vs-at-least, inclusive/exclusive, distinct vs identical, strictly-increasing, reduced fraction.\n6. Emit only the exact required output format.",
+  "strategy": "Quarantine the intuition, solve blind, then unseal and compare",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_g",
+  "manual": "1. Snap an intuitive answer and rate its reliability.\n2. If the problem is short/clean AND confidence is high: do ONE quick independent check (plug back in, test a boundary). If it confirms, finalize — do not over-think.\n3. If the problem is heavy (long sums, casework, multi-step) OR confidence is low: run a full second derivation by a different method and require agreement.\n4. Always apply sum hygiene on heavy arithmetic: partial sums in groups of 5, then total the partials; digit-by-digit on big multiplications.\n5. Trap flags scaled to problem type: probability→reduce by GCD and check 'exactly/at least'; counting→inclusive bounds, distinct vs identical; strings→whole word vs substring.\n6. Output exactly the contracted format.",
+  "strategy": "Calibrate effort: cheap confirm for easy, full audit only when intuition is shaky",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F10_dualprocess_h",
+  "manual": "1. Before answering, name the single most likely TRAP this problem sets (off-by-one, base-rate, exactly-vs-at-least, identical-vs-distinct, unreduced fraction, exclusive bound).\n2. Give your fast intuitive answer AND note whether it might have stepped into that trap.\n3. Deliberate slowly to specifically neutralize the named trap: handle boundaries explicitly, build a counts table for Bayes, separate numerator/denominator for fractions.\n4. Cross-check the deliberate answer by an independent route; if it disagrees with intuition, prefer deliberation unless intuition exposes a flaw in it.\n5. Arithmetic hygiene: chunk and re-add sums in fives; verify each multiplication twice.\n6. Reduce fractions by GCD, confirm exact value, and emit precisely the required output format and nothing else.",
+  "strategy": "Predict the trap, let intuition fail fast, then deliberate cleanly",
+  "family": "F10_dualprocess"
+ },
+ {
+  "name": "F11_metacog_a",
+  "manual": "1. Restate the problem in one line. List every assumption you are making explicitly (bounds inclusive/exclusive, distinct vs identical, 'exactly' vs 'at least', whole-word vs substring).\n2. Solve once, carefully. For any heavy sum or iteration, compute in chunks of 5 and re-add the chunk totals; never sum a long list in one pass.\n3. Ask: 'What single thing, if wrong, would make my whole answer wrong?' Name it concretely.\n4. Check ONLY that thing by an independent route (recount it, plug into the original condition, or test a boundary case).\n5. If the check disagrees, find which side erred and redo; if it agrees, stop.\n6. Re-read the required output format and emit EXACTLY it (integer only / reduced a/b / one lowercase word). Reduce fractions by GCD and confirm.\nReport only the final answer once confident.",
+  "strategy": "State assumptions, name the single fatal-flaw point, verify only that",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_b",
+  "manual": "1. Identify what is asked and the exact output format. Note any trap words ('exactly', 'at least', 'distinct', 'strictly', 'reduced').\n2. Produce a first answer.\n3. Assign a confidence 0-100 and write one sentence justifying it.\n4. If confidence >=85: do a single sanity check (units, parity, rough magnitude, boundary) then finish.\n5. If confidence <85: re-derive by a genuinely DIFFERENT method. For arithmetic-heavy work, recompute digit-by-digit and group additions in fives. Continue until two independent methods agree.\n6. Adversarially attack your answer: 'Here is why this is wrong...' If the attack succeeds, fix it.\n7. Recompute confidence. Only output when >=90.\n8. Emit the answer in EXACTLY the required format; reduce fractions, confirm integer-only if demanded.",
+  "strategy": "Confidence-gated: solve, score confidence, escalate verification only when low",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_c",
+  "manual": "1. Run the trap checklist before solving. For each that applies, write a one-word note: base-rate(Bayes table)? 'exactly' vs 'at least'? whole-word vs substring? strictly-increasing? distinct vs identical? reduced fraction required? inclusive/exclusive bounds?\n2. State your reading of each flagged trap so the setup is unambiguous.\n3. Solve. Keep heavy computations clean: partial sums in groups of 5, re-add the partials.\n4. Verify by a second independent method (different counting order, complementary count, algebra vs enumeration).\n5. If the two answers differ, locate the error explicitly; do not average.\n6. Final metacognitive question: 'Which trap am I most likely still falling into?' Re-examine that one.\n7. Output EXACTLY the demanded format: integer only, or reduced a/b confirmed by GCD, or one lowercase word.",
+  "strategy": "Trap-checklist first, then assumption audit, then dual-method confirm",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_d",
+  "manual": "1. Note the question and exact output format, flagging trap words.\n2. Solve the problem three times INDEPENDENTLY, each time using a fresh approach or order; do not look at prior attempts while working.\n3. For each attempt with heavy arithmetic, chunk sums in fives and re-add to avoid slips.\n4. Compare the three answers. If all agree, that is your answer. If two agree, take the majority but re-examine the dissenter to confirm it was an error, not a missed subtlety.\n5. If all three differ, you are likely missing an assumption: list assumptions, identify the divergence point, and solve a fourth time resolving it.\n6. Before output, ask 'what single thing would make even the majority wrong?' and check it.\n7. Emit EXACTLY the required format; reduce any fraction by GCD.",
+  "strategy": "Self-consistency majority vote with calibration check",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_e",
+  "manual": "1. Read carefully; record the exact output contract and any trap phrasing.\n2. Produce a candidate answer.\n3. PRE-MORTEM: imagine you have been told this answer is wrong. Write the three most likely reasons (miscount, off-by-one boundary, misread condition, arithmetic slip, unreduced fraction).\n4. Investigate each reason concretely against the original problem. Recheck boundaries inclusive/exclusive and 'exactly' vs 'at least'.\n5. Recompute any suspect arithmetic in chunks of 5, digit-by-digit, re-adding partials.\n6. Fix whatever the pre-mortem exposed.\n7. Final calibration: 'Am I now confident enough to bet on this?' If not, re-derive by a different method until two agree.\n8. Output EXACTLY as required; confirm fraction reduced, integer-only, or single lowercase word.",
+  "strategy": "Pre-mortem: assume the answer is wrong, hunt the cause, then verify",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_f",
+  "manual": "1. Build an assumption ledger: list each thing you take as given to interpret the problem (domain, distinctness, ordering, bounds, what counts as success).\n2. Mark the ONE load-bearing assumption — the one the answer most depends on.\n3. Try to FALSIFY it: construct a small example or re-read the wording to see if the opposite reading is intended. Adjust if needed.\n4. Solve under the confirmed reading. For sums/iterations, accumulate in groups of 5 and re-add partials.\n5. Verify the numeric result by an independent method or by substituting back into the original constraint.\n6. Separate numerator and denominator counts for probabilities; reduce by GCD; confirm format.\n7. Output ONLY the final answer in the exact required format, nothing else.",
+  "strategy": "Assumption ledger with falsification test on the load-bearing one",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_g",
+  "manual": "1. Note output format and trap words.\n2. PASS 1 (estimate): quickly get an approximate answer or bound (magnitude, parity, rough probability). This is your guardrail.\n3. PASS 2 (exact): solve precisely. Keep heavy arithmetic hygienic: digit-by-digit, partial sums in fives, re-add.\n4. Reconcile: does the exact answer sit inside the guardrail? If it violates the estimate, one of them is wrong — find which before proceeding.\n5. Ask the single-fault question: 'What one misreading would flip this?' Check that condition (inclusive/exclusive, exactly/at-least, distinct/identical).\n6. For fractions, count top and bottom separately, reduce by GCD, confirm reduced form required.\n7. Only when estimate and exact agree in magnitude and the trap is cleared, emit EXACTLY the required format.",
+  "strategy": "Two-pass: fast estimate as guardrail, then exact, reconcile gap",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F11_metacog_h",
+  "manual": "1. Classify the problem: TRIVIAL (one step, low trap risk) or HARD (multi-step, heavy arithmetic, or trap-prone).\n2. Always state the output format and scan for trap words ('exactly', 'at least', 'distinct', 'strictly', 'reduced', inclusive/exclusive).\n3. If TRIVIAL: solve once, do one quick sanity check, output. Do not over-deliberate short problems.\n4. If HARD: solve once; then re-derive by a DIFFERENT method. For long sums/iterations, chunk in fives and re-add partials; verify each boundary.\n5. Run one adversarial refutation: actively argue the answer is wrong and see if the argument holds.\n6. Resolve any disagreement by locating the specific error, not by guessing.\n7. Confirm the single most-likely trap is handled.\n8. Emit EXACTLY the required format: integer only, reduced a/b (GCD-confirmed), or one lowercase word.",
+  "strategy": "Minimal-overthinking gate: scale verification effort to problem difficulty",
+  "family": "F11_metacog"
+ },
+ {
+  "name": "F12_swarmteam_a",
+  "manual": "Simulate a 4-person team in your head.\n1. SOLVER-A (forward): solve directly, step by step. Use chunked partial sums (group additions in 5s, re-add) for any heavy arithmetic.\n2. SOLVER-B (alternative): re-solve by a genuinely DIFFERENT method (work backward, complementary count, or algebra vs enumeration).\n3. SOLVER-C (estimate/structural): get an independent answer via bounding, symmetry, or small-case pattern.\n4. VERIFIER: list each answer; flag classic traps relevant here — 'exactly' vs 'at least', distinct vs identical, inclusive/exclusive bounds, substring vs whole-word, reduced-fraction-required. Plug each answer back into the problem's constraints.\n5. SYNTHESIZER: take the value that >=2 solvers agree on. If all differ, re-run the cheapest method carefully and break the tie.\nFor probabilities/fractions, count numerator and denominator separately, reduce by GCD.\nRe-read the required output format and emit EXACTLY it (integer only / reduced a/b / one lowercase word). Output only the final answer.",
+  "strategy": "Three differently-strategized solvers, one verifier, majority synthesizer",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_b",
+  "manual": "Run a team of three independent solvers plus an adversary.\n1. Generate THREE independent attempts, each starting from a different representation (equation, enumeration, recursion). Keep each short.\n2. ADVERSARY: actively try to REFUTE each attempt — find an off-by-one, a miscounted case, an unjustified assumption, an arithmetic slip. For sums/iterations re-add in groups of five, digit by digit.\n3. Trap scan before deciding: base-rate (build a Bayes table if conditional probability), 'exactly' vs 'at least', strictly-increasing, distinct vs identical, reduced fraction, inclusive bounds.\n4. SYNTHESIZE: keep attempts the adversary could NOT break; take their majority value. If the adversary broke all, repair the strongest and re-verify by a second method until two methods agree.\n5. Confirm the output contract: re-read exactly what format is requested.\nEmit only the final answer in the exact required format (integer / reduced a/b / single lowercase word).",
+  "strategy": "Parallel attempts then adversarial verifier refutes before synthesis",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_c",
+  "manual": "Convene three specialists and a cross-checker.\n1. Identify problem type (counting, probability, number theory, algorithm/simulation, logic).\n2. SPECIALIST-1 solves with the canonical method for that type. SPECIALIST-2 solves with a complementary method (complement counting, generating idea, invariant). SPECIALIST-3 brute-forces a small instance and extrapolates the pattern.\n3. Computation hygiene for all: never trust a long mental sum — chunk into groups of 5, keep running subtotals, re-add once.\n4. CROSS-CHECKER: compare the three answers; substitute each back into every stated constraint; flag the type-specific trap (probability->numerator/denominator separate then GCD reduce; counting->'exactly' vs 'at least', distinct vs identical; sequences->strictly vs non-strictly increasing; bounds->inclusive/exclusive).\n5. VOTE: choose the answer with majority agreement; if tied, prefer the one surviving back-substitution.\nRe-read the output spec and produce EXACTLY that form. Output the final answer only.",
+  "strategy": "Specialist roles per problem type, verifier cross-checks, vote",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_d",
+  "manual": "Act as a swarm requiring consensus.\n1. Spawn three solver lines with diverse starting assumptions/orderings so errors are uncorrelated.\n2. Each line solves end to end. For heavy addition or long iterations, write partial sums in blocks of five and re-add the blocks; verify each digit.\n3. VERIFIER rule: an answer is ACCEPTED only if reproduced by two independent methods. Re-derive any single-line answer a second way (algebraic check, reverse computation, unit/parity check).\n4. Pre-flag traps: Bayes base-rate, 'exactly' vs 'at least', whole-word vs substring, reduced-fraction-required, inclusive/exclusive endpoints, distinct vs identical objects.\n5. SYNTHESIZER: report the consensus value (>=2 agree). If no pair agrees, run a clean fourth attempt as tie-breaker.\n6. For fractions: separately count numerator and denominator, divide by GCD, confirm lowest terms.\nFinally re-read the requested format and emit EXACTLY it (integer only / a/b reduced / one lowercase word). Nothing else.",
+  "strategy": "Diverse seeds, verifier demands two independent agreements, tie-break",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_e",
+  "manual": "Run a size-adaptive team.\n1. Gauge difficulty. EASY/SHORT: one careful solve plus one quick second-method check — do not over-think.\n2. HARD/HIGH-VARIANCE: spawn three independent solvers using distinct strategies (direct, complementary, small-case induction).\n3. Every solver applies arithmetic hygiene: chunk sums into 5s, keep subtotals, re-add; for products check magnitude/last digit.\n4. VERIFIER: cross-check answers, back-substitute into constraints, and run the trap checklist that applies: 'exactly' vs 'at least', distinct vs identical, strictly-increasing, inclusive bounds, substring vs whole-word, reduced fraction (count num/den separately, GCD-reduce).\n5. SYNTHESIZE by majority; on a tie, the verifier re-solves the contested step.\n6. Output-contract pass: re-read the exact format and emit ONLY it (integer / reduced a/b / single lowercase word).\nSpend effort proportional to risk; let independent agreement, not length, drive confidence.",
+  "strategy": "Lightweight swarm scaled to difficulty, majority with verify",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_f",
+  "manual": "Use a shared blackboard with three solvers, a verifier, a synthesizer.\n1. Each solver posts an answer WITH its key steps and any assumption made. Strategies must differ: enumeration, closed-form, and reverse/working-backward.\n2. For long sums/iterations, post partial sums in groups of five so the verifier can audit; re-add to confirm.\n3. VERIFIER annotates the board: mark each step valid/suspect, recompute one risky arithmetic step independently, and tag the relevant classic trap (base-rate Bayes table, 'exactly' vs 'at least', distinct vs identical, reduced-fraction, inclusive/exclusive, whole-word vs substring).\n4. SYNTHESIZER resolves: adopt the answer supported by clean steps AND majority; discard any answer with a verifier-confirmed error.\n5. If consensus fails, isolate the disagreeing step, recompute it alone, propagate.\n6. For probability: numerator and denominator counted separately, reduce by GCD, confirm format.\nRe-read the output requirement and emit EXACTLY it. Final answer only.",
+  "strategy": "Blackboard: solvers post, verifier annotates errors, synthesizer resolves",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_g",
+  "manual": "Form a team: two constructive solvers and one skeptic.\n1. OPTIMIST-1 and OPTIMIST-2 independently solve using different framings (e.g., direct construction vs complement/inclusion-exclusion). Keep arithmetic clean: sum in chunks of five, re-add, check parity and last digit.\n2. SKEPTIC assumes both are wrong and hunts the specific failure: off-by-one on bounds, 'exactly' vs 'at least' misread, double-counted or missing cases, distinct-vs-identical confusion, fraction not reduced.\n3. VERIFIER/MERGE: back-substitute each candidate into the original constraints; keep those that satisfy all. Take the majority among survivors.\n4. If skeptic invalidates both optimists, produce a corrected third solution and confirm it by an independent recomputation (two methods must agree).\n5. Fractions: count numerator and denominator separately, divide by GCD, verify lowest terms.\n6. FORMAT GATE: re-read the exact output spec and emit ONLY that (integer / reduced a/b / one lowercase word).",
+  "strategy": "Two optimists plus one skeptic, verifier merges, format gate",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F12_swarmteam_h",
+  "manual": "Three rounds, team of three plus chair.\nROUND 1 (independent): each member solves silently with a different method — algebraic, exhaustive small-case, and probabilistic/structural reasoning. Use chunked partial sums (groups of five, re-added) for any heavy computation.\nROUND 2 (debate): members compare; each must defend with a back-substitution into the problem's constraints. Surface and resolve trap risks together: base-rate, 'exactly' vs 'at least', strictly-increasing, inclusive/exclusive endpoints, substring vs whole-word, distinct vs identical, reduced-fraction-required.\nROUND 3 (vote): CHAIR tallies. Pick the majority answer. If split 1-1-1, the chair re-derives the contested quantity by a fresh independent method and votes to break the tie.\nFor fractions/probabilities, count numerator and denominator separately, reduce by GCD, confirm lowest terms.\nClose with an output-contract check: re-read the exact required format and emit EXACTLY it (integer only / a/b reduced / single lowercase word). Output the final answer alone.",
+  "strategy": "Round-based swarm: independent round, debate round, vote round",
+  "family": "F12_swarmteam"
+ },
+ {
+  "name": "F13_formatdiscipline_a",
+  "manual": "1. FIRST read the question's final ask and write the exact output contract: integer? reduced fraction a/b? one lowercase word? exact phrase? Note units and bounds.\n2. Solve the problem normally, but keep the target type in view.\n3. Before answering, run a 2-line check: re-derive the result by a DIFFERENT method; if the two disagree, redo.\n4. Trap scan: 'exactly' vs 'at least', inclusive vs exclusive bounds, distinct vs identical, whole-word vs substring, strictly vs non-strictly increasing. Confirm which applies.\n5. If a fraction: compute numerator and denominator separately, divide both by gcd, verify lowest terms.\n6. Heavy sums: add in groups of 5, write partial totals, re-add once.\n7. Emit ONLY the contract token. No words, no units unless required, no explanation, no trailing punctuation. If the answer is a word, lowercase unless told otherwise.",
+  "strategy": "Contract-first: extract the required format before solving, emit only that token.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_b",
+  "manual": "Treat formatting as a final compiler pass.\n1. Solve and get a candidate answer with full reasoning.\n2. Verify by a second independent method; require agreement before continuing.\n3. NORMALIZE pass (apply in order): strip leading/trailing spaces; remove '$', '%', commas, and explanatory words unless the format demands them; convert decimals to required form; if a fraction, reduce by gcd and confirm denominator>0 and lowest terms; if an integer, ensure no '.0' tail; if a word, force exact spelling and lowercase.\n4. Re-read the prompt's literal request and ask: 'Is my token character-for-character what they want?'\n5. Trap recheck before output: counting boundaries (off-by-one), 'at least' vs 'exactly', rounding direction.\n6. Output the single normalized token alone on its own line. Nothing else.",
+  "strategy": "Strip-to-atom: produce the raw answer, then aggressively normalize format.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_c",
+  "manual": "Optimized for probability and ratio answers.\n1. Identify the contract: most likely 'reduced fraction a/b' or 'decimal' or 'integer'. Lock it.\n2. Count the DENOMINATOR (total outcomes) independently; recount once.\n3. Count the NUMERATOR (favorable) independently; pre-check 'exactly' vs 'at least' and distinct vs identical objects.\n4. Form a/b. Compute gcd(a,b) by listing factors or Euclid; divide both. State the gcd you used.\n5. Sanity: 0<=value<=1 for probability; if value=1 or 0, express as required (1/1 or 0/1 vs '1'/'0' per contract).\n6. Cross-check by complement (1 minus opposite event) when feasible; must match.\n7. Emit exactly the reduced fraction with a single slash, no spaces (e.g., 3/8). No '=', no words, no percent. If an integer is required instead, drop the denominator only when b=1.",
+  "strategy": "Fraction-precision specialist: numerator/denominator discipline plus reduction proof.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_d",
+  "manual": "1. Pass A (solve): reason to an answer.\n2. Pass B (refute): assume the answer is wrong. Re-derive with a different approach and try to break it. Reconcile any difference; keep the survivor.\n3. FORMAT AUDIT (checklist, answer yes to each):\n - Did I emit the exact type asked (int / a/b / word / phrase)?\n - Fraction fully reduced (gcd=1)?\n - No stray units, symbols, commas, or prose?\n - Correct case for words?\n - Boundary traps resolved (inclusive/exclusive, exactly/at least, strict/non-strict)?\n4. For large arithmetic, re-add numbers in chunks of 5 and compare totals.\n5. Output only the audited token. If any checklist item failed, fix and re-audit before answering. Never include the reasoning in the final line.",
+  "strategy": "Two-pass adversarial format audit before emission.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_e",
+  "manual": "Choose the template that matches the asked output, then fill its single slot.\n- INTEGER -> [n]: a plain base-10 integer, no sign unless negative, no separators, no decimals.\n- REDUCED FRACTION -> [a/b]: gcd(a,b)=1, b>0, no spaces.\n- ONE WORD -> [word]: exact spelling, lowercase unless proper noun required.\n- EXACT PHRASE -> copy the demanded phrasing verbatim.\nProcedure:\n1. Detect template from the question's final sentence.\n2. Solve; verify with one independent re-derivation (must agree).\n3. Pre-flag the relevant trap (Bayes base-rate table for conditional probability; 'exactly' vs 'at least'; substring vs whole word; distinct vs identical).\n4. Fill the slot; for fractions reduce by gcd; for sums add in groups of 5 with a re-add.\n5. Emit the filled template ALONE. Anything outside the brackets is forbidden.",
+  "strategy": "Type-template: pick the matching emission template and fill exactly one slot.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_f",
+  "manual": "For high-variance problems.\n1. Produce THREE independent attempts using different orderings or methods; do not let earlier attempts bias later ones.\n2. Take the majority answer. If all three differ, run a fourth as tiebreaker by the cleanest method.\n3. Before finalizing, scan classic traps on the winning answer: inclusive/exclusive bounds, exactly vs at least, strictly increasing, distinct vs identical, reduced-fraction-required.\n4. Computation hygiene for any heavy sum/iteration: chunk into groups of 5, write partial sums, re-add once.\n5. FORMAT lock: match the exact contract (integer only / reduced a/b via gcd / one lowercase word). Strip all units, symbols, and prose.\n6. Emit only the single final token. No mention of the voting or alternatives.",
+  "strategy": "Majority-vote then format: three attempts, take the mode, then strict emit.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_g",
+  "manual": "The most common error is answering a different quantity than asked.\n1. Quote (mentally) the LAST sentence of the prompt. Identify the precise quantity and its required form.\n2. Confirm you are solving for THAT quantity, not an intermediate (e.g., they want the remainder, not the quotient; the count of ways, not the probability).\n3. Solve; verify by a second method until two agree.\n4. Trap pre-flag tied to phrasing: 'how many' -> integer count; 'probability' -> reduced fraction unless decimal asked; 'which word' -> exact token. Resolve exactly/at least and boundary inclusivity.\n5. Arithmetic hygiene: digit-by-digit for multiplication, group-of-5 re-adds for long sums.\n6. Final equality check: 'My token answers the literal final question in the demanded format.' \n7. Output exactly that token, nothing else, no units unless the contract includes them.",
+  "strategy": "Re-read-the-ask loop: bind output to the literal final question wording.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F13_formatdiscipline_h",
+  "manual": "Goal: the answer line contains the answer and NOTHING else.\n1. Solve the core problem; keep work in scratch, never in the final line.\n2. Independent verification: re-derive once by a different route; if mismatch, resolve before proceeding. Keep this brief for simple problems.\n3. Determine forbidden extras for this contract: prose, 'The answer is', units, %, $, commas in numbers, equals signs, quotation marks, trailing periods, leading zeros.\n4. If fraction: reduce by gcd, single slash, no spaces. If integer: bare digits. If word: exact, lowercase by default.\n5. Trap pass: exactly vs at least, distinct vs identical, strict vs non-strict, inclusive vs exclusive, whole-word vs substring.\n6. Emit the minimal token. Then silently confirm the line has no forbidden extras. Do not restate the question or reasoning.",
+  "strategy": "Minimal-surface emission: zero extra characters, verified core.",
+  "family": "F13_formatdiscipline"
+ },
+ {
+  "name": "F14_invariants_basecase_ladder",
+  "manual": "1. Compute the answer by brute force for n=0,1,2,3,4 exactly. Lay results in a table; double-check each by hand.\n2. Look for the pattern: differences, ratios, known sequences (powers, factorials, Fibonacci, binomials). State a closed-form conjecture.\n3. Verify the conjecture against EVERY base case computed; if one fails, discard and re-look.\n4. Justify the step n→n+1 with a one-line recurrence or combinatorial argument (don't just pattern-match).\n5. Test an extreme/degenerate case (n=0, empty, all-equal) and a large case where the formula's growth must stay sane.\n6. Re-read what is asked: exact count vs at-least, inclusive bounds, distinct vs identical. Plug the target n.\n7. If arithmetic is heavy, evaluate the formula digit-by-digit and re-add in groups of 5.\nOutput EXACTLY the required format (integer / reduced a/b / one word).",
+  "strategy": "Climb from tiny base cases to a conjectured formula, then prove the inductive step and stress-test the extreme.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_parity_color",
+  "manual": "1. Identify the allowed moves/operations and what changes each step.\n2. Search for an INVARIANT preserved by every move: parity of a count, a checkerboard 2-coloring, sum mod k, a weighting that stays constant.\n3. Compute the invariant for the start and for the goal. If they differ, the goal is impossible — that often IS the answer.\n4. If reachable, the invariant constrains the count/min steps: use it as a lower bound, then exhibit a construction meeting it.\n5. Test the invariant on 2-3 tiny configurations by hand to confirm it really is conserved (adversarially try to break it).\n6. Beware off-by-one and 'exactly vs at least' in the final tally.\n7. Re-derive the conclusion a second way (small exhaustive search) and confirm both agree.\nEmit the answer in EXACTLY the requested format, nothing else.",
+  "strategy": "Find a conserved quantity (parity, coloring, mod-k sum) that the moves preserve, ruling cases in or out.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_symmetry_fold",
+  "manual": "1. Spot symmetries: swap, reflection, rotation, relabeling that leave the problem invariant.\n2. Use symmetry to reduce to canonical cases (e.g., fix the largest element, assume a<=b<=c). Solve the reduced case.\n3. Multiply back by the orbit size, but CAREFULLY correct overcounting: subtract/adjust configurations fixed by the symmetry (Burnside-style: average fixed points over the group).\n4. Verify on a tiny instance by full enumeration that your multiply-and-correct gives the brute-force count.\n5. Pre-flag traps: distinct vs identical objects, ordered vs unordered, whether reflections count as the same.\n6. Count numerator and denominator separately if it's a probability; reduce by GCD; confirm format.\n7. Cross-check the total against an independent global count (sum over a different partition) — both must match.\nReturn EXACTLY the required output form.",
+  "strategy": "Exploit symmetry to collapse cases, count one orbit, multiply, then correct for fixed points.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_monovariant_bound",
+  "manual": "1. Define a non-negative integer quantity (a potential) that strictly decreases (or increases toward a cap) with every move.\n2. Its starting value bounds the number of steps; the floor/ceiling gives termination or a min/max.\n3. Hand-simulate 2-3 tiny cases to confirm the monovariant truly moves monotonically each step.\n4. For min-steps problems: the monovariant gives a lower bound; build an explicit sequence achieving it for the upper bound. The answer is where they meet.\n5. Adversarially try a move that might violate monotonicity; if found, refine the potential.\n6. Watch 'at least' vs 'exactly' and inclusive endpoints when reading off the bound.\n7. Re-derive the bound by a second framing (e.g., counting argument) and require agreement before committing.\n8. Heavy arithmetic: chunk partial sums, re-add in groups of 5.\nOutput strictly in the demanded format.",
+  "strategy": "Use a monovariant (strictly de/increasing quantity) to bound steps and prove termination/optimality.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_extreme_first",
+  "manual": "1. Before general work, solve the EXTREMES: smallest input, largest, all-equal, all-distinct, empty/zero case.\n2. Note which extremes give clean answers — they reveal the controlling structure or formula skeleton.\n3. Form a hypothesis for the general case consistent with all extremes simultaneously.\n4. Test the hypothesis on one mid-sized case via independent direct enumeration.\n5. If they disagree, locate which extreme assumption broke and patch the formula.\n6. Explicitly flag classic traps surfaced by extremes: boundary inclusivity, off-by-one, exactly-vs-at-least, substring-vs-whole-word, strictly-increasing.\n7. For probability/fraction answers, compute numerator and denominator independently, reduce by GCD, confirm reduced form is required.\n8. Re-add long sums in groups of 5; verify each digit.\nState the final answer EXACTLY as specified (integer only / a/b reduced / one lowercase word).",
+  "strategy": "Probe extreme and degenerate cases first to expose structure, then interpolate to the general count.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_mod_classes",
+  "manual": "1. Suspect modular structure: choose a small modulus k (2,3,4,9,10, or a period in the recurrence).\n2. Split the range/objects into residue classes mod k. Within each class behavior is uniform.\n3. Count items per class with floor/ceiling formulas; be meticulous about endpoints (inclusive vs exclusive).\n4. Verify class counts by hand on a small range (e.g., 1..12) against direct enumeration.\n5. Recombine per-class results into the total; ensure classes partition without overlap or gap.\n6. Pre-flag traps: 'exactly k' vs 'at least k', distinct vs repeated, reduced-fraction requirement.\n7. Re-derive the total a different way (complementary count: total minus excluded) and require the two match.\n8. For sums, chunk into groups of 5 and re-add; check each digit.\nEmit precisely the required output format and nothing more.",
+  "strategy": "Partition by residue classes mod a small k; solve per class and recombine, watching boundary counts.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_recurrence_verify",
+  "manual": "1. Compute exact values for the first 4-6 sizes by direct reasoning; tabulate.\n2. Hypothesize a recurrence a(n)=f(a(n-1),a(n-2),...) that fits ALL tabulated values; confirm it predicts the next computed value.\n3. Unroll/iterate the recurrence to the target n, doing arithmetic digit-by-digit and re-adding in groups of 5 to avoid slips.\n4. Independently derive or guess a closed form; evaluate it at the same n. The two methods MUST agree — if not, recheck both.\n5. Sanity-check growth rate and parity of the result against the small cases.\n6. Re-read the question: which index, 0- or 1-based, exactly vs at least, inclusive bounds.\n7. If probability, separate numerator/denominator, reduce by GCD, confirm format.\nReturn ONLY the answer in the exact required form.",
+  "strategy": "Build a recurrence from small cases, unroll it carefully, and verify by an independent closed form.",
+  "family": "F14_invariants"
+ },
+ {
+  "name": "F14_invariants_majority_vote",
+  "manual": "1. Solve the problem THREE independent ways, each using a different lens: (a) a conserved invariant or parity, (b) small-case pattern + recurrence, (c) direct enumeration or complementary counting.\n2. Keep each attempt short and self-contained; do not let one bias the next.\n3. Compare the three results. If at least two agree, adopt that majority answer.\n4. If all three differ, find the error: re-test each method on a tiny base case and on one extreme case; discard the one that fails.\n5. Pre-flag traps before voting: exactly-vs-at-least, distinct-vs-identical, inclusive endpoints, whole-word-vs-substring, reduced fraction needed.\n6. For the winning answer, do final arithmetic carefully — group sums by 5, verify digits; for fractions reduce by GCD.\n7. Re-read the output contract and emit EXACTLY that (integer / reduced a/b / one lowercase word), with no explanation.",
+  "strategy": "Run several independent invariant/case attempts and take the majority answer for high-variance problems.",
+  "family": "F14_invariants"
+ }
+]

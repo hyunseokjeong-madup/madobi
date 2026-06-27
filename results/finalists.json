@@ -1,0 +1,50 @@
+[
+ {
+  "name": "F02_verify_smallcase",
+  "manual": "1. Solve the general problem to get a formula or answer A.\n2. INDEPENDENTLY brute-force the smallest 2-3 instances (n=1,2,3) by hand-enumeration — list outcomes, do not use formula A.\n3. Plug those n into formula A; the outputs MUST match the enumerated values.\n4. If any mismatch: the formula is wrong (off-by-one, wrong base case, mis-set bound). Fix and re-test all small cases.\n5. Also sanity-check monotonicity/limits (does it grow the right way? boundary n=0?).\n6. Apply the validated formula to the actual input. Compute carefully: digit-by-digit, group long sums in 5s.\n7. Re-read the output contract and emit exactly that token (integer / reduced fraction / single word)."
+ },
+ {
+  "name": "F02_verify_dual_track",
+  "manual": "1. Set up TWO independent solution tracks before computing: e.g. enumeration vs formula, or forward vs backward, or units/dimensional reasoning vs direct.\n2. Break the problem into 2-3 checkpoints. At each checkpoint, compute the intermediate quantity on BOTH tracks and confirm they match before proceeding. Early divergence localizes the error fast.\n3. If tracks differ at a checkpoint, resolve it there (recompute the suspect step slowly) before moving on.\n4. Keep arithmetic clean: digit-by-digit, group long additions in 5s, recheck each group.\n5. For probability/fractions, carry numerator and denominator separately; reduce by GCD at the end; confirm the required format.\n6. Pre-flag the classic trap relevant here (exactly/at-least, inclusive bounds, distinct/identical) and ensure both tracks honor the same interpretation.\n7. When both tracks finish in agreement, emit EXACTLY the requested output format."
+ },
+ {
+  "name": "F01_decomp_b",
+  "manual": "1. Identify the asked quantity and required output format.\n2. METHOD A: break into parts, compute each with care (chunked sums of 5, digit-by-digit products).\n3. METHOD B: re-derive the SAME answer differently — reorder terms, use a formula vs direct count, or complementary counting.\n4. Compare A and B. If they disagree, locate the diverging part, recompute only it, repeat until they match.\n5. For probabilities/fractions: count numerator and denominator separately; reduce by GCD; confirm the format (reduced a/b).\n6. Flag classic traps before finalizing: base-rate (build a small Bayes table), 'exactly' vs 'at least', endpoints.\n7. Output only the value in the exact required format."
+ },
+ {
+  "name": "F02_verify_bayes_table",
+  "manual": "1. Spot base-rate/conditional problems. Pre-flag: the prior is NOT the answer.\n2. METHOD A (formula): write Bayes explicitly, P(H|E)=P(E|H)P(H)/P(E); compute P(E) via total probability.\n3. METHOD B (counts): imagine a concrete population (e.g. 10,000). Fill a 2x2 table of true/false x positive/negative using the given rates. Read the answer directly off the table cells.\n4. The two answers must match. If not, recheck which rate is conditional on which.\n5. Keep numerator and denominator as integers; reduce by GCD; confirm requested format (decimal vs reduced fraction).\n6. Re-add column/row totals in groups of 5 to verify the table is internally consistent.\n7. Output exactly the required format, nothing more."
+ },
+ {
+  "name": "F11_metacog_b",
+  "manual": "1. Identify what is asked and the exact output format. Note any trap words ('exactly', 'at least', 'distinct', 'strictly', 'reduced').\n2. Produce a first answer.\n3. Assign a confidence 0-100 and write one sentence justifying it.\n4. If confidence >=85: do a single sanity check (units, parity, rough magnitude, boundary) then finish.\n5. If confidence <85: re-derive by a genuinely DIFFERENT method. For arithmetic-heavy work, recompute digit-by-digit and group additions in fives. Continue until two independent methods agree.\n6. Adversarially attack your answer: 'Here is why this is wrong...' If the attack succeeds, fix it.\n7. Recompute confidence. Only output when >=90.\n8. Emit the answer in EXACTLY the required format; reduce fractions, confirm integer-only if demanded."
+ },
+ {
+  "name": "F01_decomp_c",
+  "manual": "1. Write the target and output contract at top.\n2. Build a LEDGER: one row per subtask with columns [step | computed value | running total].\n3. Solve subtasks top to bottom. After each row, recheck the partial value by a quick independent estimate or reverse operation; only then update running total.\n4. Heavy sums: add in groups of 5, record each group subtotal as its own ledger row.\n5. Carry digits explicitly in multi-digit arithmetic; never hold large numbers in your head.\n6. At the end, re-scan the ledger top-to-bottom confirming each running-total increment is consistent.\n7. Pre-flag: distinct vs identical, strictly-increasing, reduced-fraction-required, inclusive bounds.\n8. Emit exactly the contracted format."
+ },
+ {
+  "name": "F01_decomp_h",
+  "manual": "1. List ALL explicit and implicit constraints; restate the required output format verbatim.\n2. Decompose by constraint: handle one constraint per step, narrowing the candidate set.\n3. For counting/probability, count favorable and total SEPARATELY; build each via chunked sums of 5, digit-by-digit where large.\n4. Classify each constraint: distinct vs identical, ordered vs unordered, strictly-increasing, inclusive/exclusive — and apply the matching formula.\n5. Reduce any fraction by GCD; confirm it is in lowest terms.\n6. VERIFY by re-deriving the count a different way (complement or direct) and require agreement; recompute the diverging part if not.\n7. Final trap check: 'exactly' vs 'at least', whole-word vs substring.\n8. Emit exactly the contracted answer, nothing extra."
+ },
+ {
+  "name": "F02_verify_three_vote",
+  "manual": "1. Note the output contract and one likely trap.\n2. Solve the problem THREE times, each as an independent fresh attempt using a different framing where possible (direct, complementary, algebraic/substitution). Do not look back at prior attempts while working a new one.\n3. Collect the three answers.\n4. If all three agree: done. If two agree and one differs: re-examine the outlier to confirm it's the error, then take the majority. If all three differ: identify the most error-prone step across them, recompute it slowly (digit-by-digit, sums in groups of 5), and run a tie-break fourth attempt.\n5. For fractions, reduce by GCD and verify format; for 'exactly/at-least' confirm interpretation matches all attempts.\n6. Emit the majority answer in EXACTLY the requested format."
+ },
+ {
+  "name": "F01_decomp_d",
+  "manual": "1. PLAN phase (no arithmetic yet): list the exact sequence of operations needed and the final format. Freeze this plan.\n2. EXECUTE phase: perform one planned block at a time. Within a block, show intermediate digits/terms.\n3. Sums: chunk into fives, subtotal, then total. Products: digit-by-digit with aligned place value.\n4. After finishing a block, VERIFY it alone — recompute by reverse operation (subtract back, divide back). Fix before proceeding.\n5. Watch traps flagged in the plan: 'exactly' vs 'at least', whole-word vs substring, distinct vs identical.\n6. For fractions: separate numerator/denominator counts, reduce by GCD, confirm reduced form.\n7. Re-read required format; output only that."
+ },
+ {
+  "name": "F03_adversarial_c",
+  "manual": "Roleplay two adversaries on your draft answer.\n1. Solve once to get a DRAFT.\n2. PROSECUTOR: argue the draft is wrong. Cite the most damaging concrete flaw — a specific miscount, an arithmetic line, a misread constraint, a boundary case. Be ruthless; find the strongest objection, not a weak one.\n3. DEFENDER: respond to the prosecutor's exact charge by re-deriving that piece independently (different method if possible).\n4. JUDGE: if defender's independent re-derivation disagrees with the draft, the draft loses — adopt the corrected value. If they agree, draft survives.\n5. Repeat the debate once on the surviving answer only if the first round changed anything.\n6. Re-read the output contract; emit exactly that token."
+ },
+ {
+  "name": "C0_baseline",
+  "manual": "No operating manual. Solve the problem directly and give the final answer in the required format."
+ },
+ {
+  "name": "C2_selfverify",
+  "manual": "# Decompose + Independent Self-Verification\nPhase A: restate, list constraints, decompose, produce a candidate answer.\nPhase B (mandatory, DIFFERENT method): re-derive by an independent route (complementary count, plug back into constraints, different formula, small base case). If methods disagree, find the error and redo. Check sign/magnitude/units/format. Commit only when an independent check agrees."
+ }
+]
