@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 CHECKS = [
-    ("benchmark ground truth builds", ["python", "benchmark/build_benchmark.py"], "built 20 problems"),
+    ("benchmark ground truth builds", ["python", "research/benchmark/build_benchmark.py"], "built 20 problems"),
     ("large dataset generates",       ["python", "marketing/bench/gen_dataset.py", "--rows", "30000"], "ground_truth.json"),
     ("aggregation is EXACT at scale", ["python", "marketing/bench/verify_bench.py"], "ALL"),
     ("30-level difficulty ladder",    ["python", "marketing/bench/levels.py"], "ALL LEVELS PASS"),
