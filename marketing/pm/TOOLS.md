@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 54개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 56개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -23,6 +23,7 @@
 | `data_quality.py` | 데이터 품질 검증기 — 마케팅 CSV의 정합성 위반을 다중 룰로 점검(보고 전 게이트). |
 | `dow_heatmap.py` | 요일별 성과 히트맵. 날짜 컬럼 → 요일별 지표 집계(가중) + 막대. |
 | `forecast.py` | 월말/기간말 예측. 현재 추세(일평균)로 목표 일수까지 spend/conversions/revenue 선형 투영. |
+| `forecast_accuracy.py` | 예측 정확도 — 실제 vs 예측의 MAE/MAPE/RMSE/bias 산출. 모델 신뢰도 평가. 계산 정확. |
 | `frequency.py` | 빈도(frequency) 캡 점검. freq=노출/도달. 캡 초과 시 피로·예산낭비 경보. |
 | `funnel.py` | 퍼널 드롭오프 분석 (impr→click→conv). 가장 약한 단계 식별. CSV 합계 또는 직접 인자. |
 | `geo_lift.py` | Geo 증분성(geo holdout) — 이중차분(difference-in-differences)으로 광고 순증분 추정. |
@@ -55,6 +56,7 @@
 | `seasonal_forecast.py` | 계절성 반영 예측 — 선형 추세 × 요일 계절지수로 향후 N일 예측. |
 | `seasonality.py` | 시즌성(요일) 지수. 요일 평균/전체 평균 = 지수(>1 강세, <1 약세). 입찰·예산 가중 가이드. |
 | `shapley_attribution.py` | Shapley 값 데이터기반 어트리뷰션 — 채널 조합(coalition) 기여를 Shapley 값으로 공정 배분. |
+| `target_setter.py` | 목표 역산(goal-seek) — 목표 ROAS/CPA 달성에 필요한 입력값 역산. |
 | `tools_index.py` | 도구 인덱스 생성기 — marketing/pm/*.py 의 모듈 도크스트링 첫 줄을 모아 TOOLS.md 자동 생성. |
 | `waste.py` | 예산 낭비 탐지. ROAS가 기준 미만인데 지출이 큰 엔티티 → 절감 후보. |
 | `winback_priority.py` | 윈백 우선순위 — 과거가치(monetary) × 이탈위험(recency/기대주기)으로 재유치 대상 순위화. |

@@ -81,6 +81,8 @@ CHECKS = [
     ("sc: winback_priority",          ["python", "marketing/pm/winback_priority.py", "marketing/sample_tx.csv", "--asof", "2026-02-15"], "WINBACK PRIORITY"),
     ("sc: scorecard",                 ["python", "marketing/pm/scorecard.py", "marketing/sample_campaign.csv", "--weights", "roas:0.5,ctr:0.3,conversions:0.2"], "SCORECARD"),
     ("sc: confidence_interval",       ["python", "marketing/pm/confidence_interval.py", "--conv", "50", "--n", "1000"], "CONFIDENCE INTERVAL"),
+    ("sc: forecast_accuracy",         ["python", "marketing/pm/forecast_accuracy.py", "marketing/sample_af.csv"], "FORECAST ACCURACY"),
+    ("sc: target_setter",             ["python", "marketing/pm/target_setter.py", "--target-roas", "3", "--aov", "50000", "--cvr", "0.05"], "TARGET SETTER"),
 ]
 
 def run():

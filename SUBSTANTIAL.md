@@ -53,8 +53,11 @@
 | 36 | 가중 점수카드(정규화×가중) | `marketing/pm/scorecard.py` | A 1순위 검산 |
 | 37 | Wilson 신뢰구간(비율 CI) | `marketing/pm/confidence_interval.py` | [3.81%,6.53%] 검산 |
 
+| 38 | 예측 정확도(MAE/MAPE/RMSE/bias) | `marketing/pm/forecast_accuracy.py` | MAE10/MAPE6.7% 검산 |
+| 39 | 목표 역산 goal-seek(ROAS→CPC/CVR) | `marketing/pm/target_setter.py` | 최대CPC=833 검산 |
+
 ## ⬜ 진행/큐 (각 30분급)
-38 LTV 세그 예산배분 · 39 채널 시너지 · 40 예측 정확도(MAPE) · … (→200)
+40 채널 시너지(상관) · 41 LTV 세그 예산 · 42 멀티 KPI 대시 · … (→200)
 6 미디어믹스 회귀(MMM 간이) · 7 증분성(geo holdout) 추정 · 8 검색어 클러스터링 · 9 소재 피로 모델(추세) ·
 10 페이싱 최적화(잔여예산 재분배) · 11 HTML 대시보드 생성 · 12 데이터 품질 검증기(다중 룰) ·
 13 입찰 시뮬레이터 · 14 LTV 예측(코호트 외삽) · 15 RFM 세그먼테이션 · … (→200)
