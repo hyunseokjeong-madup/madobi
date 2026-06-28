@@ -34,6 +34,10 @@ def aggregate(csvpath, by):
     groups = defaultdict(lambda: {m: 0 for m in RAWM})
     with open(csvpath, encoding="utf-8") as f:
         for r in csv.DictReader(f):
+            # TOTAL/소계 행은 데이터가 아니므로 집계에서 제외(이중계산 방지) — reconcile.py와 동일 패턴.
+            label = " ".join((v or "") for v in r.values())
+            if re.search(r"total|합계|sum|총계|소계", label, re.I):
+                continue
             key = "ALL" if by in (None, "overall") else (r.get(by) or "").strip()
             g = groups[key]
             for m in RAWM:

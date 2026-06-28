@@ -1,3 +1,12 @@
+---
+title: "_GLOBAL 놀리지에셋 (모든 계정 공통, 검산 통과분만 누적)"
+category: knowledge
+tags: [knowledge]
+verified: true
+status: stable
+last_updated: 2026-06-28
+related: []
+---
 # _GLOBAL 놀리지에셋 (모든 계정 공통, 검산 통과분만 누적)
 
 > 규칙: 추측이 아니라 **정합성 검산을 통과한** 교훈만 여기에 올린다. 한 줄 + 근거. 중복은 갱신.
@@ -22,3 +31,4 @@
 *이 파일은 세션을 거듭하며 자란다. 계정 특이사항은 `<account>.md`로.*
 - [2026-06-27] (report) ROAS는 항상 배수(x)로 표기, 비율은 가중평균으로 집계
 - [2026-06-27] (reconciliation) 집계는 항상 reconcile/summarize 코드로 검산 후 보고(눈대중 금지)
+- [2026-06-28 13:35 KST] (reconciliation) 집계 도구는 TOTAL/소계/합계 행을 반드시 제외(이중계산 방지). 광고 플랫폼 export엔 거의 항상 TOTAL행 존재 — reconcile.py 정규식 패턴으로 통일
