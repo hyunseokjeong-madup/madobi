@@ -1,9 +1,10 @@
 """놀리지에셋 빌더 3 — 오디언스/입찰/측정/지역/시즌/규제. 각 파일 = 한 사이클."""
 from pathlib import Path
+from _fm_preserve import write_md  # 기존 frontmatter 보존하며 본문 재생성
 HERE=Path(__file__).parent
 def write(cat,name,title,b):
     d=HERE/cat; d.mkdir(parents=True,exist_ok=True)
-    (d/f"{name}.md").write_text(f"# {title}\n\n"+"\n".join(f"- {x}" for x in b)+"\n",encoding="utf-8",newline="\n")
+    write_md(d/f"{name}.md", f"# {title}\n\n"+"\n".join(f"- {x}" for x in b)+"\n")
 
 AUDIENCE={
  "prospecting":["신규 고객 발굴, 광범위+시그널","상단 퍼널, CPM/CTR 관점","소재가 타게팅을 대체하는 추세"],

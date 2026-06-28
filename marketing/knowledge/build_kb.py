@@ -4,6 +4,7 @@
 """
 import json
 from pathlib import Path
+from _fm_preserve import write_md  # 기존 frontmatter 보존하며 본문 재생성
 HERE = Path(__file__).parent
 
 def write(cat, name, title, sections):
@@ -13,7 +14,7 @@ def write(cat, name, title, sections):
         L.append(f"## {h}")
         L += [f"- {b}" for b in bullets]
         L.append("")
-    (d / f"{name}.md").write_text("\n".join(L), encoding="utf-8", newline="\n")
+    write_md(d / f"{name}.md", "\n".join(L))
 
 VERTICALS = {
  "ecommerce": ("이커머스",

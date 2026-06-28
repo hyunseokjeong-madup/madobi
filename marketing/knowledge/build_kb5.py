@@ -1,9 +1,10 @@
 """놀리지에셋 빌더 5 — 목표/플랫폼기능/리포팅/예산모델/소재테스트/진단. 각 파일 = 한 사이클."""
 from pathlib import Path
+from _fm_preserve import write_md  # 기존 frontmatter 보존하며 본문 재생성
 HERE=Path(__file__).parent
 def write(cat,name,title,b):
     d=HERE/cat; d.mkdir(parents=True,exist_ok=True)
-    (d/f"{name}.md").write_text(f"# {title}\n\n"+"\n".join(f"- {x}" for x in b)+"\n",encoding="utf-8",newline="\n")
+    write_md(d/f"{name}.md", f"# {title}\n\n"+"\n".join(f"- {x}" for x in b)+"\n")
 OBJ={
  "awareness":["KPI: 도달·CPM·VTR","상단 퍼널","브랜드 리프트로 측정"],
  "traffic":["KPI: 클릭·CPC·CTR","LP 트래픽","전환과 혼동 금지"],

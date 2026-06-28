@@ -1,9 +1,10 @@
 """놀리지에셋 빌더 4 — 후크/오퍼/LP요소/실험/그로스 전술 카드. 각 파일 = 한 사이클."""
 from pathlib import Path
+from _fm_preserve import write_md  # 기존 frontmatter 보존하며 본문 재생성
 HERE=Path(__file__).parent
 def write(cat,name,title,b):
     d=HERE/cat; d.mkdir(parents=True,exist_ok=True)
-    (d/f"{name}.md").write_text(f"# {title}\n\n"+"\n".join(f"- {x}" for x in b)+"\n",encoding="utf-8",newline="\n")
+    write_md(d/f"{name}.md", f"# {title}\n\n"+"\n".join(f"- {x}" for x in b)+"\n")
 HOOKS={
  "number":["구체 숫자로 신뢰('3일 만에','37% 절감')","과장 금지·근거 보유"],
  "question":["통점 질문으로 자기인식 유발","타깃 언어로"],
