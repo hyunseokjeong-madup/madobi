@@ -1,3 +1,12 @@
+---
+title: "TikTok Ads 플레이북"
+category: channels
+tags: [channels, tiktok]
+verified: true
+status: stable
+last_updated: 2026-06-28
+related: []
+---
 # TikTok Ads 플레이북
 
 ## 특성

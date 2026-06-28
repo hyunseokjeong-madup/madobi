@@ -1,3 +1,12 @@
+---
+title: "Meta (Facebook/Instagram) 플레이북"
+category: channels
+tags: [channels, meta]
+verified: true
+status: stable
+last_updated: 2026-06-28
+related: []
+---
 # Meta (Facebook/Instagram) 플레이북
 
 ## 핵심 KPI

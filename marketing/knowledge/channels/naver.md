@@ -1,3 +1,12 @@
+---
+title: "Naver (네이버) 플레이북"
+category: channels
+tags: [channels, naver]
+verified: true
+status: stable
+last_updated: 2026-06-28
+related: []
+---
 # Naver (네이버) 플레이북
 
 ## 매체

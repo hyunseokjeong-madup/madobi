@@ -1,3 +1,12 @@
+---
+title: "Google Ads 플레이북"
+category: channels
+tags: [channels, google]
+verified: true
+status: stable
+last_updated: 2026-06-28
+related: []
+---
 # Google Ads 플레이북
 
 ## 캠페인 유형

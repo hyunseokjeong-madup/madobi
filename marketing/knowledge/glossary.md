@@ -1,3 +1,12 @@
+---
+title: "마케팅 지표 용어집 (Glossary)"
+category: knowledge
+tags: [knowledge, glossary]
+verified: true
+status: stable
+last_updated: 2026-06-28
+related: []
+---
 # 마케팅 지표 용어집 (Glossary)
 
 쓸수록 자라는 지표 사전. 정의·공식·주의. (계산은 항상 코드로 검산 → `reconcile.py`/`summarize.py`)
