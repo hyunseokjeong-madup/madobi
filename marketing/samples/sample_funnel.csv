@@ -1,0 +1,5 @@
+step,users
+visit,10000
+cart,3000
+checkout,1500
+purchase,1000

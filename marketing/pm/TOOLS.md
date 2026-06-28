@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 70개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 72개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -33,6 +33,7 @@
 | `forecast_accuracy.py` | 예측 정확도 — 실제 vs 예측의 MAE/MAPE/RMSE/bias 산출. 모델 신뢰도 평가. 계산 정확. |
 | `frequency.py` | 빈도(frequency) 캡 점검. freq=노출/도달. 캡 초과 시 피로·예산낭비 경보. |
 | `funnel.py` | 퍼널 드롭오프 분석 (impr→click→conv). 가장 약한 단계 식별. CSV 합계 또는 직접 인자. |
+| `funnel_steps.py` | 다단계 퍼널 누수 — 단계별 사용자 수에서 통과율/이탈률 계산, 최대 누수 단계 식별. 계산 정확. |
 | `geo_lift.py` | Geo 증분성(geo holdout) — 이중차분(difference-in-differences)으로 광고 순증분 추정. |
 | `guardrails.py` | 목표 CPA/ROAS 가드레일 체커. 엔티티별로 목표 위반을 경보. |
 | `hhi.py` | 집중도 HHI — Herfindahl-Hirschman 지수(점유율 제곱합)로 채널/상품 집중도 측정. |
@@ -71,6 +72,7 @@
 | `srm_check.py` | SRM(표본비율 불일치) 점검 — A/B 트래픽 배분이 기대비율(기본 50/50)에서 유의하게 벗어났는지 카이제곱 검정. |
 | `target_setter.py` | 목표 역산(goal-seek) — 목표 ROAS/CPA 달성에 필요한 입력값 역산. |
 | `tools_index.py` | 도구 인덱스 생성기 — marketing/pm/*.py 의 모듈 도크스트링 첫 줄을 모아 TOOLS.md 자동 생성. |
+| `ttest.py` | Welch t-검정 — 두 그룹 평균 차이의 유의성(분산 다름 허용). 예: 세그먼트별 AOV 비교. |
 | `waste.py` | 예산 낭비 탐지. ROAS가 기준 미만인데 지출이 큰 엔티티 → 절감 후보. |
 | `weekly_rollup.py` | 주간 롤업 — 일별 CSV를 ISO 주 단위로 집계하고 WoW(주간대비) 증감 산출. 가중지표 정확. |
 | `winback_priority.py` | 윈백 우선순위 — 과거가치(monetary) × 이탈위험(recency/기대주기)으로 재유치 대상 순위화. |

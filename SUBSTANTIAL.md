@@ -80,8 +80,11 @@
 | 52 | CPM 추세(경매 경쟁 압력) | `marketing/pm/cpm_trend.py` | +20% 상승 검산 |
 | 53 | 효율 사분면(볼륨×효율 액션) | `marketing/pm/efficiency_quadrant.py` | Scale/Grow/Fix/Cut 검산 |
 
+| 54 | 다단계 퍼널 누수 분석 | `marketing/pm/funnel_steps.py` | visit→cart 70% 검산 |
+| 55 | Welch t-검정(평균 비교) | `marketing/pm/ttest.py` | t=2.850/p=0.004 검산 |
+
 ## ⬜ 진행/큐 (각 30분급)
-54 멀티 KPI 대시 · 55 코호트 LTV 비교 · 56 가설검정 일반화 · … (→200)
+56 멀티 KPI 대시 · 57 코호트 LTV 비교 · 58 ANOVA · … (→200)
 6 미디어믹스 회귀(MMM 간이) · 7 증분성(geo holdout) 추정 · 8 검색어 클러스터링 · 9 소재 피로 모델(추세) ·
 10 페이싱 최적화(잔여예산 재분배) · 11 HTML 대시보드 생성 · 12 데이터 품질 검증기(다중 룰) ·
 13 입찰 시뮬레이터 · 14 LTV 예측(코호트 외삽) · 15 RFM 세그먼테이션 · … (→200)

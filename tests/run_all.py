@@ -97,6 +97,8 @@ CHECKS = [
     ("sc: ctr_benchmark",             ["python", "marketing/pm/ctr_benchmark.py", "marketing/samples/sample_campaign.csv"], "CTR BENCHMARK"),
     ("sc: cpm_trend",                 ["python", "marketing/pm/cpm_trend.py", "marketing/samples/sample_cpm.csv"], "CPM TREND"),
     ("sc: efficiency_quadrant",       ["python", "marketing/pm/efficiency_quadrant.py", "marketing/samples/sample_campaign.csv"], "EFFICIENCY QUADRANT"),
+    ("sc: funnel_steps",              ["python", "marketing/pm/funnel_steps.py", "marketing/samples/sample_funnel.csv"], "FUNNEL"),
+    ("sc: ttest",                     ["python", "marketing/pm/ttest.py", "--a-mean", "50000", "--a-sd", "12000", "--a-n", "200", "--b-mean", "54000", "--b-sd", "15000", "--b-n", "180"], "WELCH t-TEST"),
 ]
 
 def run():
