@@ -101,6 +101,8 @@ CHECKS = [
     ("sc: ttest",                     ["python", "marketing/pm/ttest.py", "--a-mean", "50000", "--a-sd", "12000", "--a-n", "200", "--b-mean", "54000", "--b-sd", "15000", "--b-n", "180"], "WELCH t-TEST"),
     ("sc: anova",                     ["python", "marketing/pm/anova.py", "marketing/samples/sample_anova.csv"], "ONE-WAY ANOVA"),
     ("sc: chi_square",                ["python", "marketing/pm/chi_square.py", "marketing/samples/sample_contingency.csv"], "CHI-SQUARE"),
+    ("sc: mix_shift",                 ["python", "marketing/pm/mix_shift.py", "marketing/samples/sample_mixshift.csv"], "MIX-SHIFT"),
+    ("sc: roas_sensitivity",          ["python", "marketing/pm/roas_sensitivity.py", "--cvr", "0.05", "--aov", "50000", "--cpc", "1000"], "ROAS SENSITIVITY"),
 ]
 
 def run():

@@ -1,6 +1,6 @@
 # marketing/pm — 도구 인덱스 (자동 생성)
 
-총 74개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
+총 76개 도구. `python tools_index.py`로 갱신. 모든 계산은 코드 검산(수치 안 틀림).
 
 | 도구 | 설명 |
 |------|------|
@@ -46,6 +46,7 @@
 | `marginal_cpa.py` | 한계 CPA — 두 구간(증액 전/후)의 추가 지출당 추가 전환 비용. marginal CPA=Δspend/Δconv. |
 | `market_basket.py` | 시장바구니 분석 — 연관규칙(support/confidence/lift). 함께 구매되는 품목쌍 발굴(번들·교차판매). |
 | `mer.py` | MER (Marketing Efficiency Ratio) = 총매출/총광고비. 채널귀속 무관 전사 효율. |
+| `mix_shift.py` | 믹스-시프트 분해 — 블렌디드 CPA 변화를 '믹스 효과'(채널 비중 변화)와 '단가 효과'(채널별 CPA 변화)로 분해. |
 | `mmm.py` | 미디어믹스 간이 회귀(MMM) — OLS로 채널별 매출 기여 계수 추정. |
 | `naming_check.py` | 네이밍 규칙 검증. 소재/캠페인명이 {campaign}_{angle}_{format}_{hook}_v## 규칙을 따르는지 점검. |
 | `new_vs_returning.py` | 신규 vs 재구매 분해 — 거래 데이터에서 각 거래를 첫구매(신규)/재구매로 판정해 매출·주문 분해. |
@@ -63,6 +64,7 @@
 | `revenue_waterfall.py` | 매출 워터폴 — 두 기간 사이 총매출 변화를 채널별 기여로 분해(워터폴). 합=총변화(정확). |
 | `rfm.py` | RFM 세그멘테이션 — 거래 데이터로 Recency/Frequency/Monetary 5분위 점수화 후 세그먼트 분류. |
 | `roas_gap.py` | ROAS 목표 갭 — 채널별 실제 ROAS vs 목표. 미달 채널의 매출 부족분(목표달성 필요 추가매출) 집계. |
+| `roas_sensitivity.py` | ROAS 민감도 — ROAS=(CVR×AOV)/CPC 에서 각 드라이버 ±변화가 ROAS에 미치는 영향 표. |
 | `rotation.py` | 소재 로테이션/리프레시. 노출 충분한데 CTR 낮은 소재 → 교체 후보. 신선도 우선순위 제시. |
 | `sample_size.py` | A/B 표본수 · 검정력 계산기 (two-proportion). |
 | `saturation_fit.py` | 반응곡선 적합(포화) — Hill/Michaelis 곡선 y = Vmax·x/(K+x) 을 (지출,전환) 점들에서 적합. |
