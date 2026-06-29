@@ -86,14 +86,46 @@ def demo(csv_path, account=None, quiet=False):
     return out
 
 
+def _loop_roundtrip():
+    """자기개선 루프 라운드트립: curate.upsert(중복=재검증) → recall(회상) 검증.
+
+    learn.py 를 직접 부르지 않는다 — 그건 _GLOBAL.md 고정 + 기본 commit=True 라
+    CI에서 실제 push 를 유발한다. 대신 같은 쓰기경로(curate.upsert_lesson)를
+    marketing/knowledge/ 하위 임시 계정 파일에 적용하고, recall 로 노출까지 확인한 뒤
+    임시 파일을 완전히 청소한다(부작용 0).
+    """
+    sys.path.insert(0, str(MARKETING / "knowledge"))
+    import curate, recall  # 같은 폴더, stdlib only
+
+    acct = "_e2e_selftest_tmp"
+    kpath = MARKETING / "knowledge" / f"{acct}.md"
+    try:
+        if kpath.exists():
+            kpath.unlink()
+        fb = "주말 저녁 CPA가 평일보다 낮다 — 예산 가중"
+        r1 = curate.upsert_lesson(kpath, "pacing", fb)
+        r2 = curate.upsert_lesson(kpath, "pacing", "  주말   저녁 CPA가 평일보다 낮다 — 예산 가중 ")  # 변형
+        assert r1 == "appended" and r2 == "updated", f"dedup 실패: {r1}/{r2}"
+        lessons = [l for l in kpath.read_text(encoding="utf-8").splitlines() if l.startswith("- [")]
+        assert len(lessons) == 1, f"중복 누적됨: {len(lessons)}줄"
+        # 회상: 임시 계정 자산이 recall 에 노출되는가
+        recalled = recall.recall(account=acct, query="CPA 주말", limit=3)
+        assert acct in recalled or "CPA" in recalled.upper(), "회상이 임시 자산을 못 노출"
+    finally:
+        if kpath.exists():
+            kpath.unlink()  # 임시 자산 청소 — 213개 실데이터 불변
+    print("[selftest] 루프 라운드트립 OK — curate dedup(2→1줄, 재검증) → recall 노출")
+
+
 def selftest():
-    """비대화 검증: 기본 샘플로 흐름이 끝까지 도는지 + 알려진 불일치를 잡는지."""
+    """비대화 검증: 기본 샘플로 흐름이 끝까지 도는지 + 알려진 불일치를 잡는지 + 루프 라운드트립."""
     res = demo(DEFAULT_CSV, account="demo_ecommerce", quiet=True)
     s = res["steps"]
     # sample_campaign.csv 엔 의도된 불일치(C_carousel CTR, SUM spend)가 있음 → 반드시 적발해야 함
     assert s.get("reconcile_verdict") == "INCONSISTENCY", "reconcile이 알려진 불일치를 놓침"
     assert s.get("summarize_rc") == 0, "summarize 실행 실패"
     assert s.get("sql_query_rc") == 0, "sql_query 실행 실패"
+    _loop_roundtrip()
     print("[selftest] OK — E2E 흐름 정상 + 알려진 불일치 적발(reconcile=INCONSISTENCY)")
     return 0
 
