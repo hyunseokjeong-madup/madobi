@@ -14,7 +14,9 @@
 | 8 | **리포트 자동 생성기**(일/주/월) | ✅ | `marketing/report.py` — 검산 포함 성과 리포트 마크다운 |
 | 8b | **퍼마 일상 루틴 도구**(페이싱/퍼널/AB/재배분…) | 🚧 | `marketing/pm/*` — 100사이클 트래커 `CYCLES.md` |
 | 9 | **마케팅 추론 벤치 확대 + 함정** | ⬜ | 어트리뷰션/타임존/Simpson/베이즈 + 도구모드 100% |
-| 10 | **온보딩 + E2E 데모 + CI** | ✅ | ✅계정 온보딩(`curate.py --onboard`) · ✅CI(`.github/workflows/ci.yml`, 95/95+29/29, py3.9/3.12) · ✅E2E 데모(`marketing/demo_e2e.py` 회상→검산→집계→삼중검증, `--selftest` 내장) |
+| 10 | **온보딩 + E2E 데모 + CI** | ✅ | ✅계정 온보딩(`curate.py --onboard`) · ✅CI(`.github/workflows/ci.yml`, 105/105+29/29, py3.9/3.12 + compileall 구문가드) · ✅E2E 데모(`marketing/demo_e2e.py` 회상→검산→집계→삼중검증→루프 라운드트립, `--selftest` 내장) |
+| 11 | **자기개선 루프 게이트 편입 + 경량 RL** | ✅ | ✅루프 도구 7종을 105/105 결정론 게이트에 배선 · ✅`learn.py` dedup(curate.upsert)+git 안전 · ✅손상 색인→grep 폴백 봉합 · ✅경량 UCB1 bandit(`pm/bandit_policy.py`, 폐형식·결정론) |
+| 12 | **RAG ↔ RL 시너지 폐곡선** | ✅ | ✅`recall.recall_quality()`(회상 품질=색인 hit/grep·매칭비율, 100% 코드산물) → bandit 보상 · ✅결정론 confidence 배지 · ✅`viz.py` 그래프 JSON(노드213·에지680) · ✅`loop_report.py` observer(없는 산술 날조 안 함) |
 
 ## 운영 원칙
 - 동시 워크플로 1~2개(레이트리밋 회피) · 모든 산출물 코드검증 · 항목별 커밋·푸시.
