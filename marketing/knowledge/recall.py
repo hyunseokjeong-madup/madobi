@@ -257,6 +257,10 @@ def recall(account=None, query=None, category=None, limit=5):
     if kb_hits is None:
         kb_hits = _grep(query, category, limit)
 
+    # 결정론 신뢰도 배지(질의어 매칭 비율) — 색인/grep 경로 일관, score 와 독립.
+    for h in kb_hits:
+        h["confidence"] = _confidence(h, query)
+
     return _render(account, query, category, source, acct_hits, kb_hits)
 
 
@@ -287,8 +291,46 @@ def _render(account, query, category, source, acct_hits, kb_hits):
     return "\n".join(L)
 
 
+def _confidence(h, query):
+    """결정론적 휴리스틱 신뢰도 = (히트가 담은 질의어 종류 수) / (전체 질의어 종류 수).
+
+    score(빈도) 와 독립 — 색인 경로(score=0 고정)와 grep 경로가 같은 값을 내게 한다.
+    '진실'이 아니라 표면 매칭 지표일 뿐(임베딩·의미판단 안 함 → 추측 금지).
+    """
+    terms = set(_terms(query))
+    if not terms:
+        return None
+    hay = (str(h.get("title", "")) + " " + str(h.get("snippet", ""))).lower()
+    matched = sum(1 for t in terms if t in hay)
+    return matched / len(terms)
+
+
 def _line(h):
-    return f"- **{h['title']}** ({h['category']}) — {h['snippet']} [{h['path']}]"
+    base = f"- **{h['title']}** ({h['category']}) — {h['snippet']} [{h['path']}]"
+    c = h.get("confidence")
+    if c is None:
+        return base
+    return base + f"  ·conf={c:.2f}"  # 결정론 휴리스틱 지표(질의어 매칭 비율), 진실 아님
+
+
+# --- 회상 품질 = bandit 보상 신호 (시너지: RAG ↔ 자기개선 루프) -------------------
+def recall_quality(account=None, query=None, category=None, limit=5):
+    """이번 회상이 '얼마나 잘 답했나'를 0~1 결정론 점수로. bandit_policy 의 정직한 보상.
+
+    외부 마케팅 성과(노이즈)와 달리 이건 100% 코드 산물이라 검산 가능:
+      base = 색인 hit 이면 1.0, grep 폴백이면 0.5 (색인이 살아있는 경로가 더 건강)
+      cover = 히트들의 평균 질의어 매칭 비율(_confidence)
+      quality = base * (0.5 + 0.5*cover)   # 히트 0건이면 cover=0 → base*0.5
+    arm=prefetch 카테고리, reward=recall_quality(...) 로 두면 루프가 철학을 안 깨고 닫힌다.
+    """
+    acct_hits = _account_files(account)
+    kb_hits = _try_index_search(query, category, limit) if query else None
+    base = 1.0 if kb_hits is not None else 0.5      # 색인 경로 vs grep 폴백
+    if kb_hits is None:
+        kb_hits = _grep(query, category, limit)
+    confs = [c for c in (_confidence(h, query) for h in kb_hits) if c is not None]
+    cover = sum(confs) / len(confs) if confs else 0.0
+    return round(base * (0.5 + 0.5 * cover), 6)
 
 
 # --- CLI / self-test -----------------------------------------------------------
@@ -323,7 +365,19 @@ def _selftest():
                 db.unlink()                   # 원래 없었으면 정리
         print("[selftest] 손상 색인 → grep 폴백 확인 OK")
 
+    # 4) confidence 배지: 결정론(같은 입력 같은 값) + 0~1 범위
+    out_conf = recall(query="ROAS 심화", limit=3)
+    assert "·conf=" in out_conf, "신뢰도 배지 누락"
+    assert recall(query="ROAS 심화", limit=3) == out_conf, "회상 출력 비결정적"
+
+    # 5) recall_quality (bandit 보상): 색인 경로(>0.5)가 grep 폴백보다 건강, 결정론
+    q1 = recall_quality(query="ROAS", limit=3)
+    assert 0.0 <= q1 <= 1.0, f"품질 점수 범위 이탈: {q1}"
+    assert q1 == recall_quality(query="ROAS", limit=3), "recall_quality 비결정적"
+    assert recall_quality(query="존재하지않을질의어xyzzy", limit=3) <= q1, "무매치가 매치보다 높음"
+
     print(out)
+    print(f"[selftest] confidence 배지 + recall_quality(={q1}) 결정론 OK")
     print(f"\n[selftest] OK — 색인 경로 + grep 폴백(직접 {len(grep_hits)}건) 모두 ROAS 회상 성공")
 
 
