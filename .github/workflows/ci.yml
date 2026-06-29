@@ -1,6 +1,6 @@
 name: CI
 
-# 결정론적 보장(95/95 통합 + 29/29 집계 벤치)을 매 push/PR 마다 자동 검증한다.
+# 결정론적 보장(102/102 통합 + 29/29 집계 벤치)을 매 push/PR 마다 자동 검증한다.
 # 코어는 순수 stdlib(외부 의존성 0) → pip install 단계가 필요 없다.
 
 on:
@@ -31,7 +31,14 @@ jobs:
           # 코어가 stdlib 만으로 import 되는지 -I(격리) 모드로 증명. duckdb 미설치 환경.
           python -I -c "import sys; sys.path.insert(0, 'marketing'); import safemath, sql_query, semantic_layer; print('core imports under -I, HAS_DUCKDB=', sql_query.HAS_DUCKDB)"
 
-      - name: Integration suite (must be 95/95 GREEN)
+      - name: Syntax guard — every file byte-compiles on this Python
+        run: |
+          # run_all 이 import·실행하지 않는 '다크파일'(score_gen5/marketing_reasoning/
+          # add_frontmatter/link_related/build_kb_all 등)이 3.10+ 구문을 몰래 쓰면
+          # 3.9 레그에서 여기서 잡힌다. 실행 없이 파싱+컴파일만 → 부작용 0.
+          python -m compileall -q .
+
+      - name: Integration suite (must be 102/102 GREEN)
         run: python tests/run_all.py
 
       - name: Aggregation benchmark (must be 29/29 PASS)

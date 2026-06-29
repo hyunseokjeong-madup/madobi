@@ -105,6 +105,14 @@ CHECKS = [
     ("sc: roas_sensitivity",          ["python", "marketing/pm/roas_sensitivity.py", "--cvr", "0.05", "--aov", "50000", "--cpc", "1000"], "ROAS SENSITIVITY"),
     ("sc: regression_residuals",      ["python", "marketing/pm/regression_residuals.py", "marketing/samples/sample_af.csv"], "RESIDUAL DIAGNOSTICS"),
     ("sc: incremental_roas",          ["python", "marketing/pm/incremental_roas.py", "marketing/samples/sample_incroas.csv"], "INCREMENTAL ROAS"),
+    # --- self-improvement loop + memory RAG (이미 구현된 selftest를 결정론 게이트에 배선) ---
+    ("mem: safemath selftest",        ["python", "marketing/safemath.py", "--selftest"], "recompute"),
+    ("mem: semantic_layer selftest",  ["python", "marketing/semantic_layer.py"], "self-test: PASS"),
+    ("mem: search index builds",      ["python", "marketing/knowledge/search.py", "--build"], "INDEX BUILT"),
+    ("mem: recall selftest",          ["python", "marketing/knowledge/recall.py", "--selftest"], "[selftest] OK"),
+    ("mem: add_frontmatter selftest", ["python", "marketing/knowledge/add_frontmatter.py", "--selftest"], "[selftest] OK"),
+    ("mem: link_related selftest",    ["python", "marketing/knowledge/link_related.py", "--selftest"], "[selftest] OK"),
+    ("loop: demo_e2e selftest",       ["python", "marketing/demo_e2e.py", "--selftest"], "[selftest] OK"),
 ]
 
 def run():
