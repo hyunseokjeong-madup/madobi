@@ -230,10 +230,15 @@ def _account_files(account):
         out.append(_hit_from_path(kb, "", title=None, snippet=None, score=10**9))
     log = HISTORY / f"{account}-log.md"
     if log.exists():
+        # 형제 경로(_hit_from_path 등)와 동일하게 read 를 방어 — "회상은 절대 죽지 않는다".
+        try:
+            snippet = _snippet_for(log.read_text(encoding="utf-8"), [])
+        except Exception:
+            snippet = ""
         out.append({
             "title": f"{account} 이력 로그",
             "category": "history",
-            "snippet": _snippet_for(log.read_text(encoding="utf-8"), []),
+            "snippet": snippet,
             "path": _display_path(log),
             "score": 10**9,
         })
@@ -291,16 +296,38 @@ def _render(account, query, category, source, acct_hits, kb_hits):
     return "\n".join(L)
 
 
+def _haystack_for(h):
+    """매칭 대상 텍스트 — title + *본문 전체*. 본문은 경로로 직접 읽어 색인/grep 경로가
+    같은 값을 내게 한다(snippet 은 색인=FTS5 발췌 vs grep=파일전체로 출처가 달라 불일치).
+    파일 read 실패 시 snippet 으로 폴백(회상은 죽지 않는다).
+    """
+    parts = [str(h.get("title", ""))]
+    body = None
+    p = h.get("path")
+    if p:
+        for base in (MARKETING.parent, MARKETING, HERE):
+            cand = (base / p) if not Path(p).is_absolute() else Path(p)
+            try:
+                if cand.exists():
+                    body = cand.read_text(encoding="utf-8")
+                    break
+            except Exception:
+                body = None
+    parts.append(body if body is not None else str(h.get("snippet", "")))
+    return " ".join(parts).lower()
+
+
 def _confidence(h, query):
     """결정론적 휴리스틱 신뢰도 = (히트가 담은 질의어 종류 수) / (전체 질의어 종류 수).
 
-    score(빈도) 와 독립 — 색인 경로(score=0 고정)와 grep 경로가 같은 값을 내게 한다.
+    score(빈도) 와 독립 + *본문 전체* 기준 → 색인 경로와 grep 경로가 같은 값을 낸다
+    (예전엔 snippet 출처가 경로마다 달라 동일 문서가 다른 conf 를 냈다).
     '진실'이 아니라 표면 매칭 지표일 뿐(임베딩·의미판단 안 함 → 추측 금지).
     """
     terms = set(_terms(query))
     if not terms:
         return None
-    hay = (str(h.get("title", "")) + " " + str(h.get("snippet", ""))).lower()
+    hay = _haystack_for(h)
     matched = sum(1 for t in terms if t in hay)
     return matched / len(terms)
 
@@ -376,8 +403,29 @@ def _selftest():
     assert q1 == recall_quality(query="ROAS", limit=3), "recall_quality 비결정적"
     assert recall_quality(query="존재하지않을질의어xyzzy", limit=3) <= q1, "무매치가 매치보다 높음"
 
+    # 6) confidence 경로 일관: 같은 문서를 색인/grep hit 으로 만들어도 conf 동일(본문 기준).
+    real = _md_files()[0]
+    p = _display_path(real)
+    idx_like = {"title": real.stem, "snippet": "본문 일부 발췌만", "path": p}
+    grep_like = {"title": real.stem, "snippet": "# 완전 다른 발췌", "path": p}
+    for q in ("ROAS CPA", "예산 점검", "타깃"):
+        assert _confidence(idx_like, q) == _confidence(grep_like, q), \
+            f"색인/grep 경로 confidence 불일치 (query={q})"
+
+    # 7) account-log 가 읽기불가/깨진 인코딩이어도 recall 은 죽지 않는다(공개 API 불변식).
+    log = HISTORY / "_recall_crashtest_tmp-log.md"
+    try:
+        HISTORY.mkdir(parents=True, exist_ok=True)
+        log.write_bytes(b"\xff\xfe broken utf8 \x80")
+        crash = recall(account="_recall_crashtest_tmp", query="ROAS", limit=2)
+        assert "## 회상(recall)" in crash, "손상 account-log 에서 recall 헤더 누락"
+    finally:
+        if log.exists():
+            log.unlink()
+
     print(out)
     print(f"[selftest] confidence 배지 + recall_quality(={q1}) 결정론 OK")
+    print("[selftest] confidence 경로 일관 + account-log 크래시 가드 OK")
     print(f"\n[selftest] OK — 색인 경로 + grep 폴백(직접 {len(grep_hits)}건) 모두 ROAS 회상 성공")
 
 

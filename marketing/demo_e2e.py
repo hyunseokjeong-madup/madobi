@@ -159,6 +159,10 @@ def _loop_roundtrip():
 
 def selftest():
     """비대화 검증: 기본 샘플로 흐름이 끝까지 도는지 + 알려진 불일치를 잡는지 + 루프 라운드트립."""
+    # DEFAULT_CSV 부재를 '로직 결함'으로 오인하지 않도록 main() 과 대칭으로 먼저 확인.
+    if not Path(DEFAULT_CSV).exists():
+        print(f"[error] 기본 샘플 CSV 없음: {DEFAULT_CSV}", file=sys.stderr)
+        return 1
     res = demo(DEFAULT_CSV, account="demo_ecommerce", quiet=True)
     s = res["steps"]
     # sample_campaign.csv 엔 의도된 불일치(C_carousel CTR, SUM spend)가 있음 → 반드시 적발해야 함

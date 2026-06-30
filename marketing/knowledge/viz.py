@@ -31,26 +31,29 @@ def build_graph():
     전부 link_related 의 결정론 함수에서 파생 → 같은 레포 상태면 항상 같은 그래프.
     """
     by_cat = link_related.collect()
-    nodes, edges, seen = [], [], set()
+    # note_id(=basename) 가 여러 카테고리에 중복될 수 있다(예: bidding/portfolio 와
+    # budget_models/portfolio). 에지는 bare id 로 참조하므로 id 당 노드 1개로 dedup 하되,
+    # 어느 카테고리들에 속하는지는 categories 배열로 보존(소비자가 충돌을 알 수 있게).
+    node_cats, edges, seen = {}, [], set()
     for cat in sorted(by_cat):
         notes = by_cat[cat]
         for p in notes:
             nid = link_related.note_id(p)
-            nodes.append({"id": nid, "category": cat})
+            node_cats.setdefault(nid, set()).add(cat)
             for tgt in link_related.related_for(p, notes):
-                # 무방향 에지 — (a,b)와 (b,a)를 한 번만.
-                key = tuple(sorted((nid, tgt)))
+                key = tuple(sorted((nid, tgt)))   # 무방향 에지 — (a,b)/(b,a) 한 번만
                 if key in seen:
                     continue
                 seen.add(key)
                 edges.append({"source": key[0], "target": key[1], "category": cat})
-    nodes.sort(key=lambda n: (n["category"], n["id"]))     # 결정론 정렬
+    nodes = [{"id": nid, "categories": sorted(cats)} for nid, cats in node_cats.items()]
+    nodes.sort(key=lambda n: n["id"])                       # 결정론 정렬(id 유니크)
     edges.sort(key=lambda e: (e["category"], e["source"], e["target"]))
     return {
         "nodes": nodes,
         "edges": edges,
         "stats": {
-            "node_count": len(nodes),
+            "node_count": len(nodes),                       # 유니크 id 수
             "edge_count": len(edges),
             "category_count": len(by_cat),
         },
@@ -86,6 +89,9 @@ def _selftest():
     s = g["stats"]
     assert s["node_count"] > 0, "노드 0개"
     assert s["node_count"] == len(g["nodes"]), "노드 카운트 불일치"
+    # id 가 진짜 유니크해야 한다 — 에지가 bare id 로 참조하므로 중복 id 는 노드 병합 버그.
+    ids_all = [n["id"] for n in g["nodes"]]
+    assert len(ids_all) == len(set(ids_all)), "노드 id 중복(같은 basename 다른 카테고리 병합)"
     assert s["edge_count"] == len(g["edges"]), "에지 카운트 불일치"
     # 결정론: 두 번 빌드 → 완전 동일(JSON 직렬화까지)
     assert json.dumps(build_graph(), sort_keys=True) == json.dumps(g, sort_keys=True), "그래프 비결정적"

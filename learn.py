@@ -37,6 +37,10 @@ def _curate():
 def append(path: Path, text: str):
     path.parent.mkdir(parents=True, exist_ok=True)
     prev = path.read_text(encoding="utf-8") if path.exists() else ""
+    # 기존 내용이 개행으로 안 끝나면(외부 수동편집 등) 새 항목이 같은 줄에 붙어 md 가 깨진다
+    # → curate.py 와 동일하게 선행 개행 보존.
+    if prev and not prev.endswith("\n"):
+        prev += "\n"
     path.write_text(prev + text, encoding="utf-8")
 
 def main():
@@ -49,6 +53,8 @@ def main():
                     help="skip git add/commit/push (auto-commit+push is ON by default)")
     ap.set_defaults(commit=True)
     a = ap.parse_args()
+    if not a.feedback.strip():
+        ap.error("feedback 은 비거나 공백만일 수 없습니다(빈 stub 가 지식 자산을 오염).")
     ts = datetime.now(KST).strftime("%Y-%m-%d %H:%M KST")
     date = datetime.now(KST).strftime("%Y-%m-%d")
 

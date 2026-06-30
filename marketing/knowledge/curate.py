@@ -147,8 +147,8 @@ def _main():
         else:
             print(f"exists  -> 이미 온보딩됨 ({a.onboard})")
     elif a.upsert:
-        if not a.feedback:
-            ap.error("--upsert 에는 --feedback 이 필요합니다")
+        if not a.feedback or not a.feedback.strip():
+            ap.error("--upsert 에는 비지 않은 --feedback 이 필요합니다(공백만 불가)")
         result = upsert_lesson(a.upsert, a.tag, a.feedback)
         path = Path(a.upsert)
         rel = path if path.is_absolute() else (ROOT / path)

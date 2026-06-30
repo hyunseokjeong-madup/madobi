@@ -43,6 +43,10 @@ def parse_arms(spec: str):
         name, rsum, pulls = parts[0], float(parts[1]), int(parts[2])
         if pulls < 0 or rsum < 0:
             raise ValueError(f"reward_sum/pulls 는 음수 불가: {chunk!r}")
+        # NaN/inf 는 음수 가드(nan<0=False)를 통과해 UCB 점수를 오염시키고 max() 타이브레이크를
+        # 입력순서 의존으로 만든다(결정론 위반) → 명시적으로 거부.
+        if math.isnan(rsum) or math.isinf(rsum):
+            raise ValueError(f"reward_sum 은 유한값이어야 함(NaN/inf 불가): {chunk!r}")
         arms.append((name, rsum, pulls))
     if not arms:
         raise ValueError("arm 이 하나도 없습니다")
@@ -84,6 +88,10 @@ def select_egreedy(arms, epsilon: float, seed: int):
 
     무작위라 seed 고정 없이는 비결정적 → seed 를 항상 받는다(기본 42).
     """
+    # 범위 밖 epsilon 은 조용히 퇴화(ε<0=전활용, ε>1=전탐험)한다 → 명시적으로 거부
+    # (parse_arms 의 음수 거부 관례와 대칭).
+    if not (0.0 <= epsilon <= 1.0):
+        raise ValueError(f"epsilon 은 0~1 범위여야 함: {epsilon}")
     rng = random.Random(seed)
     means = [(name, mean_reward(rsum, pulls)) for (name, rsum, pulls) in arms]
     if rng.random() < epsilon:
@@ -157,7 +165,23 @@ def _selftest():
     a2 = select_egreedy(arms, 0.5, 42)[0]
     assert a1 == a2, "egreedy seed 고정인데 비재현"
 
-    print("BANDIT POLICY self-test: PASS  (UCB1 폐형식 검산 + 미시도우선 + 결정론 + egreedy 재현)")
+    # 5) 경계 epsilon: 0=전활용(평균최대), 1=전탐험. 범위 밖은 거부.
+    assert select_egreedy([("a", 9, 10), ("b", 0, 1)], 0.0, 42)[2] == "exploit", "ε=0 인데 탐험"
+    assert select_egreedy([("a", 9, 10), ("b", 0, 1)], 1.0, 42)[2] == "explore", "ε=1 인데 활용"
+    for bad in (-0.1, 1.5):
+        try:
+            select_egreedy(arms, bad, 42); assert False, f"ε={bad} 거부 안 됨"
+        except ValueError:
+            pass
+
+    # 6) NaN/inf reward 거부 (결정론 타이브레이크 오염 방지)
+    for bad in ("a:nan:5, b:3:4", "a:inf:5, b:3:4"):
+        try:
+            parse_arms(bad); assert False, f"{bad!r} 거부 안 됨"
+        except ValueError:
+            pass
+
+    print("BANDIT POLICY self-test: PASS  (UCB1 폐형식 + 미시도우선 + 결정론 + egreedy 재현 + 입력가드)")
 
 
 if __name__ == "__main__":
