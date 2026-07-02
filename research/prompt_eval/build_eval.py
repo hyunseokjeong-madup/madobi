@@ -103,7 +103,9 @@ def main():
           .replace("__ROOT__", str(ROOT))
           .replace("__ARMS__", arms_js)
           .replace("__SCENARIOS__", scen_js))
-    Path(a.out).write_text(js, encoding="utf-8", newline="\n")  # LF only
+    # LF only. (Path.write_text의 newline 인자는 3.10+ — 3.9 지원을 위해 open 사용)
+    with open(a.out, "w", encoding="utf-8", newline="\n") as f:
+        f.write(js)
     print(f"wrote {a.out}: 2 arms x {len(scenarios)} scenarios = {2 * len(scenarios)} nodes")
 
 
