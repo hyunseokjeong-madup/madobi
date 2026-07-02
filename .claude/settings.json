@@ -1,5 +1,12 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "python tools/session_brief.py" }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [

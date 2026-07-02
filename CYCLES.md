@@ -9,7 +9,7 @@
 | 1 | 숫자 정합성 검산 | `marketing/reconcile.py` |
 | 2 | 소재 성과 분석 | `marketing/analyze_creatives.py` |
 | 3 | 대용량 집계 | `marketing/bench/summarize.py` |
-| 4 | 집계 벤치 30단계(4D 피벗) | `marketing/bench/levels.py` |
+| 4 | 집계 벤치 40단계(4D 피벗+함정) | `marketing/bench/levels.py` |
 | 5 | 소재 변주 생성 | `marketing/creative_gen.py` |
 | 6 | 이벤트/리프트/이상치 | `marketing/event_analysis.py` |
 | 7 | 자기개선(피드백→깃) | `learn.py` |
@@ -53,10 +53,10 @@
 | 283–300 | 마케팅 추론 벤치 v3 18문항(코드검증) | `marketing/bench/reasoning3/*` |
 
 ## 🎉 300/300 달성 — 산출물 요약
-- **PM 도구 25종** (`marketing/pm/`) — 페이싱·퍼널·AB·재배분·가드레일·낭비·POAS·LTV·검색어·채널믹스·다이제스트·MER·시즌성·어트리뷰션비교·로테이션 등
+- **PM 도구 78종** (`marketing/pm/`, 300사이클 시점 25종에서 확장) — 페이싱·퍼널·AB·재배분·가드레일·낭비·POAS·LTV·검색어·채널믹스·다이제스트·MER·시즌성·어트리뷰션비교·로테이션 등
 - **놀리지에셋 212 md** — 채널·버티컬·포맷·함정·루틴·지표·템플릿·체크리스트·오디언스·입찰·측정·지역·시즌·규제·후크·오퍼·LP·실험·그로스·목표·플랫폼기능·리포팅·예산모델·소재테스트·진단
 - **코드검증 추론 벤치 3종** (gen5 10 + v2 40 + v3 18 = 68문항)
-- **집계 벤치** 10만행×13필드, 30단계 4D 피벗
+- **집계 벤치** 10만행×13필드, 40단계 4D 피벗+함정
 - 통합테스트 green · 자기개선 루프(learn/autosync) · 한/영 README · 픽셀 로고
 
 *루프는 언제든 `CYCLES.md` 큐를 늘려 재개 가능(살아있는 문서).*

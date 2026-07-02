@@ -69,7 +69,7 @@ def demo(csv_path, account=None, quiet=False):
     csv_path = Path(csv_path)
     out = {"csv": str(csv_path), "steps": {}}
 
-    # 1) 맥락 회상 (계정 지정 시) — 검색 기반, 214개 전체 read 금지.
+    # 1) 맥락 회상 (계정 지정 시) — 검색 기반, 213개 전체 read 금지.
     #    어느 카테고리를 먼저 prefetch 할지는 bandit(UCB1)이 *회상 품질 보상*으로 고른다:
     #    recall_quality(코드 산물) → bandit arm 선택 → 그 카테고리로 회상. '돌수록 똑똑'의 실전.
     if account:

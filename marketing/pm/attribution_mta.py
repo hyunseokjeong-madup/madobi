@@ -33,8 +33,15 @@ def load(path):
 def credit(paths, half_life):
     models=["first","last","linear","time_decay","position"]
     out={m:defaultdict(float) for m in models}
+    def step_key(t):
+        # step은 숫자('1','2',…,'10') 또는 timestamp 문자열 — 문자열 사전순은 '10'<'2' 오정렬.
+        # 숫자면 (0, 실수값)로 먼저 정렬, 비숫자(timestamp 등)는 (1, 원문)로 뒤에 사전순.
+        try:
+            return (0, float(t[0]))
+        except (ValueError, TypeError):
+            return (1, str(t[0]))
     for pid,touches in paths.items():
-        touches=sorted(touches, key=lambda t:t[0])
+        touches=sorted(touches, key=step_key)
         chans=[t[1] for t in touches]
         # conversion value: last non-zero value, or sum; converted if any cv==1 or any value>0
         conv=any((t[3]==1) for t in touches) if any(t[3] is not None for t in touches) else any(t[2]>0 for t in touches)

@@ -7,20 +7,22 @@ Reads a CSV of marketing breakdown data and checks consistency:
   - unit/format cleaning (commas, %, currency)
 Outputs a report with PASS (v) / WARN (!). Pure stdlib; no pandas needed.
 
-Usage: python reconcile.py data.csv [--tol 0.01]
+Usage: python reconcile.py data.csv [--tol 0.01] [--json] [--md report.md]
 """
-import csv, sys, re, argparse
+import csv, sys, re, json, argparse
 from pathlib import Path
 
+try:
+    from . import safemath
+except ImportError:  # 스크립트로 직접 실행될 때
+    import safemath
+
 RAW = ["impressions", "clicks", "spend", "conversions", "revenue"]
-ALIASES = {
-    "impressions": ["impressions", "impr", "imp", "노출", "노출수"],
-    "clicks": ["clicks", "click", "클릭", "클릭수"],
-    "spend": ["spend", "cost", "비용", "광고비", "spend(krw)", "cost(krw)"],
-    "conversions": ["conversions", "conv", "conversion", "전환", "전환수", "installs", "purchases"],
-    "revenue": ["revenue", "rev", "매출", "수익", "sales"],
+# raw alias 는 safemath._RAW_ALIASES 가 단일 소스 (도구 간 표류 방지). 파생지표 alias 만 여기 추가.
+ALIASES = {k: list(safemath._RAW_ALIASES[k]) for k in RAW}
+ALIASES.update({
     "ctr": ["ctr"], "cpc": ["cpc"], "cpm": ["cpm"], "cpa": ["cpa", "cpi"], "roas": ["roas"],
-}
+})
 
 def num(s):
     if s is None: return None
@@ -28,6 +30,10 @@ def num(s):
     if s in ("", "-", "—", "N/A", "na", "NaN"): return None
     try: return float(s)
     except ValueError: return None
+
+def num2(s):
+    """num() + '%' 명시 여부 플래그 — CTR 스케일(분수 vs 퍼센트) 판정용."""
+    return num(s), isinstance(s, str) and "%" in s
 
 def find_col(headers, key):
     low = {h.lower().strip(): h for h in headers}
@@ -52,29 +58,64 @@ def close(a, b, tol):
     denom = max(abs(a), abs(b), 1e-9)
     return abs(a - b) / denom <= tol
 
+def fmt(v):
+    """사람이 읽는 수 표기 — 지수표기 금지(4.1e+06 → 4,100,000), 천단위 콤마.
+    None(계산 불가)은 '-' — num() 이 결측으로 되읽는 문자라 라운드트립 일관."""
+    if v is None: return "-"
+    if abs(v) >= 100:
+        s = f"{v:,.2f}"
+        return s[:-3] if s.endswith(".00") else s
+    return f"{v:.4g}"
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("csv")
     ap.add_argument("--tol", type=float, default=0.01)
     ap.add_argument("--md", default=None, help="write a markdown report to this path")
+    ap.add_argument("--json", action="store_true",
+                    help="사람용 텍스트 대신 JSON 한 줄 출력 (에이전트/스크립트 연동)")
     a = ap.parse_args()
-    rows = list(csv.DictReader(Path(a.csv).read_text(encoding="utf-8").splitlines()))
-    if not rows:
-        print("empty csv"); return
+    # 파일 없음 / 빈 데이터 / cp949(엑셀 한국어 저장) 를 traceback 없이 한 줄 안내로 처리
+    rows = safemath.load_rows(a.csv)
     headers = list(rows[0].keys())
     colmap = {k: find_col(headers, k) for k in ALIASES}
     label_col = headers[0]
 
     parsed, total_row = [], None
     for r in rows:
-        rec = {k: num(r.get(colmap[k])) if colmap[k] else None for k in ALIASES}
+        rec, pctf = {}, {}
+        for k in ALIASES:
+            rec[k], pctf[k] = num2(r.get(colmap[k])) if colmap[k] else (None, False)
+        rec["_pct"] = pctf
         rec["_label"] = (r.get(label_col) or "").strip()
-        if re.search(r"total|합계|sum|총계|소계", rec["_label"], re.I):
+        # 합계행 판정은 safemath.is_total_label 공용 기준 —
+        # 과거 부분매칭(re.search)이 'Summer_Sale' 의 'Sum' 에 걸려 실데이터를 조용히 폐기했다.
+        if safemath.is_total_label(rec["_label"]):
             total_row = rec
         else:
             parsed.append(rec)
 
-    warns, passes = [], []
+    warns, passes, notes = [], [], []
+
+    # 0) CTR 스케일(분수 vs 퍼센트)은 컬럼 단위로 1회 결정.
+    #    행마다 1배/100배 양쪽을 OR 로 허용하면 실제 100배(단위) 오류가 CONSISTENT 로 통과한다.
+    ctr_scale, _ratios = None, []
+    for rec in parsed:
+        d = derive(rec)
+        rep = rec.get("ctr")
+        if rep is not None and d.get("ctr"):
+            if rec["_pct"].get("ctr"):
+                ctr_scale = 100          # 셀에 '%' 명시 → 이 컬럼은 퍼센트 표기 확정
+                break
+            _ratios.append(rep / d["ctr"])
+    if ctr_scale is None and _ratios:
+        med = sorted(_ratios)[len(_ratios) // 2]
+        if 0.5 <= med <= 2:
+            ctr_scale = 1
+        elif 50 <= med <= 200:
+            ctr_scale = 100
+            notes.append("~ [SCALE] ctr: '%' 미표기 컬럼을 중앙값 기준 percent 스케일로 추정 — 원자료 확인 권장")
+        # 그 외(중앙값이 1도 100도 아님) → None 유지: 아래에서 SCALE AMBIGUOUS WARN
 
     # 1) per-row derived metric reconciliation
     for rec in parsed:
@@ -82,13 +123,20 @@ def main():
         for m in ["ctr", "cpc", "cpm", "cpa", "roas"]:
             rep = rec.get(m)
             if rep is not None and m in d:
-                # ratios (ctr) may be reported as fraction OR percent -> accept either scale
                 if m == "ctr":
-                    ok = bool(close(rep, d[m], a.tol) or close(rep, d[m] * 100, a.tol))
-                    shown = f"reported={rep:g}% recomputed={d[m]:.4%}"
+                    if ctr_scale == 100:
+                        ok = bool(close(rep, d[m] * 100, a.tol))
+                        shown = f"reported={rep:g}% recomputed={d[m]:.4%}"
+                    elif ctr_scale == 1:
+                        ok = bool(close(rep, d[m], a.tol))
+                        shown = f"reported={fmt(rep)} recomputed={d[m]:.4f} (fraction)"
+                    else:
+                        ok = False
+                        shown = (f"reported={rep:g} recomputed={d[m]:.4%} "
+                                 f"[SCALE AMBIGUOUS - 분수/퍼센트 판별 불가]")
                 else:
                     ok = bool(close(rep, d[m], a.tol))
-                    shown = f"reported={rep:g} recomputed={d[m]:.4g}"
+                    shown = f"reported={fmt(rep)} recomputed={fmt(d[m])}"
                 msg = f"[{rec['_label']}] {m}: {shown}"
                 (passes if ok else warns).append(("v " if ok else "! ") + msg)
 
@@ -98,7 +146,7 @@ def main():
         for k in RAW:
             if total_row.get(k) is not None:
                 ok = close(sums[k], total_row[k], a.tol)
-                msg = f"[SUM] {k}: rows_sum={sums[k]:,.4g} vs total_row={total_row[k]:,.4g}"
+                msg = f"[SUM] {k}: rows_sum={fmt(sums[k])} vs total_row={fmt(total_row[k])}"
                 (passes if ok else warns).append(("v " if ok else "! ") + msg)
 
     # 3) Simpson / weighted-vs-simple ratio trap
@@ -112,43 +160,75 @@ def main():
         else:
             passes.append(f"v [RATIO] CTR weighted={weighted:.4%} (simple avg close)")
 
-    # report
-    print(f"\n=== RECONCILIATION: {a.csv}  (tol={a.tol:.0%}) ===")
-    print(f"rows={len(parsed)}  total_row={'yes' if total_row else 'no'}")
-    print(f"\n-- weighted totals --")
-    print(f"  impressions={sums['impressions']:,.0f}  clicks={sums['clicks']:,.0f}  "
-          f"spend={sums['spend']:,.0f}  conversions={sums['conversions']:,.0f}  revenue={sums['revenue']:,.0f}")
-    if sums["impressions"]:
-        print(f"  CTR={sums['clicks']/sums['impressions']:.4%}  "
-              f"CPC={sums['spend']/max(sums['clicks'],1e-9):,.2f}  "
-              f"CPM={sums['spend']/sums['impressions']*1000:,.2f}  "
-              f"ROAS={sums['revenue']/max(sums['spend'],1e-9):.2f}x")
-    print(f"\n-- checks: {len(passes)} PASS, {len(warns)} WARN --")
-    for w in warns: print("  " + w)
-    if not warns: print("  (all consistency checks passed)")
-    verdict = "CONSISTENT" if not warns else f"{len(warns)} INCONSISTENCY(IES) - investigate raw data"
-    print(f"\nVERDICT: {verdict}{' v' if not warns else ' !'}")
+    # 가중 파생지표 — 0 분모는 None('-') 으로. max(x,1e-9) 나눗셈은 쓰레기 값(1e15) 을 만들었다.
+    dw = {
+        "ctr": safemath.safe_div(sums["clicks"], sums["impressions"], default=None),
+        "cpc": safemath.safe_div(sums["spend"], sums["clicks"], default=None),
+        "cpm": safemath.safe_div(sums["spend"], sums["impressions"], default=None),
+        "roas": safemath.safe_div(sums["revenue"], sums["spend"], default=None),
+    }
+    if dw["cpm"] is not None:
+        dw["cpm"] *= 1000.0
+
+    # verdict 는 stdout·--md·--json 세 출력이 공유하는 단일 판정 —
+    # "인식된 컬럼 0개인데 CONSISTENT" 같은 거짓 양성을 막는다.
+    raw_found = [k for k in RAW if colmap[k]]
+    derived_found = [m for m in ("ctr", "cpc", "cpm", "cpa", "roas") if colmap[m]]
+    if not raw_found and not derived_found:
+        verdict, sym = "NO DATA RECOGNIZED - 인식 가능한 지표 컬럼이 없습니다 (헤더를 확인하세요)", " !"
+    elif not passes and not warns:
+        verdict, sym = "NO CHECKS RUN - 검산할 보고값/합계행이 없습니다 (재계산 totals 만 제공)", " ~"
+    elif warns:
+        verdict, sym = f"{len(warns)} INCONSISTENCY(IES) - investigate raw data", " !"
+    else:
+        verdict, sym = "CONSISTENT", " v"
+
+    if a.json:
+        payload = {
+            "file": a.csv, "rows": len(parsed), "total_row": bool(total_row), "tol": a.tol,
+            "totals": {k: sums[k] for k in RAW}, "derived_weighted": dw,
+            "checks": {"pass": len(passes), "warn": len(warns)},
+            "warnings": [w[2:] for w in warns], "notes": [n[2:] for n in notes],
+            "verdict": verdict,
+        }
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    else:
+        print(f"\n=== RECONCILIATION: {a.csv}  (tol={a.tol:.0%}) ===")
+        print(f"rows={len(parsed)}  total_row={'yes' if total_row else 'no'}")
+        print(f"\n-- weighted totals --")
+        print(f"  impressions={sums['impressions']:,.0f}  clicks={sums['clicks']:,.0f}  "
+              f"spend={sums['spend']:,.0f}  conversions={sums['conversions']:,.0f}  revenue={sums['revenue']:,.0f}")
+        if dw["ctr"] is not None:
+            roas_s = f"{fmt(dw['roas'])}x" if dw["roas"] is not None else "-"
+            print(f"  CTR={dw['ctr']:.4%}  CPC={fmt(dw['cpc'])}  CPM={fmt(dw['cpm'])}  ROAS={roas_s}")
+        print(f"\n-- checks: {len(passes)} PASS, {len(warns)} WARN --")
+        for n in notes: print("  " + n)
+        for w in warns: print("  " + w)
+        if not warns: print("  (all consistency checks passed)")
+        print(f"\nVERDICT: {verdict}{sym}")
 
     if a.md:
-        I, C, S = sums["impressions"], sums["clicks"], sums["spend"]
+        ok_mark = "✅ " if verdict == "CONSISTENT" else "⚠️ "
         lines = [f"# Reconciliation Report — `{Path(a.csv).name}`", "",
                  f"- rows: **{len(parsed)}**  ·  total row: **{'yes' if total_row else 'no'}**  ·  tol: {a.tol:.0%}",
-                 f"- verdict: **{'✅ ' + verdict if not warns else '⚠️ ' + verdict}**", "",
+                 f"- verdict: **{ok_mark}{verdict}**", "",
                  "## Totals (weighted)", "",
                  "| metric | value |", "|---|---|",
-                 f"| impressions | {I:,.0f} |", f"| clicks | {C:,.0f} |",
-                 f"| spend | {S:,.0f} |", f"| conversions | {sums['conversions']:,.0f} |",
+                 f"| impressions | {sums['impressions']:,.0f} |", f"| clicks | {sums['clicks']:,.0f} |",
+                 f"| spend | {sums['spend']:,.0f} |", f"| conversions | {sums['conversions']:,.0f} |",
                  f"| revenue | {sums['revenue']:,.0f} |"]
-        if I:
-            lines += [f"| CTR | {C/I:.4%} |", f"| CPC | {S/max(C,1e-9):,.2f} |",
-                      f"| CPM | {S/I*1000:,.2f} |", f"| ROAS | {sums['revenue']/max(S,1e-9):.2f}x |"]
+        if dw["ctr"] is not None:
+            lines += [f"| CTR | {dw['ctr']:.4%} |", f"| CPC | {fmt(dw['cpc'])} |",
+                      f"| CPM | {fmt(dw['cpm'])} |",
+                      f"| ROAS | {fmt(dw['roas'])}{'x' if dw['roas'] is not None else ''} |"]
         lines += ["", "## Consistency checks", ""]
         if warns:
             lines += [f"- ⚠️ {w[2:]}" for w in warns]
         else:
             lines += ["- ✅ all consistency checks passed"]
         Path(a.md).write_text("\n".join(lines) + "\n", encoding="utf-8")
-        print(f"\n[md] report written -> {a.md}")
+        if not a.json:
+            print(f"\n[md] report written -> {a.md}")
 
 if __name__ == "__main__":
     main()

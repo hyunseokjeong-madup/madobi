@@ -30,7 +30,7 @@ python marketing/bench/summarize.py marketing/samples/sample_campaign.csv --by c
 ## 4. 대규모 무실점 (10만 행)
 ```bash
 python marketing/bench/gen_dataset.py --rows 100000 && python marketing/bench/levels.py
-# → 29/29 levels PASS — 멀티피벗/필터/top-N/4D 피벗 전부 정확
+# → 40/40 levels PASS — 멀티피벗/필터/top-N/4D 피벗+함정 전부 정확
 ```
 
 ---

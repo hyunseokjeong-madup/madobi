@@ -6,9 +6,12 @@ Usage:
   python summarize.py dataset.csv --by channel
   python summarize.py dataset.csv --by overall --md out.md
 """
-import csv, json, argparse, re
+import json, argparse, sys
 from pathlib import Path
 from collections import defaultdict
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # marketing/
+import safemath
 
 RAWM = ["impressions", "clicks", "spend", "conversions", "revenue"]
 
@@ -31,18 +34,33 @@ def derived(t):
     }
 
 def aggregate(csvpath, by):
-    groups = defaultdict(lambda: {m: 0 for m in RAWM})
-    with open(csvpath, encoding="utf-8") as f:
-        for r in csv.DictReader(f):
-            # TOTAL/소계 행은 데이터가 아니므로 집계에서 제외(이중계산 방지) — reconcile.py와 동일 패턴.
-            label = " ".join((v or "") for v in r.values())
-            if re.search(r"total|합계|sum|총계|소계", label, re.I):
-                continue
-            key = "ALL" if by in (None, "overall") else (r.get(by) or "").strip()
-            g = groups[key]
-            for m in RAWM:
-                g[m] += num(r.get(m))
+    """CSV → {그룹: raw 합계}. 헤더는 alias(한글/대소문자/cost 등) 매핑, 합계행은 라벨 컬럼만 판정.
+
+    반환에 "_unmapped" 키를 넣지 않는다(verify_bench 호환) — 미매핑 경고는 aggregate_info() 로."""
+    groups, _ = aggregate_info(csvpath, by)
     return groups
+
+def aggregate_info(csvpath, by):
+    """aggregate + 헤더 매핑 정보. 인식 컬럼 0개면 조용한 0 리포트 대신 명시적 종료."""
+    rows = safemath.load_rows(csvpath)   # 파일 없음/빈 데이터/cp949 를 한 줄 안내로 처리
+    headers = list(rows[0].keys())
+    colmap = safemath.map_headers(headers)   # canonical → 원본 헤더
+    if not colmap:
+        raise SystemExit(f"[오류] 인식 가능한 지표 컬럼이 없습니다 — 헤더: {headers} "
+                         f"(인식 alias 예: impressions/노출, clicks/클릭, spend/비용/cost, ...)")
+    label_col = headers[0]
+    groups = defaultdict(lambda: {m: 0 for m in RAWM})
+    for r in rows:
+        # TOTAL/소계 행 제외(이중계산 방지). 판정은 safemath.is_total_label 공용 기준 —
+        # 과거 '모든 셀 join + 부분매칭'은 'Summer_Sale' 행까지 조용히 폐기했다.
+        if safemath.is_total_label(r.get(label_col)):
+            continue
+        key = "ALL" if by in (None, "overall") else (r.get(by) or "").strip()
+        g = groups[key]
+        for m in RAWM:
+            g[m] += num(r.get(colmap.get(m, m)))
+    unmapped = [m for m in RAWM if m not in colmap]
+    return groups, unmapped
 
 def main():
     ap = argparse.ArgumentParser()
@@ -52,7 +70,7 @@ def main():
     ap.add_argument("--json", default=None)
     ap.add_argument("--kpi", default="roas")
     a = ap.parse_args()
-    groups = aggregate(a.csv, a.by)
+    groups, unmapped = aggregate_info(a.csv, a.by)
 
     out = {}
     for k, t in groups.items():
@@ -61,6 +79,9 @@ def main():
     # ranked print
     order = sorted(out.items(), key=lambda kv: (kv[1].get(a.kpi) or -1), reverse=True)
     print(f"\n=== SUMMARY by {a.by}  ({len(out)} groups) ===")
+    if unmapped:
+        # 조용한 0 은 '보증된 숫자'처럼 읽힌다 — 미인식 컬럼은 반드시 표면화.
+        print(f"⚠ 미인식 지표 컬럼: {', '.join(unmapped)} (아래 표에서 0으로 표시 — 헤더 확인)")
     print("group".ljust(14) + "impr".rjust(14) + "clicks".rjust(11) + "spend".rjust(15) +
           "conv".rjust(9) + "revenue".rjust(15) + "  CTR    ROAS")
     for k, m in order:

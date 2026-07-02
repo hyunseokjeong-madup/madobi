@@ -19,7 +19,12 @@ def main():
     name=list(rows[0])[0]; vc=a.value or next((c for c in rows[0] if c.lower() in ("revenue","value","spend","conversions")),list(rows[0])[1])
     items=[((r.get(name) or "").strip(),num(r.get(vc))) for r in rows if not re.search(r"total|합계|총계",(r.get(name) or ""),re.I)]
     items.sort(key=lambda x:-x[1])
-    tot=sum(v for _,v in items) or 1; n=len(items)
+    raw_tot=sum(v for _,v in items); n=len(items)
+    if raw_tot<=0:
+        print(f"\n=== PARETO ({n} items, {vc}) ===")
+        print(f"[안내] {vc} 합계가 0 — 파레토 분석 불가. 값 컬럼(--value) 또는 데이터 확인 필요.")
+        return
+    tot=raw_tot
     print(f"\n=== PARETO ({n} items, {vc}) ===")
     cum=0; hit=None
     print("rank  name".ljust(24)+"value".rjust(14)+"누적%".rjust(9))

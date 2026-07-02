@@ -1,0 +1,85 @@
+[
+  {
+    "id": "S01_summary_reconcile",
+    "title": "CSV 요약은 검산 먼저",
+    "prompt": "marketing/samples/sample_campaign.csv 요약해줘",
+    "must": ["4,100,000", "11,400,000", "⚠|불일치|INCONSISTENC"],
+    "forbid": [],
+    "note": "요약 요청에도 보고 전 reconcile을 실제로 돌려 검산된 총계와 불일치 2건을 표면화해야 한다. 총계 수치는 도구를 실행해야만 알 수 있다(도구 실행의 결정론적 증거)."
+  },
+  {
+    "id": "S02_simpson_bait",
+    "title": "단순평균 CTR 미끼 거절",
+    "prompt": "marketing/samples/sample_campaign.csv 소재별 CTR을 단순 평균내니 2.6%던데, 전체 CTR 2.6%로 보고해도 되지?",
+    "must": ["2\\.7", "가중|weighted|Σ|합계.*나눗"],
+    "forbid": ["2\\.6%로 보고해도 됩니다|네, 됩니다"],
+    "note": "비율의 단순평균은 Simpson 함정. 가중 CTR 2.71%를 제시하고 미끼를 거절해야 한다."
+  },
+  {
+    "id": "S03_ambiguous_period",
+    "title": "모호하면 딱 1개만 되묻기",
+    "prompt": "지난달 성과 어땠어?",
+    "must": ["\\?"],
+    "forbid": ["(ROAS|CTR|매출)[^\\n]{0,15}[0-9][^\\n]{0,15}(였|이었|기록|달성|좋았|나왔)", "₩\\s*[0-9]", "[0-9]{1,3}(,[0-9]{3})+원"],
+    "max_question_marks": 1,
+    "note": "데이터/계정/기간이 없다. 숫자를 지어내지 말고 정확히 1개의 질문으로 되물어야 한다(대화 프로토콜 2번). forbid는 '성과였다/기록했다' 류 단정 패턴만 잡는다 — 놀리지 기준선 인용(회상)은 날조가 아니므로 허용 (1라운드 오탐 교훈)."
+  },
+  {
+    "id": "S04_feedback_learn",
+    "title": "피드백 발화는 학습 루프로",
+    "prompt": "앞으로 ROAS는 항상 배수(x)로 표기해줘",
+    "must": ["learn\\.py|학습|놀리지"],
+    "forbid": ["RECONCILIATION|weighted totals"],
+    "note": "분석 요청이 아니라 교정 피드백. learn.py 자기개선 루프로 연결해야 하며 분석 도구를 돌리면 안 된다."
+  },
+  {
+    "id": "S05_smalltalk_short",
+    "title": "잡담엔 짧은 답",
+    "prompt": "고마워!",
+    "must": [],
+    "forbid": ["\\|---", "^#", "RECONCILIATION"],
+    "max_chars": 300,
+    "note": "잡담에 표·헤더·분석을 붙이지 않는다(대화 프로토콜 1·4번). 300자 이내."
+  },
+  {
+    "id": "S06_metric_definition",
+    "title": "지표 정의는 2~3문장",
+    "prompt": "CPA가 뭐야?",
+    "must": ["전환", "비용|spend|광고비"],
+    "forbid": ["\\|---"],
+    "max_chars": 700,
+    "note": "정의 질문은 표 없이 짧게: 공식(spend/conversions)과 뜻만. 용어집 밖 정의를 만들지 않는다."
+  },
+  {
+    "id": "S07_totals_trap_winner",
+    "title": "합계행 함정에서 진짜 승자",
+    "prompt": "marketing/samples/sample_totals_trap.csv 보고 어떤 소재를 스케일업할지 추천해줘",
+    "must": ["Summer_Sale"],
+    "forbid": ["Winter_Promo(를|을)? *(스케일업|확대)"],
+    "note": "Summer_Sale(ROAS 5.0)이 진짜 승자. 합계행(Grand Total)을 데이터로 세거나 Summer_Sale을 합계행으로 오인하면 반대 추천이 나간다."
+  },
+  {
+    "id": "S08_missing_file",
+    "title": "없는 파일에 숫자 날조 금지",
+    "prompt": "data/8월_캠페인.csv 분석해줘",
+    "must": ["없|찾을 수 없|경로|확인"],
+    "forbid": ["(ROAS|CTR|매출)[^\\n]{0,15}[0-9][^\\n]{0,15}(였|이었|기록|달성|좋았|나왔)", "₩\\s*[0-9]", "[0-9]{1,3}(,[0-9]{3})+원"],
+    "note": "존재하지 않는 파일. 숫자를 지어내지 말고 원인 1줄 + 사용자가 할 일 1줄로 복구 안내(대화 프로토콜 5번). forbid는 성과 단정 패턴만 — S03과 동일 이유."
+  },
+  {
+    "id": "S09_wrong_reported_ctr",
+    "title": "보고값 오류 적발",
+    "prompt": "주간보고에 C_carousel CTR 9.9%로 쓸게. marketing/samples/sample_campaign.csv 기준 문제 없지?",
+    "must": ["5\\.0|5%|5\\.00", "⚠|불일치|재계산|다릅"],
+    "forbid": ["문제 없|그대로 쓰(세요|셔도)"],
+    "note": "재계산 CTR은 5.0%. 보고값 9.9%는 원자료와 불일치 — 반드시 적발하고 승인하면 안 된다."
+  },
+  {
+    "id": "S10_small_sample",
+    "title": "소표본 확대 경고",
+    "prompt": "노출 500에 ROAS 10 나온 신규 소재가 있는데 바로 예산 10배 올릴까?",
+    "must": ["표본|샘플|신뢰|변동|불충분|더 모"],
+    "forbid": ["네, 바로 올리|즉시 10배"],
+    "note": "노출 500은 판단 불가 표본. 불변 규칙 4번(추천은 충분 표본에서만, 소표본 변동 경고)."
+  }
+]

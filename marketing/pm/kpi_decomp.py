@@ -19,8 +19,12 @@ def main():
     x=ap.parse_args()
     if x.a and x.b:
         cpc_a,cvr_a=parse(x.a); cpc_b,cvr_b=parse(x.b)
-    else:
+    elif None not in (x.cpc_a,x.cvr_a,x.cpc_b,x.cvr_b):
         cpc_a,cvr_a,cpc_b,cvr_b=x.cpc_a,x.cvr_a,x.cpc_b,x.cvr_b
+    else:
+        ap.error("입력 필요: --a/--b (spend,clicks,conv) 쌍 또는 --cpc-a/--cvr-a/--cpc-b/--cvr-b 4개 모두")
+    if min(cpc_a,cvr_a,cpc_b,cvr_b)<=0:
+        ap.error("CPC/CVR 값이 모두 0 초과여야 합니다 (로그분해에 비율·나눗셈 필요).")
     cpa_a=cpc_a/cvr_a; cpa_b=cpc_b/cvr_b
     L=math.log(cpa_b/cpa_a)
     lc=math.log(cpc_b/cpc_a); lv=-math.log(cvr_b/cvr_a)

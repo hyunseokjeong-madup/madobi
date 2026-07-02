@@ -21,14 +21,18 @@ def main():
     n=len(pairs)
     if not n: print("데이터 없음"); return
     mae=sum(abs(x-y) for x,y in pairs)/n
-    mape=sum(abs(x-y)/abs(x) for x,y in pairs if x)/sum(1 for x,_ in pairs if x)
+    nz=sum(1 for x,_ in pairs if x)  # actual이 0이 아닌 표본 수(MAPE 분모)
+    mape=sum(abs(x-y)/abs(x) for x,y in pairs if x)/nz if nz else None
     rmse=math.sqrt(sum((x-y)**2 for x,y in pairs)/n)
     bias=sum(y-x for x,y in pairs)/n
     print(f"\n=== FORECAST ACCURACY (n={n}) ===")
     print(f"MAE  = {mae:,.2f}")
-    print(f"MAPE = {mape:.2%}")
+    print(f"MAPE = {mape:.2%}" if mape is not None else "MAPE = N/A(actual 전부 0)")
     print(f"RMSE = {rmse:,.2f}")
     print(f"Bias = {bias:+,.2f}  ({'과대예측' if bias>0 else '과소예측' if bias<0 else '무편향'})")
-    g="우수" if mape<0.1 else ("양호" if mape<0.2 else "개선필요")
-    print(f"판정: MAPE {mape:.1%} → {g}. 편향 크면 모델 보정.")
+    if mape is not None:
+        g="우수" if mape<0.1 else ("양호" if mape<0.2 else "개선필요")
+        print(f"판정: MAPE {mape:.1%} → {g}. 편향 크면 모델 보정.")
+    else:
+        print("판정: actual 전부 0 → MAPE 산출 불가. MAE/RMSE/bias로 평가.")
 if __name__=="__main__": main()

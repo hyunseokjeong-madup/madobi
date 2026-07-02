@@ -9,7 +9,7 @@ lessons stay in that account's file.
 Usage:
   python learn.py --feedback "ROAS는 항상 배수(x)로 표기" --scope global --tag report
   python learn.py --feedback "A계정은 18-24 세그먼트가 핵심" --scope account --account acmecorp
-  python learn.py --feedback "..." --scope global --commit        # also git add/commit/push
+  python learn.py --feedback "..." --scope global --no-commit   # 커밋/푸시 생략(기본은 자동 커밋+푸시)
 """
 import argparse, subprocess, sys
 from datetime import datetime, timezone, timedelta
@@ -93,7 +93,9 @@ def main():
     #    프로세스를 죽이지 않고(autosync 'never block' 철학) 명확히 경고만 한다.
     if a.commit:
         msg = f"learn({a.scope}{('/' + a.account) if a.account else ''}): {a.feedback.strip()[:60]}"
-        for cmd in (["git", "add", "-A"],
+        # add 는 learn 이 실제로 만진 두 파일만 — 과거 -A 는 작업트리의 무관한 진행 중
+        # 변경까지 'learn(...)' 커밋에 쓸어 담아 push 했다. '--' 는 경로 오해석 차단.
+        for cmd in (["git", "add", "--", str(target.relative_to(ROOT)), "FEEDBACK_LOG.md"],
                     ["git", "commit", "-m", msg],
                     ["git", "push"]):
             r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,

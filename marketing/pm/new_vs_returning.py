@@ -1,6 +1,7 @@
 """
 신규 vs 재구매 분해 — 거래 데이터에서 각 거래를 첫구매(신규)/재구매로 판정해 매출·주문 분해.
-첫구매 = 해당 고객의 최초 거래일. 계산 정확. 재구매율·재구매 매출비중 산출.
+판정 기준: 고객별 (날짜,금액) 안정정렬 후 첫 거래 1건만 '신규', 나머지는 전부 '재구매'
+          (같은 날 동일금액 거래가 2건이어도 첫 1건만 신규 — 값 비교 대신 위치로 결정론 판정).
 
 입력 CSV: customer_id, date, amount
 Usage: python new_vs_returning.py tx.csv
@@ -22,11 +23,10 @@ def main():
     for r in rows: tx[r[cid].strip()].append((datetime.strptime(r.get(dc).strip(),"%Y-%m-%d"), num(r.get(ac))))
     new_rev=new_ord=ret_rev=ret_ord=0; repeaters=0
     for c,items in tx.items():
-        items=sorted(items)
-        first_day=items[0][0]
+        items=sorted(items)  # 안정정렬 → 첫 거래 결정론적
         if len(items)>1: repeaters+=1
-        for d,amt in items:
-            if d==first_day and (d,amt)==items[0]:
+        for i,(d,amt) in enumerate(items):
+            if i==0:  # 고객의 첫 거래 1건만 신규
                 new_rev+=amt; new_ord+=1
             else:
                 ret_rev+=amt; ret_ord+=1

@@ -1,6 +1,7 @@
 name: CI
 
-# 결정론적 보장(106/106 통합 + 29/29 집계 벤치)을 매 push/PR 마다 자동 검증한다.
+# 결정론적 보장(통합 체크 전체 + 집계 벤치 전 레벨)을 매 push/PR 마다 자동 검증한다.
+# 개수는 하드코딩하지 않는다 — 체크가 늘어도 이 파일은 안 썩는다(개수의 진실은 run_all.py).
 # 코어는 순수 stdlib(외부 의존성 0) → pip install 단계가 필요 없다.
 
 on:
@@ -38,10 +39,10 @@ jobs:
           # 3.9 레그에서 여기서 잡힌다. 실행 없이 파싱+컴파일만 → 부작용 0.
           python -m compileall -q .
 
-      - name: Integration suite (must be 106/106 GREEN)
+      - name: Integration suite (must be ALL GREEN)
         run: python tests/run_all.py
 
-      - name: Aggregation benchmark (must be 29/29 PASS)
+      - name: Aggregation benchmark (must be ALL LEVELS PASS)
         run: |
           python marketing/bench/gen_dataset.py --rows 100000
           python marketing/bench/levels.py

@@ -20,12 +20,12 @@ def main():
     for r in rows:
         ca,sa,cb,sb=(num(r.get(k)) for k in ("conv_a","spend_a","conv_b","spend_b"))
         ch.append(((r.get(name) or "").strip(),ca,sa,cb,sb))
-    TА=sum(x[1] for x in ch); TB=sum(x[3] for x in ch)
-    blendedA=sum(x[2] for x in ch)/TА if TА else 0
+    TA=sum(x[1] for x in ch); TB=sum(x[3] for x in ch)
+    blendedA=sum(x[2] for x in ch)/TA if TA else 0
     blendedB=sum(x[4] for x in ch)/TB if TB else 0
     mix=rate=inter=0
     for nm,ca,sa,cb,sb in ch:
-        wa=ca/TА if TА else 0; wb=cb/TB if TB else 0
+        wa=ca/TA if TA else 0; wb=cb/TB if TB else 0
         cpaa=sa/ca if ca else 0; cpab=sb/cb if cb else 0
         mix+=(wb-wa)*cpaa; rate+=wa*(cpab-cpaa); inter+=(wb-wa)*(cpab-cpaa)
     delta=blendedB-blendedA

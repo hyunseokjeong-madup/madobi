@@ -5,13 +5,13 @@
 
 ---
 
-## 0. 기여의 단일 합격선 — 95/95 GREEN
+## 0. 기여의 단일 합격선 — ALL CHECKS GREEN
 
 무엇을 바꾸든, 머지 전에 통합 체크가 전부 통과해야 한다. 이게 유일한 게이트다.
 
 ```bash
 python tests/run_all.py
-# 마지막 줄이 반드시:  ✅ ALL 95/95 CHECKS GREEN
+# 마지막 줄이 반드시:  ✅ ALL N/N CHECKS GREEN (개수 N 은 계속 는다 — 전부 green 이 합격선)
 ```
 
 빨간 줄이 하나라도 있으면 그 PR 은 받지 않는다. (API·네트워크 없이 결정론적으로 돈다.)
@@ -28,7 +28,7 @@ python tests/run_all.py
 ## 1. 놀리지에셋 추가 (`marketing/knowledge/`)
 
 지식 자산 = 검산을 통과한 교훈 1개 = `.md` 파일 1개. 카테고리 폴더 아래에 둔다
-(`verticals/`, `formats/`, `pitfalls/`, `channels/`, `routines/`, `metrics/`, … 26개 카테고리).
+(`verticals/`, `formats/`, `pitfalls/`, `channels/`, `routines/`, `metrics/`, … 25개 카테고리).
 
 **형식** (md + 선택적 YAML frontmatter):
 

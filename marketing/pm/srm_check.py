@@ -10,7 +10,12 @@ def main():
     ap.add_argument("--a-n",type=int,required=True); ap.add_argument("--b-n",type=int,required=True)
     ap.add_argument("--expected",type=float,default=0.5,help="A 그룹 기대 비율")
     a=ap.parse_args()
-    tot=a.a_n+a.b_n; ea=tot*a.expected; eb=tot*(1-a.expected)
+    if not (0<a.expected<1):
+        ap.error("--expected 는 0 초과 1 미만이어야 합니다 (기대 배분 비율).")
+    tot=a.a_n+a.b_n
+    if tot<=0:
+        ap.error("--a-n + --b-n 합이 1 이상이어야 합니다 (관측 표본 0 불가).")
+    ea=tot*a.expected; eb=tot*(1-a.expected)
     chi=(a.a_n-ea)**2/ea + (a.b_n-eb)**2/eb
     crit=3.841
     print(f"\n=== SRM CHECK (chi-square, df=1) ===")

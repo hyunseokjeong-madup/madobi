@@ -33,3 +33,7 @@ marketing/pm/*.html
 
 # pytest cache (madobi 는 stdlib run_all.py 를 쓰지만, 누가 pytest 돌리면 생긴다)
 .pytest_cache/
+
+# prompt-eval workflow scripts — regenerable via `python research/prompt_eval/build_eval.py`
+# (측정 결과 results_*.json 은 재현 증거라 추적 유지)
+research/prompt_eval/eval*.js

@@ -9,23 +9,26 @@ Usage:
 
 Reuses metric/parse logic from reconcile.py (same directory).
 """
-import csv, sys, argparse, re
+import sys, argparse, re
 from pathlib import Path
 from collections import defaultdict
 sys.path.insert(0, str(Path(__file__).parent))
 from reconcile import num, find_col, ALIASES, RAW, derive
+import safemath
 
 HIGHER_BETTER = {"roas", "ctr", "cvr", "revenue", "conversions"}  # else lower-better (cpa, cpc, cpm)
 
 def load(csvpath):
-    rows = list(csv.DictReader(Path(csvpath).read_text(encoding="utf-8").splitlines()))
+    rows = safemath.load_rows(csvpath)   # 파일 없음/빈 데이터/cp949 를 한 줄 안내로 처리
     headers = list(rows[0].keys())
     colmap = {k: find_col(headers, k) for k in ALIASES}
     date_col = next((h for h in headers if re.search(r"date|날짜|일자|day", h, re.I)), None)
     label_col = headers[0]
     recs = []
     for r in rows:
-        if re.search(r"total|합계|총계|소계|sum", (r.get(label_col) or ""), re.I):
+        # 합계행 제외는 safemath.is_total_label 공용 기준 —
+        # 부분매칭('sum')이 'Summer_Sale' 승자를 폐기하고 반대 추천을 내던 사고 방지.
+        if safemath.is_total_label(r.get(label_col)):
             continue
         rec = {k: (num(r.get(colmap[k])) if colmap[k] else None) for k in ALIASES}
         rec["_label"] = (r.get(label_col) or "").strip()

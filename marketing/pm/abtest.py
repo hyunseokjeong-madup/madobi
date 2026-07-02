@@ -8,6 +8,8 @@ def main():
     ap.add_argument("--b-n", type=int, required=True)
     ap.add_argument("--b-x", type=int, required=True)
     a=ap.parse_args()
+    if a.a_n<=0 or a.b_n<=0:
+        ap.error("--a-n, --b-n 은 1 이상이어야 합니다 (시행수 0 이하 불가).")
     pa=a.a_x/a.a_n; pb=a.b_x/a.b_n
     p=(a.a_x+a.b_x)/(a.a_n+a.b_n)
     se=math.sqrt(p*(1-p)*(1/a.a_n+1/a.b_n))

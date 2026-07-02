@@ -13,12 +13,13 @@ CHECKS = [
     ("benchmark ground truth builds", ["python", "research/benchmark/build_benchmark.py"], "built 20 problems"),
     ("large dataset generates",       ["python", "marketing/bench/gen_dataset.py", "--rows", "30000"], "ground_truth.json"),
     ("aggregation is EXACT at scale", ["python", "marketing/bench/verify_bench.py"], "ALL"),
-    ("30-level difficulty ladder",    ["python", "marketing/bench/levels.py"], "ALL LEVELS PASS"),
+    ("graded difficulty ladder",      ["python", "marketing/bench/levels.py"], "ALL LEVELS PASS"),
     ("summarize tool runs",           ["python", "marketing/bench/summarize.py", "marketing/samples/sample_campaign.csv", "--by", "creative"], "SUMMARY"),
     ("creative analyzer runs",        ["python", "marketing/analyze_creatives.py", "marketing/samples/sample_campaign.csv"], "CREATIVE ANALYSIS"),
     ("creative generator runs",       ["python", "marketing/creative_gen.py", "--product", "x", "--n", "3"], "CREATIVE MATRIX"),
     ("event analyzer runs",           ["python", "marketing/event_analysis.py", "marketing/samples/sample_timeseries.csv", "--metric", "revenue", "--event", "2026-01-10"], "EVENT/CAMPAIGN ANALYSIS"),
     ("report generator runs",         ["python", "marketing/report.py", "marketing/samples/sample_campaign.csv", "--by", "creative"], "성과 리포트"),
+    ("reconcile engine runs",         ["python", "marketing/reconcile.py", "marketing/samples/sample_campaign.csv"], "VERDICT"),
     ("pm: pacing",                    ["python", "marketing/pm/pacing.py", "--spend", "100", "--budget", "200", "--elapsed", "5", "--total", "10"], "PACING"),
     ("pm: funnel",                    ["python", "marketing/pm/funnel.py", "--csv", "marketing/samples/sample_campaign.csv"], "FUNNEL"),
     ("pm: abtest",                    ["python", "marketing/pm/abtest.py", "--a-n", "1000", "--a-x", "50", "--b-n", "1000", "--b-x", "70"], "A/B TEST"),
@@ -117,6 +118,28 @@ CHECKS = [
     ("rl: bandit_policy selftest",    ["python", "marketing/pm/bandit_policy.py", "--selftest"], "self-test: PASS"),
     ("mem: knowledge graph viz",      ["python", "marketing/knowledge/viz.py", "--selftest"], "self-test: PASS"),
     ("loop: feedback report",         ["python", "marketing/loop_report.py", "--selftest"], "self-test: PASS"),
+    # --- 챗봇 모드 (결정론 NL→도구 라우터) ---
+    ("chat: router selftest",         ["python", "marketing/chat.py", "--selftest"], "self-test: PASS"),
+    ("chat: one-shot ask",            ["python", "marketing/chat.py", "--ask", "숫자 검산해줘"], "reconcile"),
+    # --- 합계행 함정 회귀: 'Summer_Sale'(부분매칭 오폐기)·'Grand Total'(이중계산) 동시 검증 ---
+    ("trap: totals reconcile",        ["python", "marketing/reconcile.py", "marketing/samples/sample_totals_trap.csv"], "CONSISTENT"),
+    ("trap: totals summarize",        ["python", "marketing/bench/summarize.py", "marketing/samples/sample_totals_trap.csv", "--by", "creative"], "Summer_Sale"),
+    ("trap: totals sql_query",        ["python", "marketing/sql_query.py", "marketing/samples/sample_totals_trap.csv", "--group-by", "creative", "--metric", "spend"], "Summer_Sale"),
+    ("trap: totals analyze",          ["python", "marketing/analyze_creatives.py", "marketing/samples/sample_totals_trap.csv", "--min-impr", "100"], "scale: Summer_Sale"),
+    # --- 한글/alias 헤더 회귀: '검산 완료' 아래 전부-0 리포트 방지 ---
+    ("alias: korean headers report",  ["python", "marketing/report.py", "marketing/samples/sample_korean_headers.csv", "--by", "채널"], "30,000"),
+    ("alias: korean headers summarize", ["python", "marketing/bench/summarize.py", "marketing/samples/sample_korean_headers.csv", "--by", "채널"], "google"),
+    # --- 기계가독 출력 규약 ---
+    ("json: reconcile --json",        ["python", "marketing/reconcile.py", "marketing/samples/sample_campaign.csv", "--json"], '"verdict"'),
+    ("json: dispatcher list --json",  ["python", "marketing/madobi.py", "list", "--json"], '"group"'),
+    # --- 프롬프트 평가 하네스 + 세션 브리핑 (하네스 엔지니어링 게이트) ---
+    ("prompt: grader selftest",       ["python", "research/prompt_eval/grade.py", "--selftest"], "self-test: PASS"),
+    ("prompt: eval script builds",    ["python", "research/prompt_eval/build_eval.py", "--out", "research/prompt_eval/eval.js"], "2 arms"),
+    ("hook: session brief selftest",  ["python", "tools/session_brief.py", "--selftest"], "self-test: PASS"),
+    # --- pm 도구 CLI 규약 통일 회귀 (positional CSV 가 --csv 와 동일 동작) ---
+    ("pm: funnel positional csv",     ["python", "marketing/pm/funnel.py", "marketing/samples/sample_campaign.csv"], "FUNNEL"),
+    ("pm: naming positional csv",     ["python", "marketing/pm/naming_check.py", "marketing/samples/sample_searchterms.csv"], "NAMING CHECK"),
+    ("sc: churn risk-cap flag",       ["python", "marketing/pm/churn_score.py", "marketing/samples/sample_tx.csv", "--asof", "2026-02-15", "--risk-cap", "3"], "CHURN RISK"),
 ]
 
 def run():
@@ -126,7 +149,10 @@ def run():
     results = []
     for name, cmd, needle in CHECKS:
         t0 = time.time()
-        r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
+        # 리터럴 "python" 은 python 별칭 없는 환경(macOS 기본 등)에서 스위트 전체가
+        # FileNotFoundError 로 죽는다 — 지금 돌고 있는 인터프리터로 치환.
+        argv = [sys.executable] + cmd[1:] if cmd[0] == "python" else cmd
+        r = subprocess.run(argv, cwd=ROOT, capture_output=True, text=True,
                            encoding="utf-8", errors="replace")
         ok = (r.returncode == 0) and (needle in (r.stdout or ""))
         dt = time.time() - t0

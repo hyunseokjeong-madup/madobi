@@ -11,6 +11,8 @@ def main():
     for g in ("a","b"):
         ap.add_argument(f"--{g}-mean",type=float,required=True); ap.add_argument(f"--{g}-sd",type=float,required=True); ap.add_argument(f"--{g}-n",type=int,required=True)
     a=ap.parse_args()
+    if a.a_n<2 or a.b_n<2:
+        ap.error("--a-n, --b-n 은 2 이상이어야 합니다 (Welch df 계산에 n-1 자유도 필요).")
     ma,sa,na=a.a_mean,a.a_sd,a.a_n; mb,sb,nb=a.b_mean,a.b_sd,a.b_n
     se=math.sqrt(sa*sa/na+sb*sb/nb)
     t=(mb-ma)/se if se else 0

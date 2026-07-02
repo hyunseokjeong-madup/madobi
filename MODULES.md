@@ -7,7 +7,7 @@
 |------|------|------|
 | `madobi-core` | `marketing/reconcile.py`, `summarize.py`, `bench/`, (safemath) | 결정론적 stdlib 산술·검산 |
 | `madobi-pm-tools` | `marketing/pm/` (78개) | CLI 의사결정 도구 모음 |
-| `madobi-knowledge` | `marketing/knowledge/` (210+ md, 26 카테고리) | 쓸수록 자라는 지식 자산 |
+| `madobi-knowledge` | `marketing/knowledge/` (210+ md, 25 카테고리) | 쓸수록 자라는 지식 자산 |
 | `madobi-agent` | `.claude/` (agents + skills) | 에이전트 페르소나·스킬 |
 | `madobi-research` | `research/` | 챔피언 전략 선별 실험 아카이브 (IP) |
 
@@ -20,7 +20,7 @@
 이 둘을 별도 레포로 쪼개면:
 
 - `clone & run` 이 깨진다 — 사용자가 N개 레포를 정확한 버전으로 맞춰야 동작.
-- `tests/run_all.py` 의 106/106 게이트가 레포 경계를 넘어 깨진다 (도구·샘플·검산이 한 트리에 있어야 결정론적).
+- `tests/run_all.py` 의 전체-그린 게이트가 레포 경계를 넘어 깨진다 (도구·샘플·검산이 한 트리에 있어야 결정론적).
 - `learn.py` 의 자기개선 루프(피드백 → 자산 → 커밋)가 한 트리 안에서만 원자적으로 돈다.
 
 → **결론: 문서로 모듈을 나누되 물리적으로는 한 레포.** 멀티레포 분리는 채택하지 않았다.
@@ -30,8 +30,10 @@
 ## `madobi-core`
 - **무엇:** 정합성 검산 + 집계 엔진. 분해합(일/채널/캠페인/소재) = 총계를 **정확히** 보장.
   파생지표(ROAS/CPA/CVR…)는 원자료 재계산 + 역산 일치. 비율은 가중평균(Σ/Σ).
-- **공개 인터페이스:** `python marketing/reconcile.py <csv>`, `python marketing/summarize.py <csv> --by <dim>`,
-  `marketing/bench/verify_bench.py`(대규모 EXACT 검증), `bench/levels.py`(30단계 난이도 사다리).
+- **공개 인터페이스:** `python marketing/reconcile.py <csv>`, `python marketing/bench/summarize.py <csv> --by <dim>`,
+  `marketing/bench/verify_bench.py`(대규모 EXACT 검증), `bench/levels.py`(40단계 난이도 사다리 — 함정 포함).
+  단일 진입점은 `python marketing/madobi.py list|chat|<tool>` — 디스패처(오타 시 유사 도구 제안) +
+  챗봇 REPL(`chat.py`, 결정론 NL→도구 라우터 · 지표 Q&A · 놀리지 회상).
   `marketing/safemath.py` — 0-분모 안전 나눗셈·지표별 허용오차 헬퍼(stdlib). `reconcile.py` 의 검산
   로직을 ADDITIVE 하게 떼어낸 모듈로, `reconcile.py` 는 그대로 동작하고 새 도구가 골라 쓴다.
 - **불변식:** **결정론적 · stdlib only.** API/네트워크/난수 없음. 같은 입력 → 같은 출력.
@@ -39,11 +41,13 @@
 
 ## `madobi-pm-tools` (`marketing/pm/`, 78개)
 - **무엇:** ROAS 민감도·페이싱·퍼널·A/B·재배분·가드레일·낭비탐지·예측 등 PM 의사결정 CLI.
-- **공개 인터페이스:** 각 도구 = 단일 파일. `python marketing/pm/<tool>.py --<args>` → 텍스트 표.
+- **공개 인터페이스:** 각 도구 = 단일 파일. `python marketing/pm/<tool>.py --<args>` → 텍스트 표
+  (기계가독이 필요한 도구는 `--json` stdout — reconcile.py·`madobi.py list --json` 이 선례.
+  신규/개정 도구는 점진적으로 이 규약을 따른다: `json.dumps(payload, ensure_ascii=False, sort_keys=True)`).
   각 도구는 `tests/run_all.py` 의 `CHECKS` 에 한 줄로 등록되어 PASS 토큰을 가진다.
 - **불변식:** 폐형식이면 정확, 추정이면 가정 명시. stdlib only(표준편차·회귀도 `math` 로 직접 구현).
 
-## `madobi-knowledge` (`marketing/knowledge/`, 210+ md / 26 카테고리, 쓸수록 증가)
+## `madobi-knowledge` (`marketing/knowledge/`, 210+ md / 25 카테고리, 쓸수록 증가)
 - **무엇:** 버티컬·포맷·함정·채널·루틴별 실전 지식. `_GLOBAL.md`(공통) + `<account>.md`(계정별).
 - **공개 인터페이스:** 시드/생성은 `build_kb*.py`. 접근면은 **search / recall / curate** 3개 stdlib 진입점:
   - `search.py` — 질의로 자산 찾기(SQLite FTS5/bm25). FTS5 가 없으면 graceful degrade.

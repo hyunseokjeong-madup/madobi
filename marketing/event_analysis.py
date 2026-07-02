@@ -6,8 +6,12 @@ Recomputes from raw (정합성). Pure stdlib.
 Usage:
   python event_analysis.py series.csv --metric revenue --event 2026-01-10 --budget 30000000 --md out.md
 """
-import csv, argparse, statistics as st
+import argparse, statistics as st
 from pathlib import Path
+try:
+    from . import safemath
+except ImportError:
+    import safemath
 
 def num(s):
     if s is None: return 0.0
@@ -26,7 +30,10 @@ def main():
     ap.add_argument("--md", default=None)
     a = ap.parse_args()
 
-    rows = list(csv.DictReader(Path(a.csv).read_text(encoding="utf-8").splitlines()))
+    rows = safemath.load_rows(a.csv)   # 파일 없음/빈 데이터/cp949 를 한 줄 안내로 처리
+    if a.metric not in rows[0]:
+        # 존재하지 않는 metric(오타)을 조용히 전부 0으로 분석하던 사고 방지
+        raise SystemExit(f"[오류] metric '{a.metric}' 컬럼이 없습니다 — 컬럼: {sorted(rows[0])}")
     dcol = next((h for h in rows[0] if h.lower() in ("date", "날짜", "일자", "day")), list(rows[0])[0])
     series = sorted(((r[dcol].strip(), num(r.get(a.metric))) for r in rows), key=lambda x: x[0])
     days = [d for d, _ in series]; vals = [v for _, v in series]
@@ -65,8 +72,9 @@ def main():
     print(f"days={len(days)} ({days[0]}..{days[-1]})  total={total:,.0f}  mean/day={mean:,.0f}")
     if lift:
         pa, qa, lf, npre, npost = lift
-        print(f"\nLIFT around {a.event}: pre_avg={pa:,.0f} ({npre}d) -> post_avg={qa:,.0f} ({npost}d)  "
-              f"lift={lf:+.1%}" if lf is not None else "")
+        # 과거엔 print 전체를 감싼 조건식 때문에 pre 평균이 0이면 LIFT 줄이 통째로 사라졌다.
+        lift_s = f"lift={lf:+.1%}" if lf is not None else "lift=계산불가(pre_avg=0)"
+        print(f"\nLIFT around {a.event}: pre_avg={pa:,.0f} ({npre}d) -> post_avg={qa:,.0f} ({npost}d)  {lift_s}")
     if pacing:
         sp, pct, daily = pacing
         print(f"\nPACING: spend={sp:,.0f} / budget={a.budget:,.0f} = {pct:.1%}  (daily≈{daily:,.0f})")

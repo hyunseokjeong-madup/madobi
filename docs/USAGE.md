@@ -1,6 +1,6 @@
 # Usage Guide
 
-A practical guide to running **Swarm Agent Lab** — the agents, the marketing skill,
+A practical guide to running **MADOBI** — the agents, the marketing skill, the chat REPL,
 the reconciliation engine, and the evolutionary optimization loop.
 
 ---
@@ -30,7 +30,7 @@ Invoke implicitly by asking, e.g.:
 `.claude/skills/marketing-analyst/SKILL.md` packages the routine workflow so the agent runs it
 the same way every time:
 
-1. **Restore context** — `recall.py` searches the 214-asset knowledge base (no full read) + the account memory.
+1. **Restore context** — `recall.py` searches the 213-asset knowledge base (no full read) + the account memory.
 2. **Reconcile** — recompute every derived metric from raw, check breakdown sums = totals.
 3. **Report** — verified numbers only; inconsistencies surfaced as ⚠, never hidden.
 4. **Record** — promote verified learnings to the knowledge assets (`curate.py`, dedup-aware; compounding).
@@ -55,7 +55,7 @@ Column names are matched flexibly (English + Korean aliases: `impressions/노출
 
 ## 3.5 Searchable memory & extra verification (stdlib, zero deps)
 
-**Searchable knowledge (FTS5 full-text recall)** — the 214 knowledge assets are indexed, not bulk-read:
+**Searchable knowledge (FTS5 full-text recall)** — the 213 knowledge assets are indexed, not bulk-read:
 ```bash
 python marketing/knowledge/search.py --build                 # build/refresh the index (~1s)
 python marketing/knowledge/search.py 'ROAS high CPA' --category diagnostics --limit 5
@@ -87,9 +87,29 @@ recall → reconcile → summarize (TOTAL-row excluded) → triple-verify → co
 
 ---
 
+## 3.6 Chat mode (deterministic REPL — no LLM calls)
+
+Talk to MADOBI straight from the terminal. Routing is **deterministic**: same question → same answer.
+
+```bash
+python marketing/madobi.py chat                    # interactive REPL (매도비> )
+python marketing/chat.py --ask "숫자 검산해줘"        # one-shot (for scripts/agents)
+```
+
+What it understands:
+- **Metric Q&A** — "ROAS가 뭐야?" → definition/formula/SQL straight from the semantic layer glossary.
+- **Tool routing** — Korean/English intent ("검산", "예산 재배분", "이탈 위험", …) → best of 89 tools,
+  with a **verified, runnable command** (example args are reused from `tests/run_all.py`, never duplicated).
+- **Knowledge recall** — "지난번에 배운 교훈?" → delegates to `knowledge/recall.py`.
+- In the REPL, `run` (or `run 2`) executes the last suggestion; `list` shows every tool.
+
+---
+
 ## 4. Running the optimization yourself
 
 ```bash
+cd research    # everything below lives in research/
+
 # 1) Build the code-verified benchmark
 python benchmark/build_benchmark.py
 

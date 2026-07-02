@@ -2,7 +2,7 @@
 #
 # 핵심 불변식(invariant): 코어는 파이썬 STDLIB ONLY.
 #   reconcile / summarize / bench / pm 78개 도구 / 검증 로직은 전부 표준 라이브러리만 쓴다.
-#   → `pip install madobi` 만으로 외부 의존성 0개로 "clone & run" 이 성립한다.
+#   → pip install 없이 `git clone` 만으로 "clone & run" 이 성립한다 (제품 약속 — CONTRIBUTING.md 참조).
 #
 # 외부 의존성은 전부 OPT-IN extras 로 격리한다 (아래 [project.optional-dependencies]).
 # duckdb / sentence-transformers 가 없어도 코어는 import 되고 정상 degrade 한다.

@@ -10,7 +10,7 @@
 |--------|------|-------|------|
 | `dataset.csv` | `marketing/bench/` | ❌ 미추적 (`.gitignore`) | 결정론적 생성기로 언제든 재생성 |
 | `ground_truth.json` | `marketing/bench/` | ❌ 미추적 (`.gitignore`) | `dataset.csv` 와 함께 재생성 |
-| 샘플 CSV (`sample_*.csv`) | `marketing/samples/` | ✅ 추적 | 테스트·도구의 결정론적 입력 — 고정돼야 95/95 가 성립 |
+| 샘플 CSV (`sample_*.csv`) | `marketing/samples/` | ✅ 추적 | 테스트·도구의 결정론적 입력 — 고정돼야 통합 체크 전체가 성립 |
 | 결과 데이터 | `research/results/` | ✅ 추적 | 스웜 최적화 재현 증거(IP) — `.gitignore` 에서 명시적 제외 |
 
 ## `dataset.csv` — 의도적으로 추적하지 않는다
@@ -29,7 +29,7 @@ python marketing/bench/verify_bench.py     # -> ALL ...
 - "데이터를 신뢰하라"가 아니라 "데이터를 재현하라"가 된다 — 재현성이 곧 증거.
 
 `tests/run_all.py` 는 매 실행 시 `gen_dataset.py` 를 먼저 돌려 데이터를 새로 만들고 검증하므로,
-산출물을 추적하지 않아도 95/95 게이트는 항상 성립한다.
+산출물을 추적하지 않아도 통합 체크 게이트는 항상 성립한다 (개수는 run_all.py 가 진실).
 
 ## CSV 정규화 — `.gitattributes`
 

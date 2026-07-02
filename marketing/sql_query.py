@@ -65,17 +65,21 @@ def _query_python(path, group_by, filters, metrics):
         )
 
     acc = defaultdict(lambda: {m: 0 for m in safemath._RAW_ALIASES})
-    with open(path, encoding="utf-8") as f:
-        for r in csv.DictReader(f):
-            if not _passes_filters(r, filters):
-                continue
-            # 합계 행(TOTAL/합계)은 중복 가산 방지 위해 제외
-            label = (next(iter(r.values()), "") or "").strip().lower()
-            if label in ("total", "합계", "sum", "총계", "소계"):
-                continue
-            key = tuple(_cell(r, g) for g in group_by) if group_by else ("ALL",)
-            for m in safemath._RAW_ALIASES:
-                acc[key][m] += _pick_raw(r, m)
+    all_rows = safemath.load_rows(path)   # 파일 없음/빈 데이터/cp949 를 한 줄 안내로 처리
+    colmap = safemath.map_headers(all_rows[0].keys())   # canonical → 원본 헤더 (대소문자 무시)
+    for r in all_rows:
+        if not _passes_filters(r, filters):
+            continue
+        # 합계 행 제외 — 판정은 safemath.is_total_label 공용 기준.
+        # 과거 5종 완전일치는 'Grand Total' 을 못 걸러 2배 이중계산됐다.
+        label = next(iter(r.values()), "")
+        if safemath.is_total_label(label):
+            continue
+        key = tuple(_cell(r, g) for g in group_by) if group_by else ("ALL",)
+        for m in safemath._RAW_ALIASES:
+            src = colmap.get(m)
+            v = safemath._finite(_clean(r.get(src))) if src else None
+            acc[key][m] += v if v is not None else 0.0
 
     rows = []
     for key in sorted(acc):
@@ -89,20 +93,6 @@ def _query_python(path, group_by, filters, metrics):
                 row[m] = derived.get(m)  # 분모 0이면 None
         rows.append(row)
     return rows
-
-
-def _pick_raw(row, canonical_key):
-    """row 에서 canonical raw 지표의 값을 alias 까지 훑어 더할 수 있게 추출.
-
-    safemath._RAW_ALIASES 의 별칭을 사용. 포맷된 셀은 safemath.safe_div 가 아닌
-    safemath._finite 로 정제하되, 합산용이라 결측은 0.
-    """
-    for a in safemath._RAW_ALIASES[canonical_key]:
-        if a in row:
-            v = safemath._finite(_clean(row[a]))
-            if v is not None:
-                return v
-    return 0.0
 
 
 def _clean(s):
@@ -164,9 +154,10 @@ def _query_duckdb(path, group_by, filters, metrics):
         clean_exprs.append((rc, aliases))
 
     cols = _duckdb_columns(src)
+    lowcols = {str(c).lower().strip(): c for c in cols}   # 대소문자 무시 (python 엔진과 동일 규칙)
     select_clean = []
     for rc, aliases in clean_exprs:
-        present = [a for a in aliases if a in cols]
+        present = [lowcols[a] for a in aliases if a in lowcols]
         if present:
             col = present[0]
             expr = (f"COALESCE(TRY_CAST(NULLIF(REGEXP_REPLACE("
@@ -175,8 +166,9 @@ def _query_duckdb(path, group_by, filters, metrics):
             expr = f"0.0 AS {rc}"
         select_clean.append(expr)
 
-    # 그룹 컬럼도 패스스루
-    group_select = ", ".join(f'"{g}" AS {g}' for g in group_by)
+    # 그룹 컬럼도 패스스루 — 식별자는 항상 인용(공백/특수문자 컬럼명 안전)
+    gq = ['"' + g.replace('"', '""') + '"' for g in group_by]
+    group_select = ", ".join(f"{q} AS {q}" for q in gq)
     base_select = ", ".join(select_clean)
     if group_by:
         base = f"SELECT {group_select}, {base_select} FROM {src}"
@@ -188,11 +180,11 @@ def _query_duckdb(path, group_by, filters, metrics):
     where = _build_where(filters, group_by, first_col)
 
     # 집계 SELECT 구성: 그룹 + 각 지표 SQL 식
-    agg_select = list(group_by)
+    agg_select = list(gq)
     for m in metrics:
         agg_select.append(f"({semantic_layer.sql_for(m)}) AS {m}")
-    group_clause = f"GROUP BY {', '.join(group_by)}" if group_by else ""
-    order_clause = f"ORDER BY {', '.join(group_by)}" if group_by else ""
+    group_clause = f"GROUP BY {', '.join(gq)}" if group_by else ""
+    order_clause = f"ORDER BY {', '.join(gq)}" if group_by else ""
 
     sql = (
         f"WITH base AS ({base}{where}) "
@@ -220,11 +212,14 @@ def _duckdb_columns(src):
 
 def _build_where(filters, group_by, first_col):
     clauses = []
-    # 합계 행 제외
+    # 합계 행 제외 — python 엔진의 safemath.is_total_label 과 동일 규칙을 SQL 로 이식
+    # ('Grand Total' 누락 + 'Summer_Sale' 오폐기 를 모두 막는 정규화 후 전체 일치).
     if first_col:
+        fq = '"' + str(first_col).replace('"', '""') + '"'
         clauses.append(
-            f"lower(trim(CAST(\"{first_col}\" AS VARCHAR))) "
-            f"NOT IN ('total','합계','sum','총계','소계')"
+            f"NOT regexp_matches(regexp_replace(lower(trim(CAST({fq} AS VARCHAR))), "
+            f"'{safemath.TOTAL_LABEL_STRIP_PATTERN}', '', 'g'), "
+            f"'{safemath.TOTAL_LABEL_SQL_PATTERN}')"
         )
     for col, cond in (filters or {}).items():
         if callable(cond):
@@ -244,6 +239,37 @@ def _build_where(filters, group_by, first_col):
 # ----------------------------------------------------------------------------
 # 공개 API
 # ----------------------------------------------------------------------------
+def _columns(path):
+    """파일의 헤더 컬럼 목록. CSV 는 첫 줄만 읽음(utf-8-sig→cp949), parquet 은 duckdb."""
+    path = Path(path)
+    if not path.exists():
+        raise SystemExit(f"[오류] 파일 없음: {path}")
+    if path.suffix.lower() in (".parquet", ".pq"):
+        if not HAS_DUCKDB:
+            raise RuntimeError(_NO_DUCKDB_MSG)
+        return _duckdb_columns(f"read_parquet('{path.as_posix()}')")
+    head = path.read_bytes().split(b"\n", 1)[0]
+    for enc in ("utf-8-sig", "cp949"):
+        try:
+            return next(csv.reader([head.decode(enc)]), [])
+        except UnicodeDecodeError:
+            continue
+    raise SystemExit(f"[오류] CSV 인코딩 인식 불가(utf-8/cp949 모두 실패): {path}")
+
+
+def _validate_group_by(path, group_by):
+    """group-by 컬럼 실재 검증 — 없는 컬럼이면 두 엔진이 '같은 방식으로' 실패해야 한다.
+
+    과거: python 엔진은 조용히 빈 라벨 단일 그룹(무의미한 답), duckdb 는 BinderException
+    traceback — 같은 입력에 다른 결과 클래스를 내 '파이썬이 진실' 불변식의 신뢰를 깎았다."""
+    if not group_by:
+        return
+    cols = _columns(path)
+    missing = [g for g in group_by if g not in cols]
+    if missing:
+        raise ValueError(f"group-by 컬럼 없음: {missing} — 사용 가능한 컬럼: {cols}")
+
+
 def query(path, group_by=None, filters=None, metrics=None, engine="auto"):
     """CSV/parquet 위에서 GROUP BY 집계.
 
@@ -251,10 +277,12 @@ def query(path, group_by=None, filters=None, metrics=None, engine="auto"):
     group_by: 그룹 컬럼명 리스트. filters: {col: value|set|callable}.
     metrics: 비즈니스 용어 리스트(semantic_layer 로 canonical 해석).
     반환: 행 dict 리스트. 그룹 컬럼 + 각 지표값(파생 분모 0 → None).
+    모르는 metric 은 KeyError, 없는 group-by 컬럼은 ValueError (양 엔진 동일).
     """
     group_by = list(group_by or [])
     filters = dict(filters or {})
     metrics = _resolve_metrics(metrics or ["roas"])
+    _validate_group_by(path, group_by)
 
     if engine == "duckdb" or (engine == "auto" and HAS_DUCKDB):
         return _query_duckdb(path, group_by, filters, metrics)
@@ -273,6 +301,7 @@ def verify_against_python(path, group_by=None, filters=None, metrics=None, tol=N
     group_by = list(group_by or [])
     filters = dict(filters or {})
     canon = _resolve_metrics(metrics or ["roas"])
+    _validate_group_by(path, group_by)
 
     py = _query_python(path, group_by, filters, canon)
     if not HAS_DUCKDB:
@@ -361,8 +390,13 @@ def main(argv=None):
     print(f"=== SQL QUERY  (engine={mode}, duckdb={'present' if HAS_DUCKDB else 'absent'}) ===")
     print(f"path={a.path}  group_by={a.group_by}  metric={a.metric}  filter={filters}")
 
-    rows = query(a.path, group_by=a.group_by, filters=filters,
-                 metrics=a.metric, engine=a.engine)
+    try:
+        rows = query(a.path, group_by=a.group_by, filters=filters,
+                     metrics=a.metric, engine=a.engine)
+    except (KeyError, ValueError) as e:
+        # 모르는 지표/없는 컬럼은 traceback 대신 usage + 한 줄 안내 (semantic_layer 의
+        # KeyError 메시지가 이미 known metrics 목록을 포함한다).
+        ap.error(str(e))
 
     cols = list(a.group_by) + _resolve_metrics(a.metric)
     print("  " + "  ".join(c.ljust(14) for c in cols))
